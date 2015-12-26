@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 1:14 PM
+// Authored: 12/26/2015 1:38 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -53,6 +53,21 @@ namespace CensusDataParser
         public static readonly CensusFile Summary1File = new CensusFile(CensusDataURLs.Summary1AccessFile, CensusFileType.SummaryOne);
         public static readonly CensusFile Summary2File = new CensusFile(CensusDataURLs.Summary2AccessFile, CensusFileType.SummaryTwo);
 
+        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> AllTables = RedistrictingFile.DataTables.Union(DemographicProfileFile.DataTables)
+                                                                                                                        .Union(Summary1File.DataTables)
+                                                                                                                        .Union(Summary2File.DataTables)
+                                                                                                                        .Union(CongressionalDistrictsFile.DataTables);
+
+        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables);
+
+        public static IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
+                                                                                             .Union(Summary1File.DataDescriptors)
+                                                                                             .Union(Summary2File.DataDescriptors)
+                                                                                             .Union(CongressionalDistrictsFile.DataDescriptors);
+
+        public static IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
+                                                                                                  .Union(Summary2File.GeoDataDescriptors);
+
         public static string GetSchemaString()
         {
             string output = GetSchemaStrings()
@@ -63,11 +78,6 @@ namespace CensusDataParser
 
         public static IEnumerable<string> GetSchemaStrings()
         {
-            //IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables);
-            //IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> AllTables = RedistrictingFile.DataTables.Union(DemographicProfileFile.DataTables)
-            //                                                                                         .Union(Summary1File.DataTables)
-            //                                                                                         .Union(Summary2File.DataTables)
-            //                                                                                         .Union(CongressionalDistrictsFile.DataTables);
             foreach (KeyValuePair<string, IEnumerable<TableColumn>> table in AllTables)
             {
                 IEnumerable<TableColumn> columns = SetColumnDescriptors(table.Value.OrderBy(o => o.Index));
@@ -119,30 +129,8 @@ namespace CensusDataParser
             }
         }
 
-        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables);
-
-        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> AllTables = RedistrictingFile.DataTables.Union(DemographicProfileFile.DataTables)
-                                                                                                 .Union(Summary1File.DataTables)
-                                                                                                 .Union(Summary2File.DataTables)
-                                                                                                 .Union(CongressionalDistrictsFile.DataTables);
-
-        public static IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
-                                                                                                 .Union(Summary1File.DataDescriptors)
-                                                                                                 .Union(Summary2File.DataDescriptors)
-                                                                                                 .Union(CongressionalDistrictsFile.DataDescriptors);
-
-        public static IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
-                                                                                                 .Union(Summary2File.GeoDataDescriptors);
-
         public static IEnumerable<TableColumn> SetColumnDescriptors(IEnumerable<TableColumn> columns)
         {
-            //IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
-            //                                                                       .Union(Summary1File.DataDescriptors)
-            //                                                                       .Union(Summary2File.DataDescriptors)
-            //                                                                       .Union(CongressionalDistrictsFile.DataDescriptors);
-            //IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
-            //                                                                            .Union(Summary2File.GeoDataDescriptors);
-
             DATA_FIELD_DESCRIPTORS[] dataDescriptors = DataDescriptors.ToArray();
             GeoHeader_Specifications[] geoDataDescriptors = GeoDataDescriptors.ToArray();
 
@@ -164,7 +152,7 @@ namespace CensusDataParser
                 column.Descriptor = dataDescriptors?.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name?.Trim(), StringComparison.OrdinalIgnoreCase));
                 column.GeoDescriptor = geoDataDescriptors?.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name?.Trim(), StringComparison.OrdinalIgnoreCase));
 
-                string[] skipFields = { "DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE" };
+                string[] skipFields = {"DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE"};
 
                 if (column.Descriptor == null
                     && column.GeoDescriptor == null
