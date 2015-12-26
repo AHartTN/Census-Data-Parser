@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 1:38 PM
+// Authored: 12/26/2015 3:18 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -153,12 +153,14 @@ namespace CensusDataParser
                     tableColumns.AddRange(from DataRow row in schema.Rows select new TableColumn(row));
 
                     if (tableName.EndsWith("PT1")
-                        || tableName.EndsWith("PART1"))
+                        || tableName.EndsWith("PART1")
+                        || tableName.EndsWith("Part1"))
                     {
                         for (int i = 2; i <= tables.Length; i++)
                         {
                             string tblName = tableName.Replace("PT1", $"PT{i}")
-                                                      .Replace("PART1", $"PART{i}");
+                                                      .Replace("PART1", $"PART{i}")
+                                                      .Replace("Part1", $"Part{i}");
 
                             foreach (TableModel table in tables.Where(w => w.TableName.EndsWith(tblName)))
                             {

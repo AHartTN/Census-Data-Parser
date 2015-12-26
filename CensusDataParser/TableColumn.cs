@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 1:38 PM
+// Authored: 12/26/2015 3:18 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -167,7 +167,7 @@ namespace CensusDataParser
             string displayName = Descriptor?.FIELD_NAME.Trim('_')
                                             .Trim() ?? GeoDescriptor?.FIELD.Trim('_')
                                                                      .Trim() ?? Name;
-            string dataType = AllowDbNull
+            string dataType = AllowDbNull && DataType != typeof (string)
                                   ? $"System.Nullable<{DataType}>"
                                   : $"{DataType}";
 

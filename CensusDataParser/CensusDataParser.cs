@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 1:38 PM
+// Authored: 12/26/2015 3:18 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -53,55 +53,52 @@ namespace CensusDataParser
         public static readonly CensusFile Summary1File = new CensusFile(CensusDataURLs.Summary1AccessFile, CensusFileType.SummaryOne);
         public static readonly CensusFile Summary2File = new CensusFile(CensusDataURLs.Summary2AccessFile, CensusFileType.SummaryTwo);
 
-        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> AllTables = RedistrictingFile.DataTables.Union(DemographicProfileFile.DataTables)
-                                                                                                                        .Union(Summary1File.DataTables)
-                                                                                                                        .Union(Summary2File.DataTables)
-                                                                                                                        .Union(CongressionalDistrictsFile.DataTables);
-
-        public static readonly IEnumerable<KeyValuePair<string, IEnumerable<TableColumn>>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables);
+        public static readonly Dictionary<string, IEnumerable<TableColumn>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables)
+                                                                                                 .ToDictionary(k => k.Key, v => v.Value);
 
         public static IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
                                                                                              .Union(Summary1File.DataDescriptors)
                                                                                              .Union(Summary2File.DataDescriptors)
-                                                                                             .Union(CongressionalDistrictsFile.DataDescriptors);
+                                                                                             .Union(CongressionalDistrictsFile.DataDescriptors)
+                                                                                             .Distinct();
 
         public static IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
-                                                                                                  .Union(Summary2File.GeoDataDescriptors);
+                                                                                                  .Union(Summary2File.GeoDataDescriptors)
+                                                                                                  .Distinct();
 
         public static string GetSchemaString()
         {
             string output = GetSchemaStrings()
-                                .Aggregate("namespace CensusDataParser\r\n{\r\nusing System.ComponentModel.DataAnnotation;\r\n\r\n", (current, schemaString) => current + $"\r\n{schemaString}") + "\r\n}";
+                                .Aggregate("namespace CensusDataParser\r\n{\r\nnamespace Generated\r\n{\r\nusing System.ComponentModel.DataAnnotations;\r\n\r\n", (current, schemaString) => current + $"\r\n{schemaString}") + "\r\n}\r\n}";
 
             return output;
         }
 
         public static IEnumerable<string> GetSchemaStrings()
         {
-            foreach (KeyValuePair<string, IEnumerable<TableColumn>> table in AllTables)
+            foreach (KeyValuePair<string, IEnumerable<TableColumn>> table in Tables.OrderBy(o => o.Key))
             {
-                IEnumerable<TableColumn> columns = SetColumnDescriptors(table.Value.OrderBy(o => o.Index));
+                IEnumerable<TableColumn> columns = SetColumnDescriptors(table.Value.Distinct(new TableColumn_EqualityComparer()))
+                    .OrderBy(o => o.Index);
 
                 string tableName = table.Key.Replace("mod", "")
-                                        .Replace(" ", "_")
-                                        .Trim('*', '_')
-                                        .Trim();
+                                        .Replace(" ", "_");
 
                 for (int i = 0; i < 100; i++)
                 {
                     tableName = tableName.Replace($"PT{i}", "")
-                                         .Replace($"PART{i}", "");
+                                         .Replace($"PART{i}", "")
+                                         .Replace($"Part{i}", "");
                 }
-
-                tableName = tableName.Trim();
 
                 if (string.IsNullOrWhiteSpace(tableName))
                 {
                     tableName = table.Key.Replace("mod", "")
-                                     .Replace(" ", "_")
-                                     .Trim('*', '_')
-                                     .Trim();
+                                     .Replace(" ", "_");
                 }
+
+                tableName = tableName.Trim('*', '_')
+                                     .Trim();
 
                 string output = columns.Aggregate($"public class {tableName}\r\n{{", (current, column) => current + $"\r\n{column}") + "\r\n}";
                 yield return output;
@@ -136,21 +133,21 @@ namespace CensusDataParser
 
             foreach (TableColumn column in columns)
             {
-                if (column.Name == "P024006")
+                switch (column.Name)
                 {
-                    column.Name = "P0240006";
-                }
-                else if (column.Name == "SDELEM")
-                {
-                    column.Name = "SDELM";
-                }
-                else
-                {
-                    column.Name = column.Name.Trim();
+                    case "P024006":
+                        column.Name = "P0240006";
+                        break;
+                    case "SDELEM":
+                        column.Name = "SDELM";
+                        break;
+                    default:
+                        column.Name = column.Name.Trim();
+                        break;
                 }
 
-                column.Descriptor = dataDescriptors?.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name?.Trim(), StringComparison.OrdinalIgnoreCase));
-                column.GeoDescriptor = geoDataDescriptors?.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name?.Trim(), StringComparison.OrdinalIgnoreCase));
+                column.Descriptor = dataDescriptors?.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
+                column.GeoDescriptor = geoDataDescriptors?.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
 
                 string[] skipFields = {"DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE"};
 
