@@ -11,4 +11,4 @@ I've currently got the application looking at the access database provided as a 
 
 Next few commits will add functionality for actually looking into each state's zip file (to access the .SF# files) and then iterate through them for processing to a SQL Server database.
 
-DISCLAIMER: Data utilized in this application is all sourced via the US Census Bureau
+DISCLAIMER: Data utilized in this application is all sourced via the US Census Bureau and the Federal Bureau of Investigations.
