@@ -52,7 +52,7 @@ namespace CensusDataParser
             string schemaOutputPath = ConfigurationManager.AppSettings["SchemaOutputPath"];
             string schemaOutputFile = $@"{schemaOutputPath}\Census_Models.cs";
 
-            CensusDataParser.OutputSchemaStrings(filePath: schemaOutputFile);
+            CensusDataParser.OutputSchemaString(filePath: schemaOutputFile);
 
             Console.ReadKey();
         }

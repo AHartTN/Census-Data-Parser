@@ -41,6 +41,7 @@ namespace CensusDataParser.Generated.SF1
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Data.OleDb;
+    using System.Globalization;
     using Enumerators;
     #endregion
 
@@ -111,7 +112,7 @@ namespace CensusDataParser.Generated.SF1
                     }
                     if (row[2] != DBNull.Value)
                     {
-                        FIELD_SIZE = (string)row[2];
+                        FIELD_SIZE = ((double)row[2]).ToString(CultureInfo.InvariantCulture);
                     }
                     break;
                 case CensusFileType.AdvanceGroupQuarters:

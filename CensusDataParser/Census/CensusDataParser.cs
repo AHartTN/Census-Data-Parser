@@ -72,6 +72,7 @@ namespace CensusDataParser
                                                                                                   .Union(Summary2File.GeoDataDescriptors)
                                                                                                   .Distinct();
 
+        #region Schema Retrieval
         public static string GetSchemaString()
         {
             string output = GetSchemaStrings()
@@ -80,7 +81,7 @@ namespace CensusDataParser
             return output;
         }
 
-        public static IEnumerable<string> GetSchemaStrings()
+        private static IEnumerable<string> GetSchemaStrings()
         {
             foreach (KeyValuePair<string, IEnumerable<TableColumn>> table in Tables.OrderBy(o => o.Key))
             {
@@ -111,7 +112,7 @@ namespace CensusDataParser
             }
         }
 
-        public static void OutputSchemaStrings(bool outputToConsole = true, string filePath = null)
+        public static void OutputSchemaString(bool outputToConsole = true, string filePath = null)
         {
             string schemaString = GetSchemaString();
             if (!string.IsNullOrWhiteSpace(filePath))
@@ -132,7 +133,7 @@ namespace CensusDataParser
             }
         }
 
-        public static IEnumerable<TableColumn> SetColumnDescriptors(IEnumerable<TableColumn> columns)
+        private static IEnumerable<TableColumn> SetColumnDescriptors(IEnumerable<TableColumn> columns)
         {
             DATA_FIELD_DESCRIPTORS[] dataDescriptors = DataDescriptors.ToArray();
             GeoHeader_Specifications[] geoDataDescriptors = GeoDataDescriptors.ToArray();
@@ -155,7 +156,7 @@ namespace CensusDataParser
                 column.Descriptor = dataDescriptors?.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
                 column.GeoDescriptor = geoDataDescriptors?.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
 
-                string[] skipFields = {"DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE"};
+                string[] skipFields = { "DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE" };
 
                 if (column.Descriptor == null
                     && column.GeoDescriptor == null
@@ -168,5 +169,10 @@ namespace CensusDataParser
                 yield return column;
             }
         }
+        #endregion Schema Retrieval
+
+        #region Data Retrieval
+
+        #endregion Data Retrieval
     }
 }
