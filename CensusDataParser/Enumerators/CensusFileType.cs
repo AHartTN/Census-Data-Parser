@@ -1,11 +1,11 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:22 PM
+// Authored: 12/26/2015 4:11 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: DATA_FIELD_DESCRIPTORS_EqualityComparer.cs
+// File: CensusFileType.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,37 +35,21 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.Enumerators
 {
-    #region Using Directives
-    using System.Collections.Generic;
-    #endregion
-
-    public class DATA_FIELD_DESCRIPTORS_EqualityComparer : IEqualityComparer<DATA_FIELD_DESCRIPTORS>
+    public enum CensusFileType
     {
-        #region Implementation of IEqualityComparer<in DATA_FIELD_DESCRIPTORS>
-        /// <summary>
-        ///     Determines whether the specified objects are equal.
-        /// </summary>
-        /// <returns>
-        ///     true if the specified objects are equal; otherwise, false.
-        /// </returns>
-        /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
-        /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
-        public bool Equals(DATA_FIELD_DESCRIPTORS x, DATA_FIELD_DESCRIPTORS y) { return x.FIELD_CODE == y.FIELD_CODE && x.FIELD_NAME == y.FIELD_NAME; }
-
-        /// <summary>
-        ///     Returns a hash code for the specified object.
-        /// </summary>
-        /// <returns>
-        ///     A hash code for the specified object.
-        /// </returns>
-        /// <param name="obj">The <see cref="T:System.Object" /> for which a hash code is to be returned.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        ///     The type of <paramref name="obj" /> is a reference type and
-        ///     <paramref name="obj" /> is null.
-        /// </exception>
-        public int GetHashCode(DATA_FIELD_DESCRIPTORS obj) { return obj.GetHashCode(); }
-        #endregion
+        Redistricting = 1,
+        AdvanceGroupQuarters = 2,
+        DemographicProfile = 3,
+        SummaryOne = 4,
+        SummaryTwo = 5,
+        IslandAreas_DPSF = 6,
+        AIANSummaryFile = 7,
+        SF1CongressionalDistricts113 = 8,
+        IslandAreas_IASF = 9,
+        IslandAreasDetailedCrossTabulations = 10,
+        IslandAreas_PUMS = 11,
+        Stateside_PUMS = 12
     }
 }

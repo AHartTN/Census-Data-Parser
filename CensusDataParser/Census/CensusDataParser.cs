@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:18 PM
+// Authored: 12/26/2015 4:09 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -42,7 +42,13 @@ namespace CensusDataParser
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Enumerators;
+    using EqualityComparers;
+    using Generated.SF1;
     using Helpers;
+    #endregion
+
+    #region Using Directives
     #endregion
 
     public class CensusDataParser

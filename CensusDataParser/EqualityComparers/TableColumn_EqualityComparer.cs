@@ -1,11 +1,11 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:18 PM
+// Authored: 12/26/2015 4:11 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: Iterations_NOTES.cs
+// File: TableColumn_EqualityComparer.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,69 +35,37 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.EqualityComparers
 {
     #region Using Directives
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.Data.OleDb;
+    using System.Collections.Generic;
     #endregion
 
-    public class Iterations_NOTES
+    public class TableColumn_EqualityComparer : IEqualityComparer<TableColumn>
     {
-        [Key]
-        public int ID { get; set; }
-
-        [Display(Name = "Note", ShortName = "Note", Order = 1)]
-        public string NOTE { get; set; }
-
-        [Display(Name = "Sort ID", ShortName = "Sort ID", Order = 0)]
-        public int? SORT_ID { get; set; }
-
-        public Iterations_NOTES()
-        {
-            // Empty constructor to ensure JSON operability
-        }
-
-        public Iterations_NOTES(OleDbDataReader reader, CensusFileType fileType)
-        {
-            switch (fileType)
-            {
-                case CensusFileType.SummaryTwo:
-                    if (reader[0] != DBNull.Value)
-                    {
-                        SORT_ID = (int?)reader[0];
-                    }
-                    if (reader[1] != DBNull.Value)
-                    {
-                        NOTE = (string)reader[1];
-                    }
-                    break;
-                case CensusFileType.Redistricting:
-                case CensusFileType.AdvanceGroupQuarters:
-                case CensusFileType.DemographicProfile:
-                case CensusFileType.SummaryOne:
-                case CensusFileType.IslandAreas_DPSF:
-                case CensusFileType.AIANSummaryFile:
-                case CensusFileType.SF1CongressionalDistricts113:
-                case CensusFileType.IslandAreas_IASF:
-                case CensusFileType.IslandAreasDetailedCrossTabulations:
-                case CensusFileType.IslandAreas_PUMS:
-                case CensusFileType.Stateside_PUMS:
-                    throw new NotImplementedException("The Iterations table is not included in this specific dataset.");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
-            }
-        }
-
-        #region Overrides of Object
+        #region Implementation of IEqualityComparer<in TableColumn>
         /// <summary>
-        ///     Returns a string that represents the current object.
+        ///     Determines whether the specified objects are equal.
         /// </summary>
         /// <returns>
-        ///     A string that represents the current object.
+        ///     true if the specified objects are equal; otherwise, false.
         /// </returns>
-        public override string ToString() { return $"{SORT_ID} | {NOTE}"; }
+        /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
+        /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
+        public bool Equals(TableColumn x, TableColumn y) { return x.BaseCatalogName == y.BaseCatalogName && x.BaseSchemaName == y.BaseSchemaName && x.BaseColumnName == y.BaseColumnName && x.BaseTableName == y.BaseTableName && x.Index == y.Index && x.Name == y.Name; }
+
+        /// <summary>
+        ///     Returns a hash code for the specified object.
+        /// </summary>
+        /// <returns>
+        ///     A hash code for the specified object.
+        /// </returns>
+        /// <param name="obj">The <see cref="T:System.Object" /> for which a hash code is to be returned.</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        ///     The type of <paramref name="obj" /> is a reference type and
+        ///     <paramref name="obj" /> is null.
+        /// </exception>
+        public int GetHashCode(TableColumn obj) { return obj.GetHashCode(); }
         #endregion
     }
 }

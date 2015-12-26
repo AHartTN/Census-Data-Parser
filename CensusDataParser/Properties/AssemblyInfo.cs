@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:18 PM
+// Authored: 12/26/2015 4:09 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -36,6 +36,7 @@
 #endregion
 
 #region Using Directives
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 #endregion
@@ -44,12 +45,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("CensusDataParser")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Census Data Parser")]
+[assembly: AssemblyDescription("Anthony Hart's US Census Data Parser")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CensusDataParser")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("AH Operations")]
+[assembly: AssemblyProduct("Census Data Parser")]
+[assembly: AssemblyCopyright("Copyright © Anthony Hart 1985-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -74,5 +75,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

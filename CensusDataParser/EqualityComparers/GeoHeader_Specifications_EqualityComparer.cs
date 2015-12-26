@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:22 PM
+// Authored: 12/26/2015 4:11 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -35,10 +35,11 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.EqualityComparers
 {
     #region Using Directives
     using System.Collections.Generic;
+    using Generated.SF1;
     #endregion
 
     public class GeoHeader_Specifications_EqualityComparer : IEqualityComparer<GeoHeader_Specifications>

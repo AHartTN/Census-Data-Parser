@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:18 PM
+// Authored: 12/26/2015 4:09 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -43,6 +43,10 @@ namespace CensusDataParser
     using System.Data;
     using System.Data.OleDb;
     using System.Linq;
+    using Enumerators;
+    using Generated.SF1;
+    using Generated.SF2;
+    using Generated.SF2.Generated;
     using Newtonsoft.Json;
     #endregion
 

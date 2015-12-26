@@ -1,11 +1,11 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 3:22 PM
+// Authored: 12/26/2015 4:11 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: TableColumn_EqualityComparer.cs
+// File: DATA_FIELD_DESCRIPTORS_EqualityComparer.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,15 +35,16 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.EqualityComparers
 {
     #region Using Directives
     using System.Collections.Generic;
+    using Generated.SF1;
     #endregion
 
-    public class TableColumn_EqualityComparer : IEqualityComparer<TableColumn>
+    public class DATA_FIELD_DESCRIPTORS_EqualityComparer : IEqualityComparer<DATA_FIELD_DESCRIPTORS>
     {
-        #region Implementation of IEqualityComparer<in TableColumn>
+        #region Implementation of IEqualityComparer<in DATA_FIELD_DESCRIPTORS>
         /// <summary>
         ///     Determines whether the specified objects are equal.
         /// </summary>
@@ -52,7 +53,7 @@ namespace CensusDataParser
         /// </returns>
         /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
         /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
-        public bool Equals(TableColumn x, TableColumn y) { return x.BaseCatalogName == y.BaseCatalogName && x.BaseSchemaName == y.BaseSchemaName && x.BaseColumnName == y.BaseColumnName && x.BaseTableName == y.BaseTableName && x.Index == y.Index && x.Name == y.Name; }
+        public bool Equals(DATA_FIELD_DESCRIPTORS x, DATA_FIELD_DESCRIPTORS y) { return x.FIELD_CODE == y.FIELD_CODE && x.FIELD_NAME == y.FIELD_NAME; }
 
         /// <summary>
         ///     Returns a hash code for the specified object.
@@ -65,7 +66,7 @@ namespace CensusDataParser
         ///     The type of <paramref name="obj" /> is a reference type and
         ///     <paramref name="obj" /> is null.
         /// </exception>
-        public int GetHashCode(TableColumn obj) { return obj.GetHashCode(); }
+        public int GetHashCode(DATA_FIELD_DESCRIPTORS obj) { return obj.GetHashCode(); }
         #endregion
     }
 }
