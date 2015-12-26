@@ -35,13 +35,11 @@
 // http://www.fbi.gov
 #endregion
 
-#region Using Directives
-#endregion
-
 namespace CensusDataParser
 {
     #region Using Directives
     using System;
+    using System.Configuration;
     #endregion
 
     internal class Program
@@ -51,7 +49,10 @@ namespace CensusDataParser
             Console.BufferHeight = short.MaxValue - 1;
             Console.BufferWidth = Console.BufferWidth * 50;
 
-            CensusDataParser.OutputSchemaStrings(filePath: @"F:\Output\Census_Models.cs");
+            string schemaOutputPath = ConfigurationManager.AppSettings["SchemaOutputPath"];
+            string schemaOutputFile = $@"{schemaOutputPath}\Census_Models.cs";
+
+            CensusDataParser.OutputSchemaStrings(filePath: schemaOutputFile);
 
             Console.ReadKey();
         }

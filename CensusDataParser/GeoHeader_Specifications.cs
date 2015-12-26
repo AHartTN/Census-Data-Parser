@@ -35,9 +35,6 @@
 // http://www.fbi.gov
 #endregion
 
-#region Using Directives
-#endregion
-
 namespace CensusDataParser
 {
     #region Using Directives
