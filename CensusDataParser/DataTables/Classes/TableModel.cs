@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -35,7 +35,7 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.DataTables.Classes
 {
     #region Using Directives
     using System;

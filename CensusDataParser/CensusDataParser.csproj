@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="Enumerators\CensusAccessFileTypes.cs" />
     <Compile Include="Census\CensusDataParser.cs" />
-    <Compile Include="Census\CensusDataURLs.cs" />
+    <Compile Include="Census\CensusDataPaths.cs" />
     <Compile Include="EqualityComparers\DATA_FIELD_DESCRIPTORS_EqualityComparer.cs" />
     <Compile Include="Generated\SF2\Table_Names.cs" />
     <Compile Include="Generated\SF2\DataDictionary.cs" />

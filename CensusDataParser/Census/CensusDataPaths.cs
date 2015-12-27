@@ -1,11 +1,11 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: CensusDataURLs.cs
+// File: CensusDataPaths.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,13 +35,13 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.Census
 {
     #region Using Directives
     using System.Configuration;
     #endregion
 
-    public class CensusDataURLs
+    public class CensusDataPaths
     {
         public static string AssembledCongressionalDistrictsPath => $@"{(UseFtp
                                                                              ? FtpRootPath

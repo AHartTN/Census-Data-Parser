@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:11 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -69,72 +69,72 @@ namespace CensusDataParser.Generated.SF1
             // Empty constructor to ensure JSON operability
         }
 
-        public DATA_FIELD_DESCRIPTORS(OleDbDataReader row, CensusFileType summaryFileType)
+        public DATA_FIELD_DESCRIPTORS(OleDbDataReader reader, CensusFileType summaryFileType)
         {
             switch (summaryFileType)
             {
                 case CensusFileType.SummaryOne:
                 case CensusFileType.SF1CongressionalDistricts113:
-                    if (row[0] != DBNull.Value)
+                    if (reader[0] != DBNull.Value)
                     {
-                        SORT_ID = (int?)row[0];
+                        SORT_ID = (int?)reader[0];
                     }
-                    if (row[1] != DBNull.Value)
+                    if (reader[1] != DBNull.Value)
                     {
-                        SEGMENT = (string)row[1];
+                        SEGMENT = (string)reader[1];
                     }
-                    if (row[2] != DBNull.Value)
+                    if (reader[2] != DBNull.Value)
                     {
-                        TABLE_NUMBER = (string)row[2];
+                        TABLE_NUMBER = (string)reader[2];
                     }
-                    if (row[3] != DBNull.Value)
+                    if (reader[3] != DBNull.Value)
                     {
-                        FIELD_NAME = (string)row[3];
+                        FIELD_NAME = (string)reader[3];
                     }
-                    if (row[4] != DBNull.Value)
+                    if (reader[4] != DBNull.Value)
                     {
-                        FIELD_CODE = (string)row[4];
+                        FIELD_CODE = (string)reader[4];
                     }
-                    if (row[5] != DBNull.Value)
+                    if (reader[5] != DBNull.Value)
                     {
-                        DECIMAL = (short)row[5];
+                        DECIMAL = (short)reader[5];
                     }
                     break;
                 case CensusFileType.SummaryTwo:
-                    if (row[0] != DBNull.Value)
+                    if (reader[0] != DBNull.Value)
                     {
-                        SORT_ID = (int)row[0];
+                        SORT_ID = (int)reader[0];
                     }
-                    if (row[1] != DBNull.Value)
+                    if (reader[1] != DBNull.Value)
                     {
-                        TABLE_NUMBER = (string)row[1];
+                        TABLE_NUMBER = (string)reader[1];
                     }
-                    if (row[2] != DBNull.Value)
+                    if (reader[2] != DBNull.Value)
                     {
-                        SEGMENT = (string)row[2];
+                        SEGMENT = (string)reader[2];
                     }
-                    if (row[3] != DBNull.Value)
+                    if (reader[3] != DBNull.Value)
                     {
-                        FIELD_NAME = (string)row[3];
+                        FIELD_NAME = (string)reader[3];
                     }
-                    if (row[4] != DBNull.Value)
+                    if (reader[4] != DBNull.Value)
                     {
-                        FIELD_CODE = (string)row[4];
+                        FIELD_CODE = (string)reader[4];
                     }
                     break;
                 case CensusFileType.Redistricting:
                 case CensusFileType.DemographicProfile:
-                    if (row[0] != DBNull.Value)
+                    if (reader[0] != DBNull.Value)
                     {
-                        FIELD_NAME = (string)row[0];
+                        FIELD_NAME = (string)reader[0];
                     }
-                    if (row[1] != DBNull.Value)
+                    if (reader[1] != DBNull.Value)
                     {
-                        FIELD_CODE = (string)row[1];
+                        FIELD_CODE = (string)reader[1];
                     }
-                    if (row[2] != DBNull.Value)
+                    if (reader[2] != DBNull.Value)
                     {
-                        SEGMENT = (row[2] as double?)?.ToString() ?? (string)row[2];
+                        SEGMENT = (reader[2] as double?)?.ToString() ?? (string)reader[2];
                     }
                     break;
                 case CensusFileType.AdvanceGroupQuarters:

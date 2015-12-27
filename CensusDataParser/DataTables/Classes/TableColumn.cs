@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -35,10 +35,11 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.DataTables.Classes
 {
     #region Using Directives
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.Data;
     using Generated.SF1;
     #endregion
@@ -145,12 +146,48 @@ namespace CensusDataParser
             {
                 BaseColumnName = (string)row[17];
             }
+
+            if (IsLong)
+                DataType = typeof(long);
         }
 
         public TableColumn SetIndex(int index)
         {
             Index = index;
             return this;
+        }
+
+        public string ColumnName => Name.Replace(" ", "_")
+                                          .Trim('_', '*')
+                                          .Trim();
+
+        public string DisplayName => Descriptor?.FIELD_NAME.Trim('_')
+                                                 .Trim() ?? GeoDescriptor?.FIELD.Trim('_')
+                                                                          .Trim() ?? Name;
+
+        public string DataTypeString => DataType != typeof(string) && AllowDbNull
+                                             ? $"System.Nullable<{DataType}>"
+                                             : $"{DataType}";
+
+        public string AttributeString => GetAttributeString();
+        public string PropertyString => $"public {DataTypeString} {ColumnName} {{ get; set; }}";
+        
+        private string GetAttributeString()
+        {
+            string output = "";
+            if (IsKey)
+            {
+                output += "\t\t[Key]\r\n";
+            }
+            output += $"\t\t[Column(\"{ColumnName}\", Order = {Index})]\r\n";
+            if (DataType == typeof(string))
+            {
+                output += $"\t\t[MaxLength({Size}, \"{{0}} must be between {{2}} and {{1}} characters\")]\r\n";
+            }
+
+            output += $"\t\t[Display(Name = \"{DisplayName}\", ShortName = \"{DisplayName}\", Order = {Index}){(IsKey ? ", Key" : "")}]";
+
+            return output;
         }
 
         #region Overrides of Object
@@ -162,19 +199,7 @@ namespace CensusDataParser
         /// </returns>
         public override string ToString()
         {
-            string columnName = Name.Replace(" ", "_")
-                                    .Trim('_', '*')
-                                    .Trim();
-            string displayName = Descriptor?.FIELD_NAME.Trim('_')
-                                            .Trim() ?? GeoDescriptor?.FIELD.Trim('_')
-                                                                     .Trim() ?? Name;
-            string dataType = AllowDbNull && DataType != typeof (string)
-                                  ? $"System.Nullable<{DataType}>"
-                                  : $"{DataType}";
-
-            string attributeString = $"[Display(Name = \"{displayName}\", ShortName = \"{displayName}\", Order = {Index}){(IsKey ? ", Key" : "")}]";
-            string propertyString = $"public {dataType} {columnName} {{ get; set; }}";
-            return $"\t{attributeString}\r\n\t{propertyString}";
+            return $"{AttributeString}\r\n\t\t{PropertyString}";
         }
         #endregion
     }

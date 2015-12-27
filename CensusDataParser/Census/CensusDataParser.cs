@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -35,48 +35,54 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.Census
 {
     #region Using Directives
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using DataTables.Classes;
     using Enumerators;
     using EqualityComparers;
     using Generated.SF1;
     using Helpers;
     #endregion
 
-    #region Using Directives
-    #endregion
-
     public class CensusDataParser
     {
-        public static readonly CensusFile CongressionalDistrictsFile = new CensusFile(CensusDataURLs.CongressionalDistrictsAccessFile, CensusFileType.SF1CongressionalDistricts113);
-        public static readonly CensusFile DemographicProfileFile = new CensusFile(CensusDataURLs.DemographicProfileAccessFile, CensusFileType.DemographicProfile);
-        public static readonly CensusFile RedistrictingFile = new CensusFile(CensusDataURLs.RedistrictingAccessFile, CensusFileType.Redistricting);
-        public static readonly CensusFile Summary1File = new CensusFile(CensusDataURLs.Summary1AccessFile, CensusFileType.SummaryOne);
-        public static readonly CensusFile Summary2File = new CensusFile(CensusDataURLs.Summary2AccessFile, CensusFileType.SummaryTwo);
+        public static readonly CensusFile CongressionalDistrictsFile = new CensusFile(CensusDataPaths.CongressionalDistrictsAccessFile, CensusFileType.SF1CongressionalDistricts113);
+        public static readonly CensusFile DemographicProfileFile = new CensusFile(CensusDataPaths.DemographicProfileAccessFile, CensusFileType.DemographicProfile);
+        public static readonly CensusFile RedistrictingFile = new CensusFile(CensusDataPaths.RedistrictingAccessFile, CensusFileType.Redistricting);
+        public static readonly CensusFile Summary1File = new CensusFile(CensusDataPaths.Summary1AccessFile, CensusFileType.SummaryOne);
+        public static readonly CensusFile Summary2File = new CensusFile(CensusDataPaths.Summary2AccessFile, CensusFileType.SummaryTwo);
+
+        public static readonly IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
+                                                                                                      .Union(Summary1File.DataDescriptors)
+                                                                                                      .Union(Summary2File.DataDescriptors)
+                                                                                                      .Union(CongressionalDistrictsFile.DataDescriptors)
+                                                                                                      .Distinct();
+
+        public static readonly IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
+                                                                                                           .Union(Summary2File.GeoDataDescriptors)
+                                                                                                           .Distinct();
 
         public static readonly Dictionary<string, IEnumerable<TableColumn>> Tables = Summary1File.DataTables.Union(Summary2File.DataTables)
                                                                                                  .ToDictionary(k => k.Key, v => v.Value);
 
-        public static IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingFile.DataDescriptors.Union(DemographicProfileFile.DataDescriptors)
-                                                                                             .Union(Summary1File.DataDescriptors)
-                                                                                             .Union(Summary2File.DataDescriptors)
-                                                                                             .Union(CongressionalDistrictsFile.DataDescriptors)
-                                                                                             .Distinct();
-
-        public static IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingFile.GeoDataDescriptors.Union(DemographicProfileFile.GeoDataDescriptors)
-                                                                                                  .Union(Summary2File.GeoDataDescriptors)
-                                                                                                  .Distinct();
+        #region Data Retrieval
+        public static void ProcessData() { }
+        #endregion Data Retrieval
 
         #region Schema Retrieval
         public static string GetSchemaString()
         {
-            string output = GetSchemaStrings()
-                                .Aggregate("namespace CensusDataParser\r\n{\r\nnamespace Generated\r\n{\r\nusing System.ComponentModel.DataAnnotations;\r\n\r\n", (current, schemaString) => current + $"\r\n{schemaString}") + "\r\n}\r\n}";
+            string rootNamespace = typeof(Program).Namespace;
+            string namespaceString = $"namespace {rootNamespace}.Generated";
+            string usingDirectives = "\t#region Using Directives\r\n\tusing System;\r\n\tusing System.ComponentModel.DataAnnotations;\r\n\tusing System.Data.OleDb;\r\n\tusing Enumerators;\r\n\t#endregion";
+
+            var schemaStrings = GetSchemaStrings();
+            string output = schemaStrings.Aggregate($"{namespaceString}\r\n{{\r\n{usingDirectives}\r\n\r\n", (current, schemaString) => current + $"\r\n{schemaString}") + "\r\n}\r\n}";
 
             return output;
         }
@@ -85,9 +91,6 @@ namespace CensusDataParser
         {
             foreach (KeyValuePair<string, IEnumerable<TableColumn>> table in Tables.OrderBy(o => o.Key))
             {
-                IEnumerable<TableColumn> columns = SetColumnDescriptors(table.Value.Distinct(new TableColumn_EqualityComparer()))
-                    .OrderBy(o => o.Index);
-
                 string tableName = table.Key.Replace("mod", "")
                                         .Replace(" ", "_");
 
@@ -107,8 +110,33 @@ namespace CensusDataParser
                 tableName = tableName.Trim('*', '_')
                                      .Trim();
 
-                string output = columns.Aggregate($"public class {tableName}\r\n{{", (current, column) => current + $"\r\n{column}") + "\r\n}";
-                yield return output;
+                IEnumerable<TableColumn> columns = SetColumnDescriptors(table.Value.Distinct(new TableColumn_EqualityComparer()))
+                    .OrderBy(o => o.Index);
+
+                string classString = "";
+                string classAttributes = $"\t[Table(\"{tableName}\", \"Census\")]";
+                string classDeclaration = $"\tpublic class {tableName}";
+                string classHeader = $"{classAttributes}\r\n{classDeclaration}";
+
+                classString = columns.Aggregate(classHeader, (current, column) => current + $"\r\n{column}");
+
+                string emptyConstructor = $"\r\n\t\tpublic {tableName}()\r\n\t\t{{\r\n\t\t\t// Empty constructor to ensure JSON/EF interoperability\r\n\t\t}}\r\n";
+
+                classString += emptyConstructor;
+
+                string readerConstructor = $"\t\tpublic {tableName}(OleDbDataReader reader, CensusFileType fileType)\r\n\t\t{{";
+
+                foreach (var a in columns.Select((column, index) => new { Column = column, Index = index }))
+                {
+                    readerConstructor += $"\r\n\t\t\tif(reader[{a.Index}] != DbNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.ColumnName} = ({a.Column.DataTypeString})reader[{a.Index}];\r\n\t\t\t}}";
+                }
+
+                readerConstructor += "\r\n\t\t}";
+
+                classString += readerConstructor;
+                classString += "\r\n\t}";
+
+                yield return classString;
             }
         }
 
@@ -153,8 +181,8 @@ namespace CensusDataParser
                         break;
                 }
 
-                column.Descriptor = dataDescriptors?.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
-                column.GeoDescriptor = geoDataDescriptors?.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
+                column.Descriptor = dataDescriptors.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
+                column.GeoDescriptor = geoDataDescriptors.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
 
                 string[] skipFields = { "DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE" };
 
@@ -170,9 +198,5 @@ namespace CensusDataParser
             }
         }
         #endregion Schema Retrieval
-
-        #region Data Retrieval
-
-        #endregion Data Retrieval
     }
 }

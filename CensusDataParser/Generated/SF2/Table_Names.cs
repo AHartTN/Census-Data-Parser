@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:11 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -44,6 +44,9 @@ namespace CensusDataParser.Generated.SF2
         using System.ComponentModel.DataAnnotations;
         using System.Data.OleDb;
         using Enumerators;
+        #endregion
+
+        #region Using Directives
         #endregion
 
         #region Using Directives

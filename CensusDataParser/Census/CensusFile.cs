@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -35,7 +35,7 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.Census
 {
     #region Using Directives
     using System;
@@ -43,6 +43,7 @@ namespace CensusDataParser
     using System.Data;
     using System.Data.OleDb;
     using System.Linq;
+    using DataTables.Classes;
     using Enumerators;
     using Generated.SF1;
     using Generated.SF2;
@@ -61,6 +62,7 @@ namespace CensusDataParser
         {
             get
             {
+                Console.Write($"\rRetrieving Data Tables for {FileType} from {FilePath}\t\t\t\t\t");
                 Dictionary<string, IEnumerable<TableColumn>> fileFields = new Dictionary<string, IEnumerable<TableColumn>>();
                 IEnumerable<TableModel> tables = Tables.Where(w => !ExcludedFiles.Contains(w.TableName))
                                                        .ToArray();
@@ -85,33 +87,35 @@ namespace CensusDataParser
 
                     fileFields[table.Name] = tableColumns;
                 }
+                Console.Write($"\r{fileFields.Count} Data Tables retrieved for {FileType} from {FilePath}\t\t\t\t\t");
                 return fileFields;
             }
         }
 
+        // public string[] ExcludedFiles => new []{ GeoTable, DataDescriptorsTable, DataDescriptorNotesTable, IterationsTable, IterationNotesTable, GeoDescriptorsTable };
         public string[] ExcludedFiles => new string[] {};
 
         public IEnumerable<TableModel> Tables
         {
             get
             {
+                Console.Write($"\rRetrieving Tables for {FileType} from {FilePath}\t\t\t\t\t");
                 using (OleDbConnection conn = Connection)
                 {
                     conn.Open();
                     DataTable tableSchema = conn.GetSchema("Tables");
                     conn.Close();
-                    IOrderedEnumerable<TableModel> result = tableSchema != null && tableSchema.Rows.Count > 0
+                    TableModel[] result = tableSchema != null && tableSchema.Rows.Count > 0
                                                                 ? tableSchema.Rows.Cast<DataRow>()
                                                                              .Select(row => new TableModel(row))
                                                                              .Where(table => !table.TableName.StartsWith("MSys"))
-                                                                             .OrderBy(o => o.Name)
+                                                                             .OrderBy(o => o.Name).ToArray()
                                                                 : null;
+                    Console.Write($"\r{result?.Length ?? 0} Tables retrieved for {FileType} from {FilePath}\t\t\t\t\t");
                     return result;
                 }
             }
         }
-
-        //public string[] ExcludedFiles => new []{ GeoTable, DataDescriptorsTable, DataDescriptorNotesTable, IterationsTable, IterationNotesTable, GeoDescriptorsTable };
 
         public string FilePath { get; set; }
         public CensusFileType FileType { get; set; }
@@ -130,6 +134,7 @@ namespace CensusDataParser
 
         public IEnumerable<TableColumn> GetTableSchema(string tableName)
         {
+            Console.Write($"\rRetrieving the {tableName} Table Schema for {FileType} from {FilePath}\t\t\t\t\t");
             List<TableColumn> tableColumns = new List<TableColumn>();
 
             if (tableName.EndsWith("mod"))
@@ -183,6 +188,7 @@ namespace CensusDataParser
                         tableColumns[i].Index = i;
                     }
 
+                    Console.Write($"\r{tableName} Table Schema has been retrieved for {FileType} from {FilePath}\t\t\t\t\t");
                     return tableColumns;
                 }
             }

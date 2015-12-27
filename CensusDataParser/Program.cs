@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:09 PM
+// Authored: 12/26/2015 5:31 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -40,6 +40,7 @@ namespace CensusDataParser
     #region Using Directives
     using System;
     using System.Configuration;
+    using Census;
     #endregion
 
     internal class Program
@@ -53,8 +54,6 @@ namespace CensusDataParser
             string schemaOutputFile = $@"{schemaOutputPath}\Census_Models.cs";
 
             CensusDataParser.OutputSchemaString(filePath: schemaOutputFile);
-
-            Console.ReadKey();
         }
     }
 }

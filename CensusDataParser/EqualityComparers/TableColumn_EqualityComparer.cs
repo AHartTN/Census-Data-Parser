@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 4:11 PM
+// Authored: 12/26/2015 5:32 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -39,6 +39,7 @@ namespace CensusDataParser.EqualityComparers
 {
     #region Using Directives
     using System.Collections.Generic;
+    using DataTables.Classes;
     #endregion
 
     public class TableColumn_EqualityComparer : IEqualityComparer<TableColumn>
