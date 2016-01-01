@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 5:31 PM
+// Authored: 12/31/2015 2:56 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -40,20 +40,29 @@ namespace CensusDataParser
     #region Using Directives
     using System;
     using System.Configuration;
-    using Census;
+    using System.Diagnostics;
     #endregion
 
-    internal class Program
+    public class Program
     {
+        public static string OutputPath = ConfigurationManager.AppSettings["OutputPath"];
+        public static string SchemaFileName = $@"Census_Models.cs";
+        public static string SchemaOutputFile = $@"{OutputPath}\{SchemaFileName}";
+
         private static void Main(string[] args)
         {
             Console.BufferHeight = short.MaxValue - 1;
             Console.BufferWidth = Console.BufferWidth * 50;
 
-            string schemaOutputPath = ConfigurationManager.AppSettings["SchemaOutputPath"];
-            string schemaOutputFile = $@"{schemaOutputPath}\Census_Models.cs";
+            CensusDataParser.OutputSchemaString(filePath: SchemaOutputFile);
 
-            CensusDataParser.OutputSchemaString(filePath: schemaOutputFile);
+            //CensusDataParser.ProcessData(CensusFileType.Redistricting);
+            //CensusDataParser.ProcessData(CensusFileType.DemographicProfile);
+            //CensusDataParser.ProcessData(CensusFileType.SummaryOne);
+            //CensusDataParser.ProcessData(CensusFileType.SummaryTwo);
+            //CensusDataParser.ProcessData(CensusFileType.SF1CongressionalDistricts113);
+
+            Debug.WriteLine("END OF APPLICATION");
         }
     }
 }

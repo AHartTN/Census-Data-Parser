@@ -5,7 +5,7 @@
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: FileHelper.cs
+// File: BaseModel.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,68 +35,71 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser.Helpers
+namespace CensusDataParser
 {
     #region Using Directives
     using System;
-    using System.IO;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.Linq;
+    using System.Reflection;
+    using Extensions;
     #endregion
 
-    public class FileHelper
+    public class BaseModel
     {
-        public static void AppendToFile(FileInfo file, string response) { AppendToFile(file, new[] {response}); }
-
-        public static void AppendToFile(FileInfo file, string[] responses)
+        public BaseModel()
         {
-            if (responses == null
-                || !responses.Any())
-            {
-                return;
-            }
+            // Empty for EF/JSON Interoperability
+        }
 
-            if (file.Directory == null
-                || !file.Directory.Exists
-                || !file.Exists)
-            {
-                WriteToFile(file, responses[0]);
+        public BaseModel(string csvLine) { PopulateFromCsvString(csvLine); }
 
-                if (responses.Length > 1)
+        public BaseModel(IEnumerable<string> values) { PopulateFromCollection(values); }
+
+        private PropertyInfo GetProperty(int index)
+        {
+            return (from property in GetType()
+                        .GetProperties()
+                    let displayAttribute = property.GetCustomAttribute<DisplayAttribute>()
+                    let idx = displayAttribute.Order
+                    where idx == index
+                    select property).FirstOrDefault();
+        }
+
+        public void PopulateFromCollection(IEnumerable<string> items)
+        {
+            foreach (var item in items.Select((s, i) => new
+                                                        {
+                                                            Value = s,
+                                                            Index = i
+                                                        }))
+            {
+                PropertyInfo property = GetProperty(item.Index);
+
+                object value = item.Value;
+                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                // May include scientific notation in decimals.
+                // We need to make sure all decimals are clean before parsing
+                if (t == typeof (decimal))
                 {
-                    File.AppendAllLines(file.FullName, responses.Skip(1));
+                    value = decimal.Parse(item.Value, NumberStyles.Any)
+                                   .ToString(CultureInfo.InvariantCulture);
                 }
-            }
-            else
-            {
-                File.AppendAllLines(file.FullName, responses);
+
+                object safeValue = Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
+                property.SetValue(this, safeValue, null);
             }
         }
 
-        public static void WriteToFile(FileInfo file, string response)
+        public void PopulateFromCsvString(string csvLine)
         {
-            if (string.IsNullOrWhiteSpace(response))
-            {
-                return;
-            }
-
-            if (file.Directory == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (file.Directory != null
-                && !file.Directory.Exists)
-            {
-                file.Directory.Create();
-            }
-
-            using (FileStream fs = File.Create(file.FullName))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.WriteLine(response);
-                }
-            }
+            IEnumerable<string> values = csvLine.SplitCSV();
+            PopulateFromCollection(values);
         }
+
+        public void PopulateFromDelimitedString(string delimitedString, char delimiter) { PopulateFromCollection(delimitedString.Split(delimiter)); }
     }
 }

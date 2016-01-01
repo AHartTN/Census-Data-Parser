@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/26/2015 5:32 PM
+// Authored: 12/31/2015 2:56 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,19 +37,52 @@
 
 namespace CensusDataParser.Enumerators
 {
+    #region Using Directives
+    using System.ComponentModel.DataAnnotations;
+    #endregion
+
     public enum CensusFileType
     {
+        [Display(Name = "Redistricting File", ShortName = "PL", Order = 1)]
         Redistricting = 1,
+
+        [Display(Name = "Advanced Group Quarters", ShortName = "SGQ", Order = 2)]
         AdvanceGroupQuarters = 2,
+
+        [Display(Name = "Demographic Profile", ShortName = "DP", Order = 3)]
         DemographicProfile = 3,
+
+        [Display(Name = "Demographic Profile (With SF1 Geos)", ShortName = "DP", Order = 4)]
+        DemographicProfileWithSF1Geos = 3,
+
+        [Display(Name = "Summary One", ShortName = "SF1", Order = 5)]
         SummaryOne = 4,
+
+        [Display(Name = "Summary Two", ShortName = "SF2", Order = 6)]
         SummaryTwo = 5,
+
+        [Display(Name = "Redistricting File", ShortName = "PL", Order = 7)]
         IslandAreas_DPSF = 6,
+
+        [Display(Name = "Redistricting File", ShortName = "PL", Order = 8)]
         AIANSummaryFile = 7,
+
+        [Display(Name = "Congressional Districts (Summary File 1)", ShortName = "S13", Order = 9)]
         SF1CongressionalDistricts113 = 8,
+
+        [Display(Name = "Island-area IASF ", ShortName = "PL", Order = 10)]
         IslandAreas_IASF = 9,
+
+        [Display(Name = "Island-area - Detailed Cross Tabulations", ShortName = "PL", Order = 11)]
         IslandAreasDetailedCrossTabulations = 10,
+
+        [Display(Name = "Island-area PUMS", ShortName = "PL", Order = 12)]
         IslandAreas_PUMS = 11,
-        Stateside_PUMS = 12
+
+        [Display(Name = "Stateside PUMS", ShortName = "PL", Order = 13)]
+        Stateside_PUMS = 12,
+
+        [Display(Name = "Urban Area Update", ShortName = "UA1", Order = 14)]
+        UrbanAreaUpdate = 13
     }
 }

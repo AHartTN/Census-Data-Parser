@@ -1,11 +1,11 @@
-﻿#region Header
+#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
 // Authored: 12/31/2015 2:56 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: AssemblyInfo.cs
+// File: RedistrictingFileType.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,44 +35,70 @@
 // http://www.fbi.gov
 #endregion
 
-#region Using Directives
-using System.Reflection;
-using System.Runtime.InteropServices;
-#endregion
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
-[assembly: AssemblyTitle("Census Data Parser")]
-[assembly: AssemblyDescription("Anthony Hart's US Census Data Parser")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("AH Operations")]
-[assembly: AssemblyProduct("Census Data Parser")]
-[assembly: AssemblyCopyright("Copyright © Anthony Hart 1985-2016")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-
-[assembly: Guid("78a0a2a0-7b6e-45e8-a0ec-3875483f1776")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+namespace CensusDataParser.Enumerators
+{
+    public enum RedistrictingFileType
+    {
+        File0,
+        File1,
+        File2,
+        File3,
+        File4,
+        File5,
+        File6,
+        File7,
+        File8,
+        File9,
+        File10,
+        File11,
+        File12,
+        File13,
+        File14,
+        File15,
+        File16,
+        File17,
+        File18,
+        File19,
+        File20,
+        File21,
+        File22,
+        File23,
+        File24,
+        File25,
+        File26,
+        File27,
+        File28,
+        File29,
+        File30,
+        File31,
+        File32,
+        File33,
+        File34,
+        File35,
+        File36,
+        File37,
+        File38,
+        File39,
+        File40,
+        File41,
+        File42,
+        File43,
+        File44,
+        File45,
+        File46,
+        File47,
+        File48,
+        File49,
+        File50,
+        File51,
+        File52,
+        File53,
+        File54,
+        File55,
+        File56,
+        File57,
+        File58,
+        File59,
+        File60
+    }
+}

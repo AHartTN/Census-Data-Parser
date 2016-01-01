@@ -1,11 +1,11 @@
-﻿#region Header
+#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
 // Authored: 12/31/2015 2:56 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: AssemblyInfo.cs
+// File: DataDictionary.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,44 +35,27 @@
 // http://www.fbi.gov
 #endregion
 
-#region Using Directives
-using System.Reflection;
-using System.Runtime.InteropServices;
-#endregion
+namespace CensusDataParser.Models.SF2
+{
+    #region Using Directives
+    using System.ComponentModel.DataAnnotations;
+    #endregion
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+    public class DataDictionary
+    {
+        [Display(Name = "FIELD CODE", ShortName = "FIELD CODE", Order = 4)]
+        public string FIELD_CODE { get; set; }
 
-[assembly: AssemblyTitle("Census Data Parser")]
-[assembly: AssemblyDescription("Anthony Hart's US Census Data Parser")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("AH Operations")]
-[assembly: AssemblyProduct("Census Data Parser")]
-[assembly: AssemblyCopyright("Copyright © Anthony Hart 1985-2016")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+        [Display(Name = "FIELD NAME", ShortName = "FIELD NAME", Order = 3)]
+        public string FIELD_NAME { get; set; }
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
+        [Display(Name = "SEGMENT", ShortName = "SEGMENT", Order = 2)]
+        public string SEGMENT { get; set; }
 
-[assembly: ComVisible(false)]
+        [Display(Name = "SORT_ID", ShortName = "SORT_ID", Order = 0)]
+        public int? SORT_ID { get; set; }
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-
-[assembly: Guid("78a0a2a0-7b6e-45e8-a0ec-3875483f1776")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+        [Display(Name = "TABLE", ShortName = "TABLE", Order = 1)]
+        public string TABLE { get; set; }
+    }
+}

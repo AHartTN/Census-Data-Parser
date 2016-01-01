@@ -1,11 +1,11 @@
-﻿#region Header
+#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
 // Authored: 12/31/2015 2:56 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: FileHelper.cs
+// File: Iterations_NOTES.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,68 +35,67 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser.Helpers
+namespace CensusDataParser.Models.SF2
 {
     #region Using Directives
     using System;
-    using System.IO;
-    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.OleDb;
+    using Enumerators;
     #endregion
 
-    public class FileHelper
+    public class Iterations_NOTES
     {
-        public static void AppendToFile(FileInfo file, string response) { AppendToFile(file, new[] {response}); }
+        [Display(Name = "NOTE", ShortName = "NOTE", Order = 1)]
+        public string NOTE { get; set; }
 
-        public static void AppendToFile(FileInfo file, string[] responses)
+        [Display(Name = "SORT ID", ShortName = "SORT ID", Order = 0)]
+        public int? SORT_ID { get; set; }
+
+        public Iterations_NOTES()
         {
-            if (responses == null
-                || !responses.Any())
-            {
-                return;
-            }
+            // Empty constructor to ensure JSON operability
+        }
 
-            if (file.Directory == null
-                || !file.Directory.Exists
-                || !file.Exists)
+        public Iterations_NOTES(OleDbDataReader reader, CensusFileType fileType)
+        {
+            switch (fileType)
             {
-                WriteToFile(file, responses[0]);
-
-                if (responses.Length > 1)
-                {
-                    File.AppendAllLines(file.FullName, responses.Skip(1));
-                }
-            }
-            else
-            {
-                File.AppendAllLines(file.FullName, responses);
+                case CensusFileType.SummaryTwo:
+                    if (reader[0] != DBNull.Value)
+                    {
+                        SORT_ID = (int?)reader[0];
+                    }
+                    if (reader[1] != DBNull.Value)
+                    {
+                        NOTE = (string)reader[1];
+                    }
+                    break;
+                case CensusFileType.Redistricting:
+                case CensusFileType.AdvanceGroupQuarters:
+                case CensusFileType.DemographicProfile:
+                case CensusFileType.SummaryOne:
+                case CensusFileType.IslandAreas_DPSF:
+                case CensusFileType.AIANSummaryFile:
+                case CensusFileType.SF1CongressionalDistricts113:
+                case CensusFileType.IslandAreas_IASF:
+                case CensusFileType.IslandAreasDetailedCrossTabulations:
+                case CensusFileType.IslandAreas_PUMS:
+                case CensusFileType.Stateside_PUMS:
+                    throw new NotImplementedException("The Iterations table is not included in this specific dataset.");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
             }
         }
 
-        public static void WriteToFile(FileInfo file, string response)
-        {
-            if (string.IsNullOrWhiteSpace(response))
-            {
-                return;
-            }
-
-            if (file.Directory == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (file.Directory != null
-                && !file.Directory.Exists)
-            {
-                file.Directory.Create();
-            }
-
-            using (FileStream fs = File.Create(file.FullName))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.WriteLine(response);
-                }
-            }
-        }
+        #region Overrides of Object
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString() { return $"{SORT_ID} | {NOTE}"; }
+        #endregion
     }
 }
