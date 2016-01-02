@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/31/2015 2:56 PM
+// Authored: 01/01/2015 8:30 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -9,7 +9,7 @@
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
-// Unpublished Copyright (c) 1985-2015 Anthony Hart, All Rights Reserved.
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
 // 
 // === NOTICE ===
 // All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
@@ -49,13 +49,32 @@ namespace CensusDataParser
 
     public class TableSchema
     {
-        public string UsingDirectivesString = UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\t\tusing {usingDirective};") + "\r\n\t\t#endregion Using Directives";
-        public string AttributeString => string.Join("\r\n\t\t", AttributeStrings);
+        public string[] BaseConstructors => new[] {$"public {ClassName}(string csvLine) : base(csvLine) {{}}", $"public {ClassName}(string[] values) : base(values) {{}}"};
+        public string BaseConstructorsString => string.Join("\r\n\r\n\t\t", BaseConstructors);
 
-        public string[] AttributeStrings => new[] { $"[Table(\"{CleanName}\")]" };
+        public string BindingHeaderString => $"public class {ClassName} : BaseModel";
 
-        public string[] BaseConstructors => new[] { $"public {CleanName}(string csvLine) : base(csvLine) {{}}", $"public {CleanName}(string[] values) : base(values) {{}}" };
-        public string BaseConstructorsString => string.Join("\r\n\r\n\t\t\t", BaseConstructors);
+        public string BindingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Binding";
+        public string BindingNamespaceString => $"{BindingBaseNamespaceString}";
+
+        public string ClassString
+        {
+            get
+            {
+                string output = $"namespace {BindingNamespaceString}";
+                output += "\r\n{";
+                output += $"\r\n\t{UsingDirectivesString}";
+                output += $"\r\n\r\n\t{BindingHeaderString}";
+                output += "\r\n\t{\r\n\t\t#region Properties";
+                output += $"\r\n\t\t{PropertiesString}";
+                output += "\r\n\t\t#endregion Properties\r\n\r\n\t\t#region Constructors";
+                output += $"\r\n\t\t{BaseConstructorsString}";
+                output += $"\r\n\r\n\t\t{ReaderConstructor}";
+                output += "\r\n\t\t#endregion Constructors";
+                output += "\r\n\t}\r\n}";
+                return output;
+            }
+        }
 
         public string CleanName
         {
@@ -83,47 +102,48 @@ namespace CensusDataParser
             }
         }
 
-        public string DisplayName => CleanName.Replace("_", " ");
+        public string ClassName => $"{FileTypeString}_{CleanName}";
 
-        public string FullName
+        public string DisplayName => CleanName.Replace("_", " ");
+        public string FileTypeString => Enum.GetName(typeof (CensusFileType), FileType);
+
+        public string FluentAPIPropertyStrings => Columns.Aggregate("", (current, column) => current + column.FluentAPIMapString);
+        public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
+
+        public string MappingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Mapping";
+        public string MappingNamespaceString => $"{MappingBaseNamespaceString}";
+
+        public string MappingString
         {
             get
             {
-                string output = "";
-                if (!string.IsNullOrWhiteSpace(Catalog)
-                    && !string.IsNullOrWhiteSpace(Schema))
-                {
-                    output += $"{Catalog}.{Schema}.";
-                }
-                else if (string.IsNullOrWhiteSpace(Catalog)
-                         && !string.IsNullOrWhiteSpace(Schema))
-                {
-                    output += $"{Schema}.";
-                }
-                else if (!string.IsNullOrWhiteSpace(Catalog)
-                         && string.IsNullOrWhiteSpace(Schema))
-                {
-                    output += $"{Catalog}.dbo.";
-                }
-                output += CleanName;
+                string output = $"namespace {MappingNamespaceString}";
+                output += "\r\n{";
+                output += $"\r\n\t{UsingDirectivesString}";
+                output += $"\r\n\r\n\t{MappingHeaderString}";
+                output += "\r\n\t{";
+                output += $"\r\n\t\tpublic {ClassName}Map()";
+                output += "\r\n\t\t{";
+                output += $"\r\n\t\t\tToTable(\"{CleanName}\", \"{FileTypeString}\");";
+                output += FluentAPIPropertyStrings;
+                output += "\r\n\t\t}\r\n\t}\r\n}";
                 return output;
             }
         }
 
-        public string HeaderString => $"public partial class {CleanName} : BaseModel";
-
-        public string NamespaceString => $"namespace {Enum.GetName(typeof(CensusFileType), FileType)}";
-
-        public string PropertiesString => string.Join("\r\n\r\n\t\t\t", Columns?.OrderBy(o => o.Index).Select(s => s?.ToString()) ?? new string[] { });
+        public string PropertiesString => string.Join("\r\n\r\n\t\t", Columns?.OrderBy(o => o.Index)
+                                                                              .Select(s => s?.ToString()) ?? new string[] {});
 
         public string ReaderConstructor => Columns?.Select((column, index) => new
-        {
-            Column = column,
-            Index = index
-        })
-                                                   .Aggregate($"public {CleanName}(OleDbDataReader reader, CensusFileType fileType)\r\n\t\t\t{{", (current, a) => current + $"\r\n\t\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t\t{{\r\n\t\t\t\t\t{a.Column.CleanName} = ({a.Column.DataTypeString})reader[{a.Index}];\r\n\t\t\t\t}}") + "\r\n\t\t\t}";
+                                                                              {
+                                                                                  Column = column,
+                                                                                  Index = index
+                                                                              })
+                                                   .Aggregate($"public {ClassName}(OleDbDataReader reader, CensusFileType fileType)\r\n\t\t{{", (current, a) => current + $"\r\n\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.CleanName} = ({a.Column.TypeString})reader[{a.Index}];\r\n\t\t\t}}") + "\r\n\t\t}";
 
-        public string BaseNamespace { get; set; } = typeof(Program).Namespace;
+        public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
+
+        public string BaseNamespace { get; set; } = typeof (Program).Namespace;
         public string Catalog { get; set; } = ConfigurationManager.AppSettings["DefaultCatalog"];
 
         public IEnumerable<ColumnSchema> Columns { get; set; }
@@ -142,7 +162,7 @@ namespace CensusDataParser
         public string Schema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
         public string Type { get; set; }
 
-        public static string[] UsingDirectives = { "System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.OleDb", "Enumerators" };
+        public string[] UsingDirectives => new[]{"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
 
         public TableSchema()
         {
@@ -206,15 +226,5 @@ namespace CensusDataParser
             Date_Created = DateTime.UtcNow;
             Date_Modified = DateTime.UtcNow;
         }
-
-        #region Overrides of Object
-        /// <summary>
-        ///     Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        ///     A string that represents the current object.
-        /// </returns>
-        public override string ToString() { return $"{NamespaceString}\r\n\t{{\r\n\t\t{UsingDirectivesString}\r\n\r\n\t\t{AttributeString}\r\n\t\t{HeaderString}\r\n\t\t{{\r\n\t\t\t#region Properties\r\n\t\t\t{PropertiesString}\r\n\t\t\t#endregion Properties\r\n\r\n\t\t\t#region Constructors\r\n\t\t\t{BaseConstructorsString}\r\n\r\n\t\t\t{ReaderConstructor}\r\n\t\t\t#endregion Constructors\r\n\t\t}}\r\n\t}}"; }
-        #endregion
     }
 }

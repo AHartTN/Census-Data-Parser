@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/31/2015 2:56 PM
+// Authored: 01/01/2015 8:30 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -9,7 +9,7 @@
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
-// Unpublished Copyright (c) 1985-2015 Anthony Hart, All Rights Reserved.
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
 // 
 // === NOTICE ===
 // All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
@@ -44,6 +44,7 @@ namespace CensusDataParser
     using System.IO.Compression;
     using System.Linq;
     using Enumerators;
+    using Extensions;
     using Helpers;
     using Models.SF1;
     #endregion
@@ -51,19 +52,18 @@ namespace CensusDataParser
     public class CensusDataParser : BaseModel
     {
         #region Properties
-
         #region Archive Paths
-        public static readonly string[] DataFilePaths = {CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path};
-        public static readonly string[] AllDataArchivePaths = {CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath};
+        public static readonly string[] DataArchivePaths = { CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path };
+        public static readonly string[] AllDataArchivePaths = { CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath };
         #endregion Archive Paths
 
-        #region Census File Category Schemas
+        #region Access Files
         public static readonly AccessFile CongressionalDistrictsAccessFile = new AccessFile(CensusDataPaths.CongressionalDistrictsAccessFile, CensusFileType.SF1CongressionalDistricts113);
         public static readonly AccessFile DemographicProfileAccessFile = new AccessFile(CensusDataPaths.DemographicProfileAccessFile, CensusFileType.DemographicProfile);
         public static readonly AccessFile RedistrictingAccessFile = new AccessFile(CensusDataPaths.RedistrictingAccessFile, CensusFileType.Redistricting);
         public static readonly AccessFile Summary1AccessFile = new AccessFile(CensusDataPaths.Summary1AccessFile, CensusFileType.SummaryOne);
         public static readonly AccessFile Summary2AccessFile = new AccessFile(CensusDataPaths.Summary2AccessFile, CensusFileType.SummaryTwo);
-        #endregion Census File Category Schemas
+        #endregion Access Files
 
         #region Schema Structures
         public static readonly IEnumerable<TableSchema> TableSchemas = Summary1AccessFile.DataTableSchemas.Union(Summary2AccessFile.DataTableSchemas);
@@ -83,74 +83,63 @@ namespace CensusDataParser
         #endregion Schema Structures
 
         #region Data Archives
-        public static readonly IEnumerable<FileInfo> DataArchives = DataFilePaths.SelectMany(s => new DirectoryInfo(s).EnumerateFiles("*.zip", SearchOption.AllDirectories));
+        public static readonly IEnumerable<FileInfo> DataArchives = DataArchivePaths.SelectMany(s => new DirectoryInfo(s).EnumerateFiles("*.zip", SearchOption.AllDirectories));
 
-        public static readonly IEnumerable<FileInfo> CongressionalDistrictDataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                              .Trim('\\')
-                                                                                                                              .Trim()
-                                                                                                                              .Split('\\')[1].Split('.')[1] == "s13");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> DemographicProfileDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.DemographicProfile.GetShortName())
+                                                                                                                     .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                        .Entries);
 
-        public static readonly IEnumerable<FileInfo> DemographicProfileDataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                           .Trim('\\')
-                                                                                                                           .Trim()
-                                                                                                                           .Split('\\')[1].Split('.')[1] == "dp");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> RedistrictingDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.Redistricting.GetShortName())
+                                                                                                                .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                   .Entries);
 
-        public static readonly IEnumerable<FileInfo> RedistrictingDataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                      .Trim('\\')
-                                                                                                                      .Trim()
-                                                                                                                      .Split('\\')[1].Split('.')[1] == "pl");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> CongressionalDistrictDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SF1CongressionalDistricts113.GetShortName())
+                                                                                                                        .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                           .Entries);
 
-        public static readonly IEnumerable<FileInfo> Summary1DataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                 .Trim('\\')
-                                                                                                                 .Trim()
-                                                                                                                 .Split('\\')[1].Split('.')[1] == "sf1");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> Summary1DataFiles => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryOne.GetShortName())
+                                                                                                        .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                           .Entries);
 
-        public static readonly IEnumerable<FileInfo> Summary2DataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                 .Trim('\\')
-                                                                                                                 .Trim()
-                                                                                                                 .Split('\\')[1].Split('.')[1] == "sf2");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> Summary2DataFiles => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryTwo.GetShortName())
+                                                                                                        .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                           .Entries);
 
-        public static readonly IEnumerable<FileInfo> UrbanUpdateDataArchives = DataArchives.Where(w => DataFilePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                    .Trim('\\')
-                                                                                                                    .Trim()
-                                                                                                                    .Split('\\')[1].Split('.')[1] == "ur1");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> UrbanUpdateDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.UrbanAreaUpdate.GetShortName())
+                                                                                                              .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                 .Entries);
         #endregion
 
         #region AllData Archives
         public static readonly IEnumerable<FileInfo> AllDataArchives = AllDataArchivePaths.SelectMany(s => new DirectoryInfo(s).EnumerateFiles("*.zip", SearchOption.AllDirectories));
 
-        public static readonly IEnumerable<FileInfo> AllCongressionalDistrictDataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                          .Trim('\\')
-                                                                                                                                          .Trim()
-                                                                                                                                          .Split('\\')[1].Split('.')[1] == "s13");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllDemographicProfileDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.DemographicProfile.GetShortName())
+                                                                                                                           .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                              .Entries);
 
-        public static readonly IEnumerable<FileInfo> AllDemographicProfileDataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                       .Trim('\\')
-                                                                                                                                       .Trim()
-                                                                                                                                       .Split('\\')[1].Split('.')[1] == "dp");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllRedistrictingDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.Redistricting.GetShortName())
+                                                                                                                      .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                         .Entries);
 
-        public static readonly IEnumerable<FileInfo> AllRedistrictingDataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                  .Trim('\\')
-                                                                                                                                  .Trim()
-                                                                                                                                  .Split('\\')[1].Split('.')[1] == "pl");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllCongressionalDistrictDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SF1CongressionalDistricts113.GetShortName())
+                                                                                                                              .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                                 .Entries);
 
-        public static readonly IEnumerable<FileInfo> AllSummary1DataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                             .Trim('\\')
-                                                                                                                             .Trim()
-                                                                                                                             .Split('\\')[1].Split('.')[1] == "sf1");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllSummary1DataFiles => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryOne.GetShortName())
+                                                                                                              .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                 .Entries);
 
-        public static readonly IEnumerable<FileInfo> AllSummary2DataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                             .Trim('\\')
-                                                                                                                             .Trim()
-                                                                                                                             .Split('\\')[1].Split('.')[1] == "sf2");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllSummary2DataFiles => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryTwo.GetShortName())
+                                                                                                              .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                 .Entries);
 
-        public static readonly IEnumerable<FileInfo> AllUrbanUpdateDataArchives = AllDataArchives.Where(w => AllDataArchivePaths.Aggregate(w.FullName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                .Trim('\\')
-                                                                                                                                .Trim()
-                                                                                                                                .Split('\\')[1].Split('.')[1] == "ur1");
+        public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllUrbanUpdateDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.UrbanAreaUpdate.GetShortName())
+                                                                                                                    .ToDictionary<FileInfo, string, IEnumerable<ZipArchiveEntry>>(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+                                                                                                                                                                                                                                                                       .Entries);
         #endregion AllData Archives
 
-        //#region Data Files
+        #region Data Files
+
         //public static readonly List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> RedistrictingDataFiles = (from file in RedistrictingDataArchives
         //                                                                                                           select file.FullName
         //                                                                                                           into fullFileName
@@ -215,8 +204,9 @@ namespace CensusDataParser
         //                                                                                                                   let archive = ZipFile.OpenRead(fullFileName)
         //                                                                                                                   let entries = archive.Entries
         //                                                                                                                   select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
-        //#endregion Data Files
-        #endregion
+        #endregion Data Files
+
+        #endregion Properties
 
         #region Data Retrieval
         public static void ProcessData(CensusFileType fileType)
@@ -252,91 +242,16 @@ namespace CensusDataParser
             }
         }
 
-        public static void ProcessRedistrictingFileData()
-        {
-            List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> RedistrictingDataFiles = (from file in RedistrictingDataArchives
-                                                                                                select file.FullName
-                                                                                                into fullFileName
-                                                                                                let aggregatedFileName = DataFilePaths.Aggregate(fullFileName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                      .Trim('\\')
-                                                                                                                                      .Trim()
-                                                                                                let state = aggregatedFileName.Split('\\')[0]
-                                                                                                let fileName = aggregatedFileName.Split('\\')[1]
-                                                                                                let name = fileName.Split('.')[0]
-                                                                                                let archive = ZipFile.OpenRead(fullFileName)
-                                                                                                let entries = archive.Entries
-                                                                                                select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
+        public static void ProcessRedistrictingFileData() { }
 
-            foreach (Tuple<string, string, IEnumerable<ZipArchiveEntry>> file in RedistrictingDataFiles)
-            {
-                Console.WriteLine($"{file.Item1} | {file.Item2} | {file.Item3.Count()}");
-                foreach (ZipArchiveEntry entry in file.Item3)
-                {
-                    Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
-
-                    //using (StreamReader sr = new StreamReader(entry.Open()))
-                    //{
-                    //    while (!sr.EndOfStream)
-                    //    {
-
-                    //    }
-                    //}
-                }
-            }
-        }
-
-        public static void ProcessDemographicProfileFileData()
-        {
-            List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> DemographicProfileDataFiles = (from file in DemographicProfileDataArchives
-                                                                                                     select file.FullName
-                                                                                                     into fullFileName
-                                                                                                     let aggregatedFileName = DataFilePaths.Aggregate(fullFileName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                           .Trim('\\')
-                                                                                                                                           .Trim()
-                                                                                                     let state = aggregatedFileName.Split('\\')[0]
-                                                                                                     let fileName = aggregatedFileName.Split('\\')[1]
-                                                                                                     let name = fileName.Split('.')[0]
-                                                                                                     let archive = ZipFile.OpenRead(fullFileName)
-                                                                                                     let entries = archive.Entries
-                                                                                                     select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
-
-            foreach (Tuple<string, string, IEnumerable<ZipArchiveEntry>> file in DemographicProfileDataFiles)
-            {
-                Console.WriteLine($"{file.Item1} | {file.Item2} | {file.Item3.Count()}");
-                foreach (ZipArchiveEntry entry in file.Item3)
-                {
-                    Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
-
-                    //using (StreamReader sr = new StreamReader(entry.Open()))
-                    //{
-                    //    while (!sr.EndOfStream)
-                    //    {
-
-                    //    }
-                    //}
-                }
-            }
-        }
+        public static void ProcessDemographicProfileFileData() { }
 
         public static void ProcessSummary1FileData()
         {
-            List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> Summary1DataFiles = (from file in Summary1DataArchives
-                                                                                           select file.FullName
-                                                                                           into fullFileName
-                                                                                           let aggregatedFileName = DataFilePaths.Aggregate(fullFileName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                 .Trim('\\')
-                                                                                                                                 .Trim()
-                                                                                           let state = aggregatedFileName.Split('\\')[0]
-                                                                                           let fileName = aggregatedFileName.Split('\\')[1]
-                                                                                           let name = fileName.Split('.')[0]
-                                                                                           let archive = ZipFile.OpenRead(fullFileName)
-                                                                                           let entries = archive.Entries
-                                                                                           select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
-
-            foreach (Tuple<string, string, IEnumerable<ZipArchiveEntry>> file in Summary1DataFiles)
+            foreach (KeyValuePair<string, IEnumerable<ZipArchiveEntry>> file in Summary1DataFiles)
             {
-                Console.WriteLine($"{file.Item1} | {file.Item2} | {file.Item3.Count()}");
-                foreach (ZipArchiveEntry entry in file.Item3)
+                Console.WriteLine($"{file.Key} | {file.Value.Count()}");
+                foreach (ZipArchiveEntry entry in file.Value)
                 {
                     Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
 
@@ -351,144 +266,46 @@ namespace CensusDataParser
             }
         }
 
-        public static void ProcessSummary2FileData()
-        {
-            List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> Summary2DataFiles = (from file in Summary2DataArchives
-                                                                                           select file.FullName
-                                                                                           into fullFileName
-                                                                                           let aggregatedFileName = DataFilePaths.Aggregate(fullFileName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                 .Trim('\\')
-                                                                                                                                 .Trim()
-                                                                                           let state = aggregatedFileName.Split('\\')[0]
-                                                                                           let fileName = aggregatedFileName.Split('\\')[1]
-                                                                                           let name = fileName.Split('.')[0]
-                                                                                           let archive = ZipFile.OpenRead(fullFileName)
-                                                                                           let entries = archive.Entries
-                                                                                           select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
+        public static void ProcessSummary2FileData() { }
 
-            foreach (Tuple<string, string, IEnumerable<ZipArchiveEntry>> file in Summary2DataFiles)
-            {
-                Console.WriteLine($"{file.Item1} | {file.Item2} | {file.Item3.Count()}");
-                foreach (ZipArchiveEntry entry in file.Item3)
-                {
-                    Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
-
-                    //using (StreamReader sr = new StreamReader(entry.Open()))
-                    //{
-                    //    while (!sr.EndOfStream)
-                    //    {
-
-                    //    }
-                    //}
-                }
-            }
-        }
-
-        public static void ProcessCongressionalDistrictsFileData()
-        {
-            List<Tuple<string, string, IEnumerable<ZipArchiveEntry>>> CongressionalDistrictDataFiles = (from file in CongressionalDistrictDataArchives
-                                                                                                        select file.FullName
-                                                                                                        into fullFileName
-                                                                                                        let aggregatedFileName = DataFilePaths.Aggregate(fullFileName, (current, dataPath) => current.Replace(dataPath, ""))
-                                                                                                                                              .Trim('\\')
-                                                                                                                                              .Trim()
-                                                                                                        let state = aggregatedFileName.Split('\\')[0]
-                                                                                                        let fileName = aggregatedFileName.Split('\\')[1]
-                                                                                                        let name = fileName.Split('.')[0]
-                                                                                                        let archive = ZipFile.OpenRead(fullFileName)
-                                                                                                        let entries = archive.Entries
-                                                                                                        select new Tuple<string, string, IEnumerable<ZipArchiveEntry>>(name.Replace("2010", ""), state.Replace("_", ""), entries)).ToList();
-            foreach (Tuple<string, string, IEnumerable<ZipArchiveEntry>> file in CongressionalDistrictDataFiles)
-            {
-                Console.WriteLine($"{file.Item1} | {file.Item2} | {file.Item3.Count()}");
-                foreach (ZipArchiveEntry entry in file.Item3)
-                {
-                    Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
-
-                    //using (StreamReader sr = new StreamReader(entry.Open()))
-                    //{
-                    //    while (!sr.EndOfStream)
-                    //    {
-
-                    //    }
-                    //}
-                }
-            }
-        }
+        public static void ProcessCongressionalDistrictsFileData() { }
         #endregion Data Retrieval
 
         #region Schema Retrieval
-        public static string GetSchemaString()
+        public static IEnumerable<string> GetSchemaStrings() { return AllTableSchemas.Select(schema => schema.ToString()); }
+
+        public static void OutputSchemaStrings(bool outputToConsole = true, string directory = null, bool allTables = false)
         {
-            string rootNamespace = typeof (Program).Namespace;
-            string namespaceString = $"namespace {rootNamespace}.Generated";
-            string usingDirectives = "\t#region Using Directives\r\n\tusing System;\r\n\tusing System.Collections.Generic;\r\n\tusing System.ComponentModel.DataAnnotations;\r\n\tusing System.ComponentModel.DataAnnotations.Schema;\r\n\tusing System.Data.OleDb;\r\n\tusing Enumerators;\r\n\t#endregion";
+            string outputPath = Program.OutputPath;
 
-            IEnumerable<string> schemaStrings = GetSchemaStrings();
-            string output = schemaStrings.Aggregate($"{namespaceString}\r\n{{\r\n", (current, schemaString) => current + $"\r\n\r\n\t{schemaString}") + "\r\n}";
-
-            return output;
-        }
-
-        private static IEnumerable<string> GetSchemaStrings() { return TableSchemas.Select(schema => schema.ToString()); }
-
-        public static void OutputSchemaString(bool outputToConsole = true, string filePath = null)
-        {
-            string schemaString = GetSchemaString();
-            if (!string.IsNullOrWhiteSpace(filePath))
+            DatabaseSchema dbSchema = new DatabaseSchema
             {
-                FileInfo file = new FileInfo(filePath);
+                Name = "RawCensusDataEntities",
+                Tables = allTables
+                                                       ? AllTableSchemas
+                                                       : TableSchemas
+            };
 
-                if (file.Exists)
+            if (!string.IsNullOrWhiteSpace(directory))
+            {
+                FileHelper.WriteToFile(new FileInfo($"{outputPath}\\Context\\{dbSchema.Name}.cs"), dbSchema.ClassString);
+            }
+
+            foreach (TableSchema tableSchema in dbSchema.Tables)
+            {
+                if (!string.IsNullOrWhiteSpace(directory))
                 {
-                    file.Delete();
+                    FileHelper.WriteToFile(new FileInfo($"{outputPath}\\Binding\\{tableSchema.ClassName}.cs"), tableSchema.ClassString);
+                    FileHelper.WriteToFile(new FileInfo($"{outputPath}\\Mapping\\{tableSchema.ClassName}Map.cs"), tableSchema.MappingString);
                 }
 
-                FileHelper.AppendToFile(file, schemaString);
-            }
-
-            if (outputToConsole)
-            {
-                Console.WriteLine(schemaString);
+                if (outputToConsole)
+                {
+                    Console.WriteLine(tableSchema.ClassString);
+                    Console.WriteLine(tableSchema.MappingString);
+                }
             }
         }
-
-        //public static IEnumerable<ColumnSchema> SetColumnDescriptors(IEnumerable<ColumnSchema> columns)
-        //{
-        //    DATA_FIELD_DESCRIPTORS[] dataDescriptors = DataDescriptors.ToArray();
-        //    GeoHeader_Specifications[] geoDataDescriptors = GeoDataDescriptors.ToArray();
-
-        //    foreach (ColumnSchema column in columns)
-        //    {
-        //        switch (column.Name)
-        //        {
-        //            case "P024006":
-        //                column.Name = "P0240006";
-        //                break;
-        //            case "SDELEM":
-        //                column.Name = "SDELM";
-        //                break;
-        //            default:
-        //                column.Name = column.Name.Trim();
-        //                break;
-        //        }
-
-        //        column.Descriptor = dataDescriptors.FirstOrDefault(f => string.Equals(f.FIELD_CODE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
-        //        column.GeoDescriptor = geoDataDescriptors.FirstOrDefault(f => string.Equals(f.DATA_DICTIONARY_REFERENCE?.Trim(), column.Name, StringComparison.OrdinalIgnoreCase));
-
-        //        string[] skipFields = { "DESC", "DECIMAL", "FIELD", "ID", "ITEM", "ITERATIONS", "LEN", "NOTE", "SEGMENT", "SORT_ID", "STUB", "TABLE" };
-
-        //        if (column.Descriptor == null
-        //            && column.GeoDescriptor == null
-        //            && !column.Name.Contains(" ")
-        //            && !skipFields.Contains(column.Name.ToUpperInvariant()))
-        //        {
-        //            Console.WriteLine($"Column missing Descriptors: {column}");
-        //        }
-
-        //        yield return column;
-        //    }
-        //}
         #endregion Schema Retrieval
     }
 }

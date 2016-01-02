@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/31/2015 2:56 PM
+// Authored: 01/01/2015 8:30 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -9,7 +9,7 @@
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
-// Unpublished Copyright (c) 1985-2015 Anthony Hart, All Rights Reserved.
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
 // 
 // === NOTICE ===
 // All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
@@ -40,29 +40,34 @@ namespace CensusDataParser
     #region Using Directives
     using System;
     using System.Configuration;
-    using System.Diagnostics;
+    using Enumerators;
+    //using Generated.Context;
     #endregion
 
     public class Program
     {
-        public static string OutputPath = ConfigurationManager.AppSettings["OutputPath"];
-        public static string SchemaFileName = $@"Census_Models.cs";
-        public static string SchemaOutputFile = $@"{OutputPath}\{SchemaFileName}";
+        public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
 
         private static void Main(string[] args)
         {
             Console.BufferHeight = short.MaxValue - 1;
             Console.BufferWidth = Console.BufferWidth * 50;
 
-            CensusDataParser.OutputSchemaString(filePath: SchemaOutputFile);
+            CensusDataParser.OutputSchemaStrings(directory: OutputPath, allTables: true);
 
-            //CensusDataParser.ProcessData(CensusFileType.Redistricting);
-            //CensusDataParser.ProcessData(CensusFileType.DemographicProfile);
-            //CensusDataParser.ProcessData(CensusFileType.SummaryOne);
-            //CensusDataParser.ProcessData(CensusFileType.SummaryTwo);
-            //CensusDataParser.ProcessData(CensusFileType.SF1CongressionalDistricts113);
+            //if (RawCensusDataEntities.CreateDatabase())
+            //{
 
-            Debug.WriteLine("END OF APPLICATION");
+            //    //CensusDataParser.ProcessData(CensusFileType.Redistricting);
+            //    //CensusDataParser.ProcessData(CensusFileType.DemographicProfile);
+            //    CensusDataParser.ProcessData(CensusFileType.SummaryOne);
+
+            //    //CensusDataParser.ProcessData(CensusFileType.SummaryTwo);
+            //    //CensusDataParser.ProcessData(CensusFileType.SF1CongressionalDistricts113);
+
+            //}
+
+            Console.WriteLine("END OF APPLICATION");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/31/2015 2:56 PM
+// Authored: 01/01/2015 8:30 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -9,7 +9,7 @@
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
-// Unpublished Copyright (c) 1985-2015 Anthony Hart, All Rights Reserved.
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
 // 
 // === NOTICE ===
 // All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained

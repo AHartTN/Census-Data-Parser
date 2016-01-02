@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -56,73 +64,6 @@
     <Compile Include="Attributes\HiddenAttribute.cs" />
     <Compile Include="BaseModel.cs" />
     <Compile Include="DatabaseSchema.cs" />
-    <Compile Include="Generated\DATA_FIELD_DESCRIPTORS.cs" />
-    <Compile Include="Generated\DataDictionary.cs" />
-    <Compile Include="Generated\DataDictionary_NOTES.cs" />
-    <Compile Include="Generated\GeoHeader_Specifications.cs" />
-    <Compile Include="Generated\GEO_HEADER_SF1.cs" />
-    <Compile Include="Generated\Iterations_List.cs" />
-    <Compile Include="Generated\Iterations_NOTES.cs" />
-    <Compile Include="Generated\SF1_00001.cs" />
-    <Compile Include="Generated\SF1_00002.cs" />
-    <Compile Include="Generated\SF1_00003.cs" />
-    <Compile Include="Generated\SF1_00004.cs" />
-    <Compile Include="Generated\SF1_00005.cs" />
-    <Compile Include="Generated\SF1_00006.cs" />
-    <Compile Include="Generated\SF1_00007.cs" />
-    <Compile Include="Generated\SF1_00008.cs" />
-    <Compile Include="Generated\SF1_00009.cs" />
-    <Compile Include="Generated\SF1_00010.cs" />
-    <Compile Include="Generated\SF1_00011.cs" />
-    <Compile Include="Generated\SF1_00012.cs" />
-    <Compile Include="Generated\SF1_00013.cs" />
-    <Compile Include="Generated\SF1_00014.cs" />
-    <Compile Include="Generated\SF1_00015.cs" />
-    <Compile Include="Generated\SF1_00016.cs" />
-    <Compile Include="Generated\SF1_00017.cs" />
-    <Compile Include="Generated\SF1_00018.cs" />
-    <Compile Include="Generated\SF1_00019.cs" />
-    <Compile Include="Generated\SF1_00020.cs" />
-    <Compile Include="Generated\SF1_00021.cs" />
-    <Compile Include="Generated\SF1_00022.cs" />
-    <Compile Include="Generated\SF1_00023.cs" />
-    <Compile Include="Generated\SF1_00024.cs" />
-    <Compile Include="Generated\SF1_00025.cs" />
-    <Compile Include="Generated\SF1_00026.cs" />
-    <Compile Include="Generated\SF1_00027.cs" />
-    <Compile Include="Generated\SF1_00028.cs" />
-    <Compile Include="Generated\SF1_00029.cs" />
-    <Compile Include="Generated\SF1_00030.cs" />
-    <Compile Include="Generated\SF1_00031.cs" />
-    <Compile Include="Generated\SF1_00032.cs" />
-    <Compile Include="Generated\SF1_00033.cs" />
-    <Compile Include="Generated\SF1_00034.cs" />
-    <Compile Include="Generated\SF1_00035.cs" />
-    <Compile Include="Generated\SF1_00036.cs" />
-    <Compile Include="Generated\SF1_00037.cs" />
-    <Compile Include="Generated\SF1_00038.cs" />
-    <Compile Include="Generated\SF1_00039.cs" />
-    <Compile Include="Generated\SF1_00040.cs" />
-    <Compile Include="Generated\SF1_00041.cs" />
-    <Compile Include="Generated\SF1_00042.cs" />
-    <Compile Include="Generated\SF1_00043.cs" />
-    <Compile Include="Generated\SF1_00044.cs" />
-    <Compile Include="Generated\SF1_00045.cs" />
-    <Compile Include="Generated\SF1_00046.cs" />
-    <Compile Include="Generated\SF1_00047.cs" />
-    <Compile Include="Generated\SF2_GeoHeader.cs" />
-    <Compile Include="Generated\SF2_Segment_01.cs" />
-    <Compile Include="Generated\SF2_Segment_02.cs" />
-    <Compile Include="Generated\SF2_Segment_03.cs" />
-    <Compile Include="Generated\SF2_Segment_04.cs" />
-    <Compile Include="Generated\SF2_Segment_05.cs" />
-    <Compile Include="Generated\SF2_Segment_06.cs" />
-    <Compile Include="Generated\SF2_Segment_07.cs" />
-    <Compile Include="Generated\SF2_Segment_08.cs" />
-    <Compile Include="Generated\SF2_Segment_09.cs" />
-    <Compile Include="Generated\SF2_Segment_10.cs" />
-    <Compile Include="Generated\SF2_Segment_11.cs" />
-    <Compile Include="Generated\Table_Names.cs" />
     <Compile Include="TableSchema.cs" />
     <Compile Include="ColumnSchema.cs" />
     <Compile Include="Enumerators\CensusAccessFileTypes.cs" />
@@ -152,7 +93,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

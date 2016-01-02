@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 12/31/2015 2:56 PM
+// Authored: 01/01/2015 8:30 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -9,7 +9,7 @@
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
-// Unpublished Copyright (c) 1985-2015 Anthony Hart, All Rights Reserved.
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
 // 
 // === NOTICE ===
 // All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
@@ -57,9 +57,18 @@ namespace CensusDataParser
                                        .Trim('_', '*')
                                        .Trim();
 
-        public string DataTypeString => DataType != typeof (string) && AllowDbNull
-                                            ? $"System.Nullable<{DataType}>"
-                                            : $"{DataType}";
+        public string DatabaseTypeString => DataType.ToString()
+                                                    .Replace("System.", "")
+                                                    .Replace("Nullable<", "")
+                                                    .Replace(">", "")
+                                                    .Replace("String", "NVARCHAR")
+                                                    .Replace("Int16", "SMALLINT")
+                                                    .Replace("Int32", "INT")
+                                                    .Replace("Int64", "BIGINT")
+                                                    .Replace("Guid", "UNIQUEIDENTIFIER")
+                                                    .Replace("Boolean", "BIT")
+                                                    .Replace("DateTime", "DATETIME")
+                                                    .ToUpperInvariant();
 
         public DATA_FIELD_DESCRIPTORS Descriptor => CensusDataParser.DataDescriptors.FirstOrDefault(f => f.FIELD_CODE == Name);
 
@@ -67,12 +76,56 @@ namespace CensusDataParser
                                                    .Trim();
 
         public string DisplayName => DescriptorName ?? GeoDescriptorName ?? CleanName.Replace("_", " ");
+
+        public string FluentAPIMapString
+        {
+            get
+            {
+                string output = $"\r\n\r\n\t\t\tProperty(p => p.{CleanName})";
+                output += $"\r\n\t\t\t\t.HasColumnName(\"{CleanName}\")";
+                output += $"\r\n\t\t\t\t.HasColumnOrder({Index})";
+                output += $"\r\n\t\t\t\t.HasColumnType(\"{DatabaseTypeString}\")";
+                output += $"\r\n\t\t\t\t.HasDatabaseGeneratedOption(DatabaseGeneratedOption.{(IsAutoIncrement ? "Identity" : "None")})";
+
+                if (DataType == typeof (string))
+                {
+                    output += $"\r\n\t\t\t\t.HasMaxLength({Size})";
+                }
+
+                output += $"\r\n\t\t\t\t.HasParameterName(\"{CleanName}\")";
+
+                output += AllowDbNull
+                              ? $"\r\n\t\t\t\t.IsOptional()"
+                              : $"\r\n\t\t\t\t.IsRequired()";
+                output += ";";
+
+                return output;
+            }
+        }
+
         public GeoHeader_Specifications GeoDescriptor => CensusDataParser.GeoDataDescriptors.FirstOrDefault(f => f.DATA_DICTIONARY_REFERENCE == Name);
 
         public string GeoDescriptorName => GeoDescriptor?.FIELD?.Trim('_')
                                                          .Trim();
 
-        public string PropertyString => $"public {DataTypeString} {CleanName} {{ get; set; }}";
+        public string PropertyString => $"public {TypeString} {CleanName} {{ get; set; }}";
+
+        public string TypeString => DataType.ToString()
+                                            .Replace("System.", "")
+                                            .Replace("Nullable<", "")
+                                            .Replace(">", "")
+                                            .Replace("Boolean", "bool")
+                                            .Replace("Byte", "byte")
+                                            .Replace("Char", "char")
+                                            .Replace("Decimal", "decimal")
+                                            .Replace("Double", "double")
+                                            .Replace("float", "float")
+                                            .Replace("Int16", "short")
+                                            .Replace("Int32", "int")
+                                            .Replace("Int64", "long")
+                                            .Replace("String", "string") + (AllowDbNull && DataType != typeof(string)
+                                                                                ? "?"
+                                                                                : "");
 
         public bool AllowDbNull { get; set; } = true;
 
@@ -188,19 +241,19 @@ namespace CensusDataParser
 
             if (IsKey)
             {
-                output += "[Key]\r\n\t\t\t";
+                output += "[Key]\r\n\t\t";
             }
             if (DataType == typeof (string))
             {
-                output += $"[MaxLength({Size})]\r\n\t\t\t";
+                output += $"[MaxLength({Size})]\r\n\t\t";
             }
 
-            output += $"[ReadOnly({IsReadOnly.ToString().ToLower()})]\r\n\t\t\t";
-            output += $"[Column(\"{CleanName}\", Order = {Index})]\r\n\t\t\t";
+            output += $"[ReadOnly({IsReadOnly.ToString() .ToLower()})]\r\n\t\t";
+            output += $"[Column(\"{CleanName}\", Order = {Index})]\r\n\t\t";
 
             output += IsAutoIncrement
-                          ? $"[DatabaseGenerated(DatabaseGeneratedOption.Identity)]\r\n\t\t\t"
-                          : $"[DatabaseGenerated(DatabaseGeneratedOption.None)]\r\n\t\t\t";
+                          ? $"[DatabaseGenerated(DatabaseGeneratedOption.Identity)]\r\n\t\t"
+                          : $"[DatabaseGenerated(DatabaseGeneratedOption.None)]\r\n\t\t";
 
             output += $"[Display(Name = \"{DisplayName}\", ShortName = \"{DisplayName}\", Order = {Index})]";
 
@@ -220,7 +273,7 @@ namespace CensusDataParser
         /// <returns>
         ///     A string that represents the current object.
         /// </returns>
-        public override string ToString() { return $"{AttributeString}\r\n\t\t\t{PropertyString}"; }
+        public override string ToString() { return $"{AttributeString}\r\n\t\t{PropertyString}"; }
         #endregion
     }
 }
