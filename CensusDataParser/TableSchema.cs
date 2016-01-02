@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/01/2015 8:30 PM
+// Authored: 01/02/2015 12:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -52,10 +52,12 @@ namespace CensusDataParser
         public string[] BaseConstructors => new[] {$"public {ClassName}(string csvLine) : base(csvLine) {{}}", $"public {ClassName}(string[] values) : base(values) {{}}"};
         public string BaseConstructorsString => string.Join("\r\n\r\n\t\t", BaseConstructors);
 
-        public string BindingHeaderString => $"public class {ClassName} : BaseModel";
-
         public string BindingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Binding";
+
+        public string BindingHeaderString => $"public class {ClassName} : BaseModel";
         public string BindingNamespaceString => $"{BindingBaseNamespaceString}";
+
+        public string ClassName => $"{FileTypeString}_{CleanName}";
 
         public string ClassString
         {
@@ -102,15 +104,13 @@ namespace CensusDataParser
             }
         }
 
-        public string ClassName => $"{FileTypeString}_{CleanName}";
-
         public string DisplayName => CleanName.Replace("_", " ");
         public string FileTypeString => Enum.GetName(typeof (CensusFileType), FileType);
 
         public string FluentAPIPropertyStrings => Columns.Aggregate("", (current, column) => current + column.FluentAPIMapString);
-        public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
 
         public string MappingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Mapping";
+        public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
         public string MappingNamespaceString => $"{MappingBaseNamespaceString}";
 
         public string MappingString
@@ -141,6 +141,8 @@ namespace CensusDataParser
                                                                               })
                                                    .Aggregate($"public {ClassName}(OleDbDataReader reader, CensusFileType fileType)\r\n\t\t{{", (current, a) => current + $"\r\n\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.CleanName} = ({a.Column.TypeString})reader[{a.Index}];\r\n\t\t\t}}") + "\r\n\t\t}";
 
+        public string[] UsingDirectives => new[] {"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
+
         public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
 
         public string BaseNamespace { get; set; } = typeof (Program).Namespace;
@@ -161,8 +163,6 @@ namespace CensusDataParser
         public string PropID { get; set; }
         public string Schema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
         public string Type { get; set; }
-
-        public string[] UsingDirectives => new[]{"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
 
         public TableSchema()
         {

@@ -1,0 +1,689 @@
+#region Header
+
+// Author: Anthony Hart (Anthony | Anthony Hart)
+// Authored: 01/02/2016 12:32 PM
+// 
+// Solution: CensusDataParser
+// Project: CensusDataParser
+// File: SummaryOne_SF1_00047Map.cs
+// 
+// Anthony Hart ("ANTHONY") CONFIDENTIAL
+// 
+// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
+// 
+// === NOTICE ===
+// All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
+// herein are proprietary to ANTHONY and may be covered by U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law.
+// Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained
+// from ANTHONY. Access to the source code contained herein is hereby forbidden to anyone except current ANTHONY employees, managers or contractors who have executed 
+// Confidentiality and Non-disclosure agreements explicitly covering such access. 
+// 
+// The copyright notice above does not evidence any actual or intended publication or disclosure of this source code, which includes 
+// information that is confidential and/or proprietary, and is a trade secret, of ANTHONY. ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC PERFORMANCE, 
+// OR PUBLIC DISPLAY OF OR THROUGH USE OF THIS SOURCE CODE WITHOUT THE EXPRESS WRITTEN CONSENT OF ANTHONY IS STRICTLY PROHIBITED, AND IN VIOLATION OF APPLICABLE 
+// LAWS AND INTERNATIONAL TREATIES. THE RECEIPT OR POSSESSION OF THIS SOURCE CODE AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS 
+// TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT MAY DESCRIBE, IN WHOLE OR IN PART.
+// 
+// ANTHONY reserves the right to make public any and all contents of this file at the sole discretion of ANTHONY. In such case, licensing included with said publication(s) will supercede this notice only if made public by ANTHONY.
+// 
+// DISCLAIMERS (When Implemented):
+// MAF/TIGER SHAPEFILES AND CENSUS DATA OBTAINED FROM THE US CENSUS BUREAU VIA FTP.
+// http://www.census.gov
+// ftp://ftp.census.gov
+// 
+// CRIME/POLICE INFORMATION OBTAINED FROM THE FEDERAL BUREAU OF INVESTIGATIONS VIA HTTP
+// http://www.fbi.gov
+#endregion
+
+namespace CensusDataParser.Generated.Mapping
+{
+    #region Using Directives
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration;
+    using Binding;
+    #endregion
+
+    public class SummaryOne_SF1_00047Map : EntityTypeConfiguration<SummaryOne_SF1_00047>
+    {
+        public SummaryOne_SF1_00047Map()
+        {
+            ToTable("SF1_00047", "SummaryOne");
+
+            Property(p => p.FILEID)
+                .HasColumnName("FILEID")
+                .HasColumnOrder(0)
+                .HasColumnType("NVARCHAR")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasMaxLength(255)
+                .HasParameterName("FILEID")
+                .IsOptional();
+
+            Property(p => p.STUSAB)
+                .HasColumnName("STUSAB")
+                .HasColumnOrder(1)
+                .HasColumnType("NVARCHAR")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasMaxLength(255)
+                .HasParameterName("STUSAB")
+                .IsOptional();
+
+            Property(p => p.CHARITER)
+                .HasColumnName("CHARITER")
+                .HasColumnOrder(2)
+                .HasColumnType("NVARCHAR")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasMaxLength(255)
+                .HasParameterName("CHARITER")
+                .IsOptional();
+
+            Property(p => p.CIFSN)
+                .HasColumnName("CIFSN")
+                .HasColumnOrder(3)
+                .HasColumnType("NVARCHAR")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasMaxLength(255)
+                .HasParameterName("CIFSN")
+                .IsOptional();
+
+            Property(p => p.LOGRECNO)
+                .HasColumnName("LOGRECNO")
+                .HasColumnOrder(4)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("LOGRECNO")
+                .IsOptional();
+
+            Property(p => p.HCT0010001)
+                .HasColumnName("HCT0010001")
+                .HasColumnOrder(5)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010001")
+                .IsOptional();
+
+            Property(p => p.HCT0010002)
+                .HasColumnName("HCT0010002")
+                .HasColumnOrder(6)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010002")
+                .IsOptional();
+
+            Property(p => p.HCT0010003)
+                .HasColumnName("HCT0010003")
+                .HasColumnOrder(7)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010003")
+                .IsOptional();
+
+            Property(p => p.HCT0010004)
+                .HasColumnName("HCT0010004")
+                .HasColumnOrder(8)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010004")
+                .IsOptional();
+
+            Property(p => p.HCT0010005)
+                .HasColumnName("HCT0010005")
+                .HasColumnOrder(9)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010005")
+                .IsOptional();
+
+            Property(p => p.HCT0010006)
+                .HasColumnName("HCT0010006")
+                .HasColumnOrder(10)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010006")
+                .IsOptional();
+
+            Property(p => p.HCT0010007)
+                .HasColumnName("HCT0010007")
+                .HasColumnOrder(11)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010007")
+                .IsOptional();
+
+            Property(p => p.HCT0010008)
+                .HasColumnName("HCT0010008")
+                .HasColumnOrder(12)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010008")
+                .IsOptional();
+
+            Property(p => p.HCT0010009)
+                .HasColumnName("HCT0010009")
+                .HasColumnOrder(13)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010009")
+                .IsOptional();
+
+            Property(p => p.HCT0010010)
+                .HasColumnName("HCT0010010")
+                .HasColumnOrder(14)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010010")
+                .IsOptional();
+
+            Property(p => p.HCT0010011)
+                .HasColumnName("HCT0010011")
+                .HasColumnOrder(15)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010011")
+                .IsOptional();
+
+            Property(p => p.HCT0010012)
+                .HasColumnName("HCT0010012")
+                .HasColumnOrder(16)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010012")
+                .IsOptional();
+
+            Property(p => p.HCT0010013)
+                .HasColumnName("HCT0010013")
+                .HasColumnOrder(17)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010013")
+                .IsOptional();
+
+            Property(p => p.HCT0010014)
+                .HasColumnName("HCT0010014")
+                .HasColumnOrder(18)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010014")
+                .IsOptional();
+
+            Property(p => p.HCT0010015)
+                .HasColumnName("HCT0010015")
+                .HasColumnOrder(19)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010015")
+                .IsOptional();
+
+            Property(p => p.HCT0010016)
+                .HasColumnName("HCT0010016")
+                .HasColumnOrder(20)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010016")
+                .IsOptional();
+
+            Property(p => p.HCT0010017)
+                .HasColumnName("HCT0010017")
+                .HasColumnOrder(21)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010017")
+                .IsOptional();
+
+            Property(p => p.HCT0010018)
+                .HasColumnName("HCT0010018")
+                .HasColumnOrder(22)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010018")
+                .IsOptional();
+
+            Property(p => p.HCT0010019)
+                .HasColumnName("HCT0010019")
+                .HasColumnOrder(23)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010019")
+                .IsOptional();
+
+            Property(p => p.HCT0010020)
+                .HasColumnName("HCT0010020")
+                .HasColumnOrder(24)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010020")
+                .IsOptional();
+
+            Property(p => p.HCT0010021)
+                .HasColumnName("HCT0010021")
+                .HasColumnOrder(25)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010021")
+                .IsOptional();
+
+            Property(p => p.HCT0010022)
+                .HasColumnName("HCT0010022")
+                .HasColumnOrder(26)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010022")
+                .IsOptional();
+
+            Property(p => p.HCT0010023)
+                .HasColumnName("HCT0010023")
+                .HasColumnOrder(27)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010023")
+                .IsOptional();
+
+            Property(p => p.HCT0010024)
+                .HasColumnName("HCT0010024")
+                .HasColumnOrder(28)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010024")
+                .IsOptional();
+
+            Property(p => p.HCT0010025)
+                .HasColumnName("HCT0010025")
+                .HasColumnOrder(29)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010025")
+                .IsOptional();
+
+            Property(p => p.HCT0010026)
+                .HasColumnName("HCT0010026")
+                .HasColumnOrder(30)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010026")
+                .IsOptional();
+
+            Property(p => p.HCT0010027)
+                .HasColumnName("HCT0010027")
+                .HasColumnOrder(31)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010027")
+                .IsOptional();
+
+            Property(p => p.HCT0010028)
+                .HasColumnName("HCT0010028")
+                .HasColumnOrder(32)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010028")
+                .IsOptional();
+
+            Property(p => p.HCT0010029)
+                .HasColumnName("HCT0010029")
+                .HasColumnOrder(33)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010029")
+                .IsOptional();
+
+            Property(p => p.HCT0010030)
+                .HasColumnName("HCT0010030")
+                .HasColumnOrder(34)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010030")
+                .IsOptional();
+
+            Property(p => p.HCT0010031)
+                .HasColumnName("HCT0010031")
+                .HasColumnOrder(35)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010031")
+                .IsOptional();
+
+            Property(p => p.HCT0010032)
+                .HasColumnName("HCT0010032")
+                .HasColumnOrder(36)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010032")
+                .IsOptional();
+
+            Property(p => p.HCT0010033)
+                .HasColumnName("HCT0010033")
+                .HasColumnOrder(37)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010033")
+                .IsOptional();
+
+            Property(p => p.HCT0010034)
+                .HasColumnName("HCT0010034")
+                .HasColumnOrder(38)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010034")
+                .IsOptional();
+
+            Property(p => p.HCT0010035)
+                .HasColumnName("HCT0010035")
+                .HasColumnOrder(39)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0010035")
+                .IsOptional();
+
+            Property(p => p.HCT0020001)
+                .HasColumnName("HCT0020001")
+                .HasColumnOrder(40)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020001")
+                .IsOptional();
+
+            Property(p => p.HCT0020002)
+                .HasColumnName("HCT0020002")
+                .HasColumnOrder(41)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020002")
+                .IsOptional();
+
+            Property(p => p.HCT0020003)
+                .HasColumnName("HCT0020003")
+                .HasColumnOrder(42)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020003")
+                .IsOptional();
+
+            Property(p => p.HCT0020004)
+                .HasColumnName("HCT0020004")
+                .HasColumnOrder(43)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020004")
+                .IsOptional();
+
+            Property(p => p.HCT0020005)
+                .HasColumnName("HCT0020005")
+                .HasColumnOrder(44)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020005")
+                .IsOptional();
+
+            Property(p => p.HCT0020006)
+                .HasColumnName("HCT0020006")
+                .HasColumnOrder(45)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020006")
+                .IsOptional();
+
+            Property(p => p.HCT0020007)
+                .HasColumnName("HCT0020007")
+                .HasColumnOrder(46)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020007")
+                .IsOptional();
+
+            Property(p => p.HCT0020008)
+                .HasColumnName("HCT0020008")
+                .HasColumnOrder(47)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020008")
+                .IsOptional();
+
+            Property(p => p.HCT0020009)
+                .HasColumnName("HCT0020009")
+                .HasColumnOrder(48)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020009")
+                .IsOptional();
+
+            Property(p => p.HCT0020010)
+                .HasColumnName("HCT0020010")
+                .HasColumnOrder(49)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020010")
+                .IsOptional();
+
+            Property(p => p.HCT0020011)
+                .HasColumnName("HCT0020011")
+                .HasColumnOrder(50)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020011")
+                .IsOptional();
+
+            Property(p => p.HCT0020012)
+                .HasColumnName("HCT0020012")
+                .HasColumnOrder(51)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020012")
+                .IsOptional();
+
+            Property(p => p.HCT0020013)
+                .HasColumnName("HCT0020013")
+                .HasColumnOrder(52)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0020013")
+                .IsOptional();
+
+            Property(p => p.HCT0030001)
+                .HasColumnName("HCT0030001")
+                .HasColumnOrder(53)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030001")
+                .IsOptional();
+
+            Property(p => p.HCT0030002)
+                .HasColumnName("HCT0030002")
+                .HasColumnOrder(54)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030002")
+                .IsOptional();
+
+            Property(p => p.HCT0030003)
+                .HasColumnName("HCT0030003")
+                .HasColumnOrder(55)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030003")
+                .IsOptional();
+
+            Property(p => p.HCT0030004)
+                .HasColumnName("HCT0030004")
+                .HasColumnOrder(56)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030004")
+                .IsOptional();
+
+            Property(p => p.HCT0030005)
+                .HasColumnName("HCT0030005")
+                .HasColumnOrder(57)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030005")
+                .IsOptional();
+
+            Property(p => p.HCT0030006)
+                .HasColumnName("HCT0030006")
+                .HasColumnOrder(58)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030006")
+                .IsOptional();
+
+            Property(p => p.HCT0030007)
+                .HasColumnName("HCT0030007")
+                .HasColumnOrder(59)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030007")
+                .IsOptional();
+
+            Property(p => p.HCT0030008)
+                .HasColumnName("HCT0030008")
+                .HasColumnOrder(60)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030008")
+                .IsOptional();
+
+            Property(p => p.HCT0030009)
+                .HasColumnName("HCT0030009")
+                .HasColumnOrder(61)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030009")
+                .IsOptional();
+
+            Property(p => p.HCT0030010)
+                .HasColumnName("HCT0030010")
+                .HasColumnOrder(62)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030010")
+                .IsOptional();
+
+            Property(p => p.HCT0030011)
+                .HasColumnName("HCT0030011")
+                .HasColumnOrder(63)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030011")
+                .IsOptional();
+
+            Property(p => p.HCT0030012)
+                .HasColumnName("HCT0030012")
+                .HasColumnOrder(64)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030012")
+                .IsOptional();
+
+            Property(p => p.HCT0030013)
+                .HasColumnName("HCT0030013")
+                .HasColumnOrder(65)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0030013")
+                .IsOptional();
+
+            Property(p => p.HCT0040001)
+                .HasColumnName("HCT0040001")
+                .HasColumnOrder(66)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040001")
+                .IsOptional();
+
+            Property(p => p.HCT0040002)
+                .HasColumnName("HCT0040002")
+                .HasColumnOrder(67)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040002")
+                .IsOptional();
+
+            Property(p => p.HCT0040003)
+                .HasColumnName("HCT0040003")
+                .HasColumnOrder(68)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040003")
+                .IsOptional();
+
+            Property(p => p.HCT0040004)
+                .HasColumnName("HCT0040004")
+                .HasColumnOrder(69)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040004")
+                .IsOptional();
+
+            Property(p => p.HCT0040005)
+                .HasColumnName("HCT0040005")
+                .HasColumnOrder(70)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040005")
+                .IsOptional();
+
+            Property(p => p.HCT0040006)
+                .HasColumnName("HCT0040006")
+                .HasColumnOrder(71)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040006")
+                .IsOptional();
+
+            Property(p => p.HCT0040007)
+                .HasColumnName("HCT0040007")
+                .HasColumnOrder(72)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040007")
+                .IsOptional();
+
+            Property(p => p.HCT0040008)
+                .HasColumnName("HCT0040008")
+                .HasColumnOrder(73)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040008")
+                .IsOptional();
+
+            Property(p => p.HCT0040009)
+                .HasColumnName("HCT0040009")
+                .HasColumnOrder(74)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040009")
+                .IsOptional();
+
+            Property(p => p.HCT0040010)
+                .HasColumnName("HCT0040010")
+                .HasColumnOrder(75)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040010")
+                .IsOptional();
+
+            Property(p => p.HCT0040011)
+                .HasColumnName("HCT0040011")
+                .HasColumnOrder(76)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040011")
+                .IsOptional();
+
+            Property(p => p.HCT0040012)
+                .HasColumnName("HCT0040012")
+                .HasColumnOrder(77)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040012")
+                .IsOptional();
+
+            Property(p => p.HCT0040013)
+                .HasColumnName("HCT0040013")
+                .HasColumnOrder(78)
+                .HasColumnType("INT")
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+                .HasParameterName("HCT0040013")
+                .IsOptional();
+        }
+    }
+}

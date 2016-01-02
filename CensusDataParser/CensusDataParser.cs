@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/01/2015 8:30 PM
+// Authored: 01/02/2015 12:37 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -52,9 +52,10 @@ namespace CensusDataParser
     public class CensusDataParser : BaseModel
     {
         #region Properties
+
         #region Archive Paths
-        public static readonly string[] DataArchivePaths = { CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path };
-        public static readonly string[] AllDataArchivePaths = { CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath };
+        public static readonly string[] DataArchivePaths = {CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path};
+        public static readonly string[] AllDataArchivePaths = {CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath};
         #endregion Archive Paths
 
         #region Access Files
@@ -279,12 +280,12 @@ namespace CensusDataParser
             string outputPath = Program.OutputPath;
 
             DatabaseSchema dbSchema = new DatabaseSchema
-            {
-                Name = "RawCensusDataEntities",
-                Tables = allTables
+                                      {
+                                          Name = "RawCensusDataEntities",
+                                          Tables = allTables
                                                        ? AllTableSchemas
                                                        : TableSchemas
-            };
+                                      };
 
             if (!string.IsNullOrWhiteSpace(directory))
             {

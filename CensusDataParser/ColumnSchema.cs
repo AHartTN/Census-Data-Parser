@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/01/2015 8:30 PM
+// Authored: 01/02/2015 12:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -123,7 +123,7 @@ namespace CensusDataParser
                                             .Replace("Int16", "short")
                                             .Replace("Int32", "int")
                                             .Replace("Int64", "long")
-                                            .Replace("String", "string") + (AllowDbNull && DataType != typeof(string)
+                                            .Replace("String", "string") + (AllowDbNull && DataType != typeof (string)
                                                                                 ? "?"
                                                                                 : "");
 

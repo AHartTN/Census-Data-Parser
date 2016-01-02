@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/01/2015 8:30 PM
+// Authored: 01/02/2015 12:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -40,7 +40,6 @@ namespace CensusDataParser
     #region Using Directives
     using System;
     using System.Configuration;
-    using Enumerators;
     //using Generated.Context;
     #endregion
 

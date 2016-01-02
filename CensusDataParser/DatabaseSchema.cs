@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/01/2015 8:30 PM
+// Authored: 01/02/2015 12:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -46,44 +46,6 @@ namespace CensusDataParser
 
     public class DatabaseSchema
     {
-        public string BaseNamespace { get; set; } = typeof(Program).Namespace;
-        public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
-        public string ContextNamespaceString => $"{BaseNamespace}.{Namespace}.Context";
-        public string Name { get; set; }
-        public string ConnectionName { get; set; } = "DefaultConnection";
-
-        public IEnumerable<TableSchema> Tables { get; set; }
-
-        IEnumerable<IGrouping<CensusFileType, TableSchema>> GroupedTables => Tables.GroupBy(g => g.FileType);
-
-        public string GroupedTablesString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\tpublic virtual DbSet<{t.ClassName}> {t.ClassName}Records {{ get; set; }}")}\r\n\t\t#endregion {table.Key}");
-        public string GroupedTableMapsString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {t.ClassName}Map());")}\r\n\t\t\t#endregion {table.Key}");
-
-        public string TablesString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\tpublic virtual DbSet<{table.ClassName}> {table.ClassName}Records {{ get; set; }}");
-        public string TableMapsString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {table.ClassName}Map());");
-
-        public string CreateDatabaseMethodString
-        {
-            get
-            {
-                string output = "\r\n\r\n\t\tpublic static bool CreateDatabase()";
-                output += "\r\n\t\t{";
-                output += "\r\n\t\t\ttry";
-                output += "\r\n\t\t\t{";
-                output += $"\r\n\t\t\t\tusing (var db = new {Name}())";
-                output += "\r\n\t\t\t\t{";
-                output += "\r\n\t\t\t\t\treturn db.Database.Exists() || db.Database.CreateIfNotExists();";
-                output += "\r\n\t\t\t\t}";
-                output += "\r\n\t\t\t}";
-                output += "\r\n\t\t\tcatch (Exception ex)";
-                output += "\r\n\t\t\t{";
-                output += "\r\n\t\t\t\tthrow new InvalidOperationException(\"The database could not be initialized!\", ex);";
-                output += "\r\n\t\t\t}";
-                output += "\r\n\t\t}";
-                return output;
-            }
-        }
-
         public string ClassString
         {
             get
@@ -108,5 +70,44 @@ namespace CensusDataParser
                 return output;
             }
         }
+
+        public string ContextNamespaceString => $"{BaseNamespace}.{Namespace}.Context";
+
+        public string CreateDatabaseMethodString
+        {
+            get
+            {
+                string output = "\r\n\r\n\t\tpublic static bool CreateDatabase()";
+                output += "\r\n\t\t{";
+                output += "\r\n\t\t\ttry";
+                output += "\r\n\t\t\t{";
+                output += $"\r\n\t\t\t\tusing (var db = new {Name}())";
+                output += "\r\n\t\t\t\t{";
+                output += "\r\n\t\t\t\t\treturn db.Database.Exists() || db.Database.CreateIfNotExists();";
+                output += "\r\n\t\t\t\t}";
+                output += "\r\n\t\t\t}";
+                output += "\r\n\t\t\tcatch (Exception ex)";
+                output += "\r\n\t\t\t{";
+                output += "\r\n\t\t\t\tthrow new InvalidOperationException(\"The database could not be initialized!\", ex);";
+                output += "\r\n\t\t\t}";
+                output += "\r\n\t\t}";
+                return output;
+            }
+        }
+
+        public string GroupedTableMapsString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {t.ClassName}Map());")}\r\n\t\t\t#endregion {table.Key}");
+
+        IEnumerable<IGrouping<CensusFileType, TableSchema>> GroupedTables => Tables.GroupBy(g => g.FileType);
+
+        public string GroupedTablesString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\tpublic virtual DbSet<{t.ClassName}> {t.ClassName}Records {{ get; set; }}")}\r\n\t\t#endregion {table.Key}");
+        public string TableMapsString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {table.ClassName}Map());");
+
+        public string TablesString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\tpublic virtual DbSet<{table.ClassName}> {table.ClassName}Records {{ get; set; }}");
+        public string BaseNamespace { get; set; } = typeof (Program).Namespace;
+        public string ConnectionName { get; set; } = "DefaultConnection";
+        public string Name { get; set; }
+        public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
+
+        public IEnumerable<TableSchema> Tables { get; set; }
     }
 }
