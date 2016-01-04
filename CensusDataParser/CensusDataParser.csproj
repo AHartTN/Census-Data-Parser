@@ -318,7 +318,7 @@
     <Compile Include="TableSchema.cs" />
     <Compile Include="ColumnSchema.cs" />
     <Compile Include="Enumerators\CensusAccessFileTypes.cs" />
-    <Compile Include="CensusDataParser.cs" />
+    <Compile Include="CensusDataHelper.cs" />
     <Compile Include="CensusDataPaths.cs" />
     <Compile Include="Enumerators\CongressionalDistrictsFileType.cs" />
     <Compile Include="Enumerators\DemographicProfileFileType.cs" />

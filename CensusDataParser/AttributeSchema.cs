@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 12:36 PM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,5 +37,5 @@
 
 namespace CensusDataParser
 {
-    public class AttributeSchema {}
+	public class AttributeSchema {}
 }

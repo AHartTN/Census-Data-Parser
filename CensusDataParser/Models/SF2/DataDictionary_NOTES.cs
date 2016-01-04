@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 12:36 PM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,72 +37,72 @@
 
 namespace CensusDataParser.Models.SF2
 {
-    #region Using Directives
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.Data.OleDb;
-    using Enumerators;
-    #endregion
+	#region Using Directives
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using System.Data.OleDb;
+	using Enumerators;
+	#endregion
 
-    public class DataDictionary_NOTES
-    {
-        [Display(Name = "Field Name", ShortName = "Field Name", Order = 2)]
-        public string Field_Name { get; set; }
+	public class DataDictionary_NOTES
+	{
+		[Display(Name = "Field Name", ShortName = "Field Name", Order = 2)]
+		public string Field_Name { get; set; }
 
-        [Display(Name = "SORT_ID", ShortName = "SORT_ID", Order = 0)]
-        public int? SORT_ID { get; set; }
+		[Display(Name = "SORT_ID", ShortName = "SORT_ID", Order = 0)]
+		public int? SORT_ID { get; set; }
 
-        [Display(Name = "Table", ShortName = "Table", Order = 1)]
-        public string Table { get; set; }
+		[Display(Name = "Table", ShortName = "Table", Order = 1)]
+		public string Table { get; set; }
 
-        public DataDictionary_NOTES()
-        {
-            // Empty constructor to ensure JSON operability
-        }
+		public DataDictionary_NOTES()
+		{
+			// Empty constructor to ensure JSON operability
+		}
 
-        public DataDictionary_NOTES(OleDbDataReader reader, CensusFileType fileType)
-        {
-            switch (fileType)
-            {
-                case CensusFileType.SummaryTwo:
-                    if (reader[0] != DBNull.Value)
-                    {
-                        SORT_ID = (int?)reader[0];
-                    }
-                    if (reader[1] != DBNull.Value)
-                    {
-                        Table = (string)reader[1];
-                    }
-                    if (reader[2] != DBNull.Value)
-                    {
-                        Field_Name = (string)reader[2];
-                    }
-                    break;
-                case CensusFileType.Redistricting:
-                case CensusFileType.AdvanceGroupQuarters:
-                case CensusFileType.DemographicProfile:
-                case CensusFileType.SummaryOne:
-                case CensusFileType.IslandAreas_DPSF:
-                case CensusFileType.AIANSummaryFile:
-                case CensusFileType.SF1CongressionalDistricts113:
-                case CensusFileType.IslandAreas_IASF:
-                case CensusFileType.IslandAreasDetailedCrossTabulations:
-                case CensusFileType.IslandAreas_PUMS:
-                case CensusFileType.Stateside_PUMS:
-                    throw new NotImplementedException("The Data Dictionary Notes table is not included in this specific dataset.");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
-            }
-        }
+		public DataDictionary_NOTES(OleDbDataReader reader, CensusFileType fileType)
+		{
+			switch (fileType)
+			{
+				case CensusFileType.SummaryTwo:
+					if (reader[0] != DBNull.Value)
+					{
+						SORT_ID = (int?)reader[0];
+					}
+					if (reader[1] != DBNull.Value)
+					{
+						Table = (string)reader[1];
+					}
+					if (reader[2] != DBNull.Value)
+					{
+						Field_Name = (string)reader[2];
+					}
+					break;
+				case CensusFileType.Redistricting:
+				case CensusFileType.AdvanceGroupQuarters:
+				case CensusFileType.DemographicProfile:
+				case CensusFileType.SummaryOne:
+				case CensusFileType.IslandAreas_DPSF:
+				case CensusFileType.AIANSummaryFile:
+				case CensusFileType.SF1CongressionalDistricts113:
+				case CensusFileType.IslandAreas_IASF:
+				case CensusFileType.IslandAreasDetailedCrossTabulations:
+				case CensusFileType.IslandAreas_PUMS:
+				case CensusFileType.Stateside_PUMS:
+					throw new NotImplementedException("The Data Dictionary Notes table is not included in this specific dataset.");
+				default:
+					throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+			}
+		}
 
-        #region Overrides of Object
-        /// <summary>
-        ///     Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        ///     A string that represents the current object.
-        /// </returns>
-        public override string ToString() { return $"{SORT_ID} | {Table} | {Field_Name}"; }
-        #endregion
-    }
+		#region Overrides of Object
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>
+		///     A string that represents the current object.
+		/// </returns>
+		public override string ToString() { return $"{SORT_ID} | {Table} | {Field_Name}"; }
+		#endregion
+	}
 }

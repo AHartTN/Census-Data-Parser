@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 12:36 PM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,36 +37,73 @@
 
 namespace CensusDataParser
 {
-    #region Using Directives
-    using System;
-    using System.Configuration;
-    //using Generated.Context;
-    #endregion
+	#region Using Directives
+	using System;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Configuration;
+	using System.Data.Entity.ModelConfiguration;
+	using System.Data.Entity.ModelConfiguration.Configuration;
+	using System.Data.Entity.ModelConfiguration.Utilities;
+	using System.Linq;
+	using System.Reflection;
+	using Enumerators;
+	using Generated.Binding;
+	using Generated.Context;
+	using Generated.Mapping;
+	#endregion
 
-    public class Program
-    {
-        public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
+	public class Program
+	{
+		public const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+		public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
 
-        private static void Main(string[] args)
-        {
-            Console.BufferHeight = short.MaxValue - 1;
-            Console.BufferWidth = Console.BufferWidth * 50;
+		private static void Main(string[] args)
+		{
+			Console.BufferHeight = short.MaxValue - 1;
+			Console.BufferWidth = Console.BufferWidth * 50;
 
-            CensusDataParser.OutputSchemaStrings(directory: OutputPath, allTables: true);
+			Dictionary<string, int> columnOrders = GetColumnOrders(new SummaryOne_GEO_HEADER_SF1Map());
+			Console.WriteLine(columnOrders.Count);
+			//CensusDataHelper.OutputSchemaStrings(directory: OutputPath, allTables: true);
 
-            //if (RawCensusDataEntities.CreateDatabase())
-            //{
+			if (RawCensusDataEntities.CreateDatabase())
+			{
+				//CensusDataHelper.ProcessData(CensusFileType.Redistricting);
+				//CensusDataHelper.ProcessData(CensusFileType.DemographicProfile);
+				CensusDataHelper.ProcessData(CensusFileType.SummaryOne);
 
-            //    //CensusDataParser.ProcessData(CensusFileType.Redistricting);
-            //    //CensusDataParser.ProcessData(CensusFileType.DemographicProfile);
-            //    CensusDataParser.ProcessData(CensusFileType.SummaryOne);
+				//CensusDataHelper.ProcessData(CensusFileType.SummaryTwo);
+				//CensusDataHelper.ProcessData(CensusFileType.SF1CongressionalDistricts113);
+			}
 
-            //    //CensusDataParser.ProcessData(CensusFileType.SummaryTwo);
-            //    //CensusDataParser.ProcessData(CensusFileType.SF1CongressionalDistricts113);
+			Console.WriteLine("END OF APPLICATION");
+		}
 
-            //}
+		public static Dictionary<string, int> GetColumnOrders<T>(EntityTypeConfiguration<T> map) where T : class
+		{
+			Type modelType = typeof(T);
+			object configuration = map.GetType().GetProperty("Configuration", BindFlags).GetValue(map);
+			Type configurationType = configuration.GetType();
+			PropertyInfo propertiesConfiguration = configurationType.GetProperty("PrimitivePropertyConfigurations", BindFlags);
+			IEnumerable propertyValues = propertiesConfiguration.GetValue(configuration) as IEnumerable;
 
-            Console.WriteLine("END OF APPLICATION");
-        }
-    }
+			if (propertyValues == null)
+				return null;
+
+			foreach (object propertyValue in propertyValues)
+			{
+				Type propertyValueType = propertyValue.GetType();
+				PropertyInfo keyProperty = propertyValueType.GetProperty("Key", BindFlags);
+				PropertyInfo valueProperty = propertyValueType.GetProperty("Value", BindFlags);
+
+				object keyValue = keyProperty.GetValue(propertyValue);
+				object valueValue = valueProperty.GetValue(propertyValue);
+
+				Console.WriteLine();
+			}
+
+			return null;
+		}
+	}
 }

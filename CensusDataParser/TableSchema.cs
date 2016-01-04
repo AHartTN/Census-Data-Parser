@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 12:36 PM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,194 +37,203 @@
 
 namespace CensusDataParser
 {
-    #region Using Directives
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Data;
-    using System.Linq;
-    using Enumerators;
-    using Extensions;
-    #endregion
+	#region Using Directives
+	using System;
+	using System.Collections.Generic;
+	using System.Configuration;
+	using System.Data;
+	using System.Linq;
+	using Enumerators;
+	using Extensions;
+	#endregion
 
-    public class TableSchema
-    {
-        public string[] BaseConstructors => new[] {$"public {ClassName}(string csvLine) : base(csvLine) {{}}", $"public {ClassName}(string[] values) : base(values) {{}}"};
-        public string BaseConstructorsString => string.Join("\r\n\r\n\t\t", BaseConstructors);
+	public class TableSchema
+	{
+		public string[] BaseConstructors => new[] {$"public {ClassName}(string csvLine) : base(csvLine) {{}}", $"public {ClassName}(string[] values) : base(values) {{}}"};
+		public string BaseConstructorsString => string.Join("\r\n\r\n\t\t", BaseConstructors);
 
-        public string BindingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Binding";
+		public string BindingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Binding";
 
-        public string BindingHeaderString => $"public class {ClassName} : BaseModel";
-        public string BindingNamespaceString => $"{BindingBaseNamespaceString}";
+		public string BindingHeaderString => $"public class {ClassName} : BaseModel";
+		public string BindingNamespaceString => $"{BindingBaseNamespaceString}";
 
-        public string ClassName => $"{FileTypeString}_{CleanName}";
+		public string ClassName => $"{FileTypeString}_{CleanName}";
 
-        public string ClassString
-        {
-            get
-            {
-                string output = $"namespace {BindingNamespaceString}";
-                output += "\r\n{";
-                output += $"\r\n\t{UsingDirectivesString}";
-                output += $"\r\n\r\n\t{BindingHeaderString}";
-                output += "\r\n\t{\r\n\t\t#region Properties";
-                output += $"\r\n\t\t{PropertiesString}";
-                output += "\r\n\t\t#endregion Properties\r\n\r\n\t\t#region Constructors";
-                output += $"\r\n\t\t{BaseConstructorsString}";
-                output += $"\r\n\r\n\t\t{ReaderConstructor}";
-                output += "\r\n\t\t#endregion Constructors";
-                output += "\r\n\t}\r\n}";
-                return output;
-            }
-        }
+		public string ClassString
+		{
+			get
+			{
+				string output = $"namespace {BindingNamespaceString}";
+				output += "\r\n{";
+				output += $"\r\n\t{UsingDirectivesString}";
+				output += $"\r\n\r\n\t{BindingHeaderString}";
+				output += "\r\n\t{\r\n\t\t#region Properties";
+				output += $"\r\n\t\t{PropertiesString}";
+				output += "\r\n\t\t#endregion Properties\r\n\r\n\t\t#region Constructors";
+				output += $"\r\n\t\t{BaseConstructorsString}";
+				output += $"\r\n\r\n\t\t{ReaderConstructor}";
+				output += "\r\n\t\t#endregion Constructors";
+				output += "\r\n\t}\r\n}";
+				return output;
+			}
+		}
 
-        public string CleanName
-        {
-            get
-            {
-                string tableName = Name.Replace("mod", "")
-                                       .Replace(" ", "_");
+		public string CleanName
+		{
+			get
+			{
+				string tableName = Name.Replace("mod", "")
+				                       .Replace(" ", "_");
 
-                for (int i = 0; i < 100; i++)
-                {
-                    tableName = tableName.Replace($"PT{i}", "")
-                                         .Replace($"PART{i}", "")
-                                         .Replace($"Part{i}", "");
-                }
+				for (int i = 0; i < 100; i++)
+				{
+					tableName = tableName.Replace($"PT{i}", "")
+					                     .Replace($"PART{i}", "")
+					                     .Replace($"Part{i}", "");
+				}
 
-                if (string.IsNullOrWhiteSpace(tableName))
-                {
-                    tableName = Name.Replace("mod", "")
-                                    .Replace(" ", "_");
-                }
+				if (string.IsNullOrWhiteSpace(tableName))
+				{
+					tableName = Name.Replace("mod", "")
+					                .Replace(" ", "_");
+				}
 
-                tableName = tableName.Trim('*', '_')
-                                     .Trim();
-                return tableName;
-            }
-        }
+				tableName = tableName.Trim('*', '_')
+				                     .Trim();
+				return tableName;
+			}
+		}
 
-        public string DisplayName => CleanName.Replace("_", " ");
-        public string FileTypeString => Enum.GetName(typeof (CensusFileType), FileType);
+		public string DisplayName => CleanName.Replace("_", " ");
+		public string FileTypeString => Enum.GetName(typeof (CensusFileType), FileType);
 
-        public string FluentAPIPropertyStrings => Columns.Aggregate("", (current, column) => current + column.FluentAPIMapString);
+		public string FluentAPIPropertyStrings => Columns.Aggregate("", (current, column) => current + column.FluentAPIMapString);
 
-        public string MappingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Mapping";
-        public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
-        public string MappingNamespaceString => $"{MappingBaseNamespaceString}";
+		public string MappingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Mapping";
+		public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
 
-        public string MappingString
-        {
-            get
-            {
-                string output = $"namespace {MappingNamespaceString}";
-                output += "\r\n{";
-                output += $"\r\n\t{UsingDirectivesString}";
-                output += $"\r\n\r\n\t{MappingHeaderString}";
-                output += "\r\n\t{";
-                output += $"\r\n\t\tpublic {ClassName}Map()";
-                output += "\r\n\t\t{";
-                output += $"\r\n\t\t\tToTable(\"{CleanName}\", \"{FileTypeString}\");";
-                output += FluentAPIPropertyStrings;
-                output += "\r\n\t\t}\r\n\t}\r\n}";
-                return output;
-            }
-        }
+		//public string MappingKeyString => Columns?.Where(w => w.IsKey || ColumnSchema.KeyColumns.Contains(w.CleanName)).Aggregate("HasKey(k => new {", (current, column) => current + $"k.{column.CleanName},") + "});";
+		public string MappingKeyString => string.Join(", ", Columns.Where(w => w.IsKey || ColumnSchema.KeyColumns.Contains(w.CleanName))
+		                                                           .Select(s => $"k.{s.CleanName}"));
 
-        public string PropertiesString => string.Join("\r\n\r\n\t\t", Columns?.OrderBy(o => o.Index)
-                                                                              .Select(s => s?.ToString()) ?? new string[] {});
+		public string MappingNamespaceString => $"{MappingBaseNamespaceString}";
 
-        public string ReaderConstructor => Columns?.Select((column, index) => new
-                                                                              {
-                                                                                  Column = column,
-                                                                                  Index = index
-                                                                              })
-                                                   .Aggregate($"public {ClassName}(OleDbDataReader reader, CensusFileType fileType)\r\n\t\t{{", (current, a) => current + $"\r\n\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.CleanName} = ({a.Column.TypeString})reader[{a.Index}];\r\n\t\t\t}}") + "\r\n\t\t}";
+		public string MappingString
+		{
+			get
+			{
+				string output = $"namespace {MappingNamespaceString}";
+				output += "\r\n{";
+				output += $"\r\n\t{UsingDirectivesString}";
+				output += $"\r\n\r\n\t{MappingHeaderString}";
+				output += "\r\n\t{";
+				output += $"\r\n\t\tpublic {ClassName}Map()";
+				output += "\r\n\t\t{";
+				output += $"\r\n\t\t\tToTable(\"{CleanName}\", \"{FileTypeString}\");";
+				if (!string.IsNullOrWhiteSpace(MappingKeyString))
+				{
+					output += $"\r\n\r\n\t\t\tHasKey(k => new {{{MappingKeyString}}});";
+				}
+				output += FluentAPIPropertyStrings;
+				output += "\r\n\t\t}\r\n\t}\r\n}";
+				return output;
+			}
+		}
 
-        public string[] UsingDirectives => new[] {"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
+		public string PropertiesString => string.Join("\r\n\r\n\t\t", Columns?.OrderBy(o => o.Index)
+		                                                                      .Select(s => s?.ToString()) ?? new string[] {});
 
-        public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
+		public string ReaderConstructor => Columns?.Select((column, index) => new
+		                                                                      {
+			                                                                      Column = column,
+			                                                                      Index = index
+		                                                                      })
+		                                           .Aggregate($"public {ClassName}(OleDbDataReader reader)\r\n\t\t{{", (current, a) => current + $"\r\n\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.CleanName} = ({a.Column.TypeString})reader[{a.Index}];\r\n\t\t\t}}") + "\r\n\t\t}";
 
-        public string BaseNamespace { get; set; } = typeof (Program).Namespace;
-        public string Catalog { get; set; } = ConfigurationManager.AppSettings["DefaultCatalog"];
+		public string[] UsingDirectives => new[] {"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
 
-        public IEnumerable<ColumnSchema> Columns { get; set; }
+		public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
 
-        public DateTime? Date_Created { get; set; }
-        public DateTime? Date_Modified { get; set; }
-        public string Description { get; set; }
+		public string BaseNamespace { get; set; } = typeof (Program).Namespace;
+		public string Catalog { get; set; } = ConfigurationManager.AppSettings["DefaultCatalog"];
 
-        public CensusFileType FileType { get; set; }
+		public IEnumerable<ColumnSchema> Columns { get; set; }
 
-        public Guid Guid { get; set; }
-        public string Name { get; set; }
-        public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
+		public DateTime? Date_Created { get; set; }
+		public DateTime? Date_Modified { get; set; }
+		public string Description { get; set; }
 
-        public string PropID { get; set; }
-        public string Schema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
-        public string Type { get; set; }
+		public CensusFileType FileType { get; set; }
 
-        public TableSchema()
-        {
-            // Empty constructor to ensure JSON operability
-        }
+		public Guid Guid { get; set; }
+		public string Name { get; set; }
+		public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
 
-        public TableSchema(CensusFileType fileType, DataRow row)
-        {
-            FileType = fileType;
+		public string PropID { get; set; }
+		public string Schema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
+		public string Type { get; set; }
 
-            if (row[0] != DBNull.Value)
-            {
-                Catalog = (string)row[0];
-            }
-            if (row[1] != DBNull.Value)
-            {
-                Schema = (string)row[1];
-            }
-            if (row[2] != DBNull.Value)
-            {
-                Name = (string)row[2];
-            }
-            if (row[3] != DBNull.Value)
-            {
-                Type = (string)row[3];
-            }
-            if (row[4] != DBNull.Value)
-            {
-                Guid = (Guid)row[4];
-            }
-            if (row[5] != DBNull.Value)
-            {
-                Description = (string)row[5];
-            }
-            if (row[6] != DBNull.Value)
-            {
-                PropID = (string)row[6];
-            }
-            if (row[7] != DBNull.Value)
-            {
-                Date_Created = (DateTime?)row[7];
-            }
-            if (row[8] != DBNull.Value)
-            {
-                Date_Modified = (DateTime?)row[8];
-            }
-        }
+		public TableSchema()
+		{
+			// Empty constructor to ensure JSON operability
+		}
 
-        public TableSchema(string name, string catalog, IEnumerable<ColumnSchema> columns, string schema = "dbo")
-        {
-            if (string.IsNullOrWhiteSpace(name)
-                || catalog.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentException("Table must have a valid table name and catalog");
-            }
+		public TableSchema(CensusFileType fileType, DataRow row)
+		{
+			FileType = fileType;
 
-            Name = name;
-            Catalog = catalog;
-            Schema = schema;
-            Columns = columns;
-            Date_Created = DateTime.UtcNow;
-            Date_Modified = DateTime.UtcNow;
-        }
-    }
+			if (row[0] != DBNull.Value)
+			{
+				Catalog = (string)row[0];
+			}
+			if (row[1] != DBNull.Value)
+			{
+				Schema = (string)row[1];
+			}
+			if (row[2] != DBNull.Value)
+			{
+				Name = (string)row[2];
+			}
+			if (row[3] != DBNull.Value)
+			{
+				Type = (string)row[3];
+			}
+			if (row[4] != DBNull.Value)
+			{
+				Guid = (Guid)row[4];
+			}
+			if (row[5] != DBNull.Value)
+			{
+				Description = (string)row[5];
+			}
+			if (row[6] != DBNull.Value)
+			{
+				PropID = (string)row[6];
+			}
+			if (row[7] != DBNull.Value)
+			{
+				Date_Created = (DateTime?)row[7];
+			}
+			if (row[8] != DBNull.Value)
+			{
+				Date_Modified = (DateTime?)row[8];
+			}
+		}
+
+		public TableSchema(string name, string catalog, IEnumerable<ColumnSchema> columns, string schema = "dbo")
+		{
+			if (string.IsNullOrWhiteSpace(name)
+			    || catalog.IsNullOrWhiteSpace())
+			{
+				throw new ArgumentException("Table must have a valid table name and catalog");
+			}
+
+			Name = name;
+			Catalog = catalog;
+			Schema = schema;
+			Columns = columns;
+			Date_Created = DateTime.UtcNow;
+			Date_Modified = DateTime.UtcNow;
+		}
+	}
 }

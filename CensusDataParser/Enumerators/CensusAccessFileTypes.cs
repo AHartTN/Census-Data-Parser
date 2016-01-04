@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 10:59 AM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,12 +37,12 @@
 
 namespace CensusDataParser.Enumerators
 {
-    public enum CensusAccessFileTypes
-    {
-        Redistricting = 1,
-        DemographicProfile = 3,
-        SummaryOne = 4,
-        SummaryTwo = 5,
-        SF1CongressionalDistricts113 = 8
-    }
+	public enum CensusAccessFileTypes
+	{
+		Redistricting = 1,
+		DemographicProfile = 3,
+		SummaryOne = 4,
+		SummaryTwo = 5,
+		SF1CongressionalDistricts113 = 8
+	}
 }

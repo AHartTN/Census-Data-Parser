@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 12:36 PM
+// Authored: 01/02/2015 4:24 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,77 +37,77 @@
 
 namespace CensusDataParser
 {
-    #region Using Directives
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Linq;
-    using Enumerators;
-    #endregion
+	#region Using Directives
+	using System.Collections.Generic;
+	using System.Configuration;
+	using System.Linq;
+	using Enumerators;
+	#endregion
 
-    public class DatabaseSchema
-    {
-        public string ClassString
-        {
-            get
-            {
-                string output = $"namespace {ContextNamespaceString}";
-                output += "\r\n{";
-                output += "\r\n\t#region Using Directives";
-                output += "\r\n\tusing Binding;";
-                output += "\r\n\tusing Mapping;";
-                output += "\r\n\tusing System;";
-                output += "\r\n\tusing System.Data.Entity;";
-                output += "\r\n\t#endregion Using Directives";
-                output += $"\r\n\r\n\tpublic class {Name} : DbContext";
-                output += "\r\n\t{";
-                output += $"\r\n\t\tpublic {Name}() : base(\"name={ConnectionName}\") {{ }}";
-                output += $"\r\n{GroupedTablesString}";
-                output += "\r\n\r\n\t\tprotected override void OnModelCreating(DbModelBuilder modelBuilder)\r\n\t\t{";
-                output += GroupedTableMapsString;
-                output += "\r\n\t\t}";
-                output += CreateDatabaseMethodString;
-                output += "\r\n\t}\r\n}";
-                return output;
-            }
-        }
+	public class DatabaseSchema
+	{
+		public string ClassString
+		{
+			get
+			{
+				string output = $"namespace {ContextNamespaceString}";
+				output += "\r\n{";
+				output += "\r\n\t#region Using Directives";
+				output += "\r\n\tusing Binding;";
+				output += "\r\n\tusing Mapping;";
+				output += "\r\n\tusing System;";
+				output += "\r\n\tusing System.Data.Entity;";
+				output += "\r\n\t#endregion Using Directives";
+				output += $"\r\n\r\n\tpublic class {Name} : DbContext";
+				output += "\r\n\t{";
+				output += $"\r\n\t\tpublic {Name}() : base(\"name={ConnectionName}\") {{ }}";
+				output += $"\r\n{GroupedTablesString}";
+				output += "\r\n\r\n\t\tprotected override void OnModelCreating(DbModelBuilder modelBuilder)\r\n\t\t{";
+				output += GroupedTableMapsString;
+				output += "\r\n\t\t}";
+				output += CreateDatabaseMethodString;
+				output += "\r\n\t}\r\n}";
+				return output;
+			}
+		}
 
-        public string ContextNamespaceString => $"{BaseNamespace}.{Namespace}.Context";
+		public string ContextNamespaceString => $"{BaseNamespace}.{Namespace}.Context";
 
-        public string CreateDatabaseMethodString
-        {
-            get
-            {
-                string output = "\r\n\r\n\t\tpublic static bool CreateDatabase()";
-                output += "\r\n\t\t{";
-                output += "\r\n\t\t\ttry";
-                output += "\r\n\t\t\t{";
-                output += $"\r\n\t\t\t\tusing (var db = new {Name}())";
-                output += "\r\n\t\t\t\t{";
-                output += "\r\n\t\t\t\t\treturn db.Database.Exists() || db.Database.CreateIfNotExists();";
-                output += "\r\n\t\t\t\t}";
-                output += "\r\n\t\t\t}";
-                output += "\r\n\t\t\tcatch (Exception ex)";
-                output += "\r\n\t\t\t{";
-                output += "\r\n\t\t\t\tthrow new InvalidOperationException(\"The database could not be initialized!\", ex);";
-                output += "\r\n\t\t\t}";
-                output += "\r\n\t\t}";
-                return output;
-            }
-        }
+		public string CreateDatabaseMethodString
+		{
+			get
+			{
+				string output = "\r\n\r\n\t\tpublic static bool CreateDatabase()";
+				output += "\r\n\t\t{";
+				output += "\r\n\t\t\ttry";
+				output += "\r\n\t\t\t{";
+				output += $"\r\n\t\t\t\tusing (var db = new {Name}())";
+				output += "\r\n\t\t\t\t{";
+				output += "\r\n\t\t\t\t\treturn db.Database.Exists() || db.Database.CreateIfNotExists();";
+				output += "\r\n\t\t\t\t}";
+				output += "\r\n\t\t\t}";
+				output += "\r\n\t\t\tcatch (Exception ex)";
+				output += "\r\n\t\t\t{";
+				output += "\r\n\t\t\t\tthrow new InvalidOperationException(\"The database could not be initialized!\", ex);";
+				output += "\r\n\t\t\t}";
+				output += "\r\n\t\t}";
+				return output;
+			}
+		}
 
-        public string GroupedTableMapsString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {t.ClassName}Map());")}\r\n\t\t\t#endregion {table.Key}");
+		public string GroupedTableMapsString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {t.ClassName}Map());")}\r\n\t\t\t#endregion {table.Key}");
 
-        IEnumerable<IGrouping<CensusFileType, TableSchema>> GroupedTables => Tables.GroupBy(g => g.FileType);
+		private IEnumerable<IGrouping<CensusFileType, TableSchema>> GroupedTables => Tables.GroupBy(g => g.FileType);
 
-        public string GroupedTablesString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\tpublic virtual DbSet<{t.ClassName}> {t.ClassName}Records {{ get; set; }}")}\r\n\t\t#endregion {table.Key}");
-        public string TableMapsString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {table.ClassName}Map());");
+		public string GroupedTablesString => GroupedTables.Aggregate("", (current, table) => current + $"\r\n\t\t#region {table.Key}{table.Aggregate("", (c, t) => c + $"\r\n\t\tpublic virtual DbSet<{t.ClassName}> {t.ClassName}Records {{ get; set; }}")}\r\n\t\t#endregion {table.Key}");
+		public string TableMapsString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {table.ClassName}Map());");
 
-        public string TablesString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\tpublic virtual DbSet<{table.ClassName}> {table.ClassName}Records {{ get; set; }}");
-        public string BaseNamespace { get; set; } = typeof (Program).Namespace;
-        public string ConnectionName { get; set; } = "DefaultConnection";
-        public string Name { get; set; }
-        public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
+		public string TablesString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\tpublic virtual DbSet<{table.ClassName}> {table.ClassName}Records {{ get; set; }}");
+		public string BaseNamespace { get; set; } = typeof (Program).Namespace;
+		public string ConnectionName { get; set; } = "DefaultConnection";
+		public string Name { get; set; }
+		public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
 
-        public IEnumerable<TableSchema> Tables { get; set; }
-    }
+		public IEnumerable<TableSchema> Tables { get; set; }
+	}
 }
