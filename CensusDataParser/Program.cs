@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 4:24 PM
+// Authored: 01/06/2015 2:41 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,44 +37,36 @@
 
 namespace CensusDataParser
 {
+	#region Using Directives
 	using System;
 	using System.Configuration;
 	using System.Linq;
-	using System.Runtime.CompilerServices;
 	using Enumerators;
 	using Extensions;
 	using Generated.Context;
+	#endregion
 
 	#region Using Directives
 	#endregion
 
 	public class Program
 	{
-		public static bool UseFtp = bool.Parse(ConfigurationManager.AppSettings["UseFTP"]);
-		public static string LocalRootPath = ConfigurationManager.AppSettings["LocalRootPath"];
-		public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
 		public static string DefaultConnectionString => ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-		public static string DefaultDatabase = ConfigurationManager.AppSettings["DefaultCatalog"];
-		public static string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
 		public static string BaseCatalog = ConfigurationManager.AppSettings["DefaultCatalog"];
-		public static string BaseSchema = ConfigurationManager.AppSettings["DefaultSchema"];
 		public static string BaseNamespace = typeof (Program).Namespace;
+		public static string BaseSchema = ConfigurationManager.AppSettings["DefaultSchema"];
+		public static string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		public static string DefaultDatabase = ConfigurationManager.AppSettings["DefaultCatalog"];
+		public static string LocalRootPath = ConfigurationManager.AppSettings["LocalRootPath"];
 		public static string Namespace = ConfigurationManager.AppSettings["DefaultNamespace"];
-
-		private static void Main(string[] args)
-		{
-			Initialize(args);
-			//ProcessCensusSchema();
-			ProcessCensusData();
-
-			Console.WriteLine("END OF APPLICATION");
-		}
+		public static bool UseFtp = bool.Parse(ConfigurationManager.AppSettings["UseFTP"]);
 
 		private static void Initialize(string[] args)
 		{
 			Console.Write("INITIALIZING APPLICATION");
 
-			Console.BufferHeight = Int16.MaxValue - 1;
+			Console.BufferHeight = short.MaxValue - 1;
 			Console.BufferWidth = Console.BufferWidth * 50;
 
 			ProcessArgs(args);
@@ -82,14 +74,35 @@ namespace CensusDataParser
 			Console.WriteLine("\rINITIALIZATION COMPLETE\t\t\t\t\t");
 		}
 
+		private static void Main(string[] args)
+		{
+			Initialize(args);
+
+			//ProcessCensusSchema();
+			ProcessCensusData();
+
+			Console.WriteLine("END OF APPLICATION");
+		}
+
 		private static void ProcessArgs(string[] args)
 		{
 			Console.Write("PROCESSING ARGUMENTS");
-			foreach (string arg in args.Select((argument,index) => $"Argument {index}: {argument}"))
+			foreach (string arg in args.Select((argument, index) => $"Argument {index}: {argument}"))
 			{
 				Console.WriteLine(arg);
 			}
 			Console.WriteLine("\rARGUMENT PROCESSING COMPLETE\t\t\t\t\t");
+		}
+
+		public static void ProcessCensusData()
+		{
+			if (RawCensusDataEntities.CreateDatabase())
+			{
+				foreach (CensusFileType fileType in default(CensusFileType).GetEnums())
+				{
+					CensusDataHelper.ProcessData(fileType);
+				}
+			}
 		}
 
 		public static void ProcessCensusSchema()
@@ -97,17 +110,6 @@ namespace CensusDataParser
 			Console.Write("PROCESSING CENSUS SCHEMA");
 			CensusDataHelper.OutputSchemaStrings(directory: OutputPath, allTables: true);
 			Console.WriteLine("\rCENSUS SCHEMA PROCESSING COMPLETE\t\t\t\t\t");
-		}
-
-		public static void ProcessCensusData()
-		{
-			if (RawCensusDataEntities.CreateDatabase())
-			{
-				foreach (var fileType in default(CensusFileType).GetEnums())
-				{
-					CensusDataHelper.ProcessData(fileType);
-				}
-			}
 		}
 	}
 }

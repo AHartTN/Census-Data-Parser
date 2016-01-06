@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 4:24 PM
+// Authored: 01/06/2015 11:26 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -39,22 +39,14 @@ namespace CensusDataParser
 {
 	#region Using Directives
 	using System;
-	using System.CodeDom;
 	using System.Collections.Generic;
-	using System.Configuration;
-	using System.Data;
-	using System.Data.Entity.ModelConfiguration;
-	using System.Data.SqlClient;
 	using System.IO;
 	using System.IO.Compression;
 	using System.Linq;
 	using Enumerators;
 	using Extensions;
-	using Generated.Binding;
 	using Generated.Context;
-	using Generated.Mapping;
 	using Helpers;
-	using Microsoft.SqlServer.Server;
 	using Models.SF1;
 	#endregion
 
@@ -68,8 +60,8 @@ namespace CensusDataParser
 		#endregion Helpers
 
 		#region Archive Paths
-		public static readonly string[] DataArchivePaths = { CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path };
-		public static readonly string[] AllDataArchivePaths = { CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath };
+		public static readonly string[] DataArchivePaths = {CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path};
+		public static readonly string[] AllDataArchivePaths = {CensusDataPaths.AssembledRedistrictingPath, CensusDataPaths.AssembledDemographicProfilePath, CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path, CensusDataPaths.AssembledCongressionalDistrictsPath};
 		#endregion Archive Paths
 
 		#region Access Files
@@ -84,73 +76,73 @@ namespace CensusDataParser
 		public static readonly IEnumerable<TableSchema> TableSchemas = Summary1AccessFile.DataTableSchemas.Union(Summary2AccessFile.DataTableSchemas);
 
 		public static readonly IEnumerable<TableSchema> AllTableSchemas = RedistrictingAccessFile.DataTableSchemas.Union(DemographicProfileAccessFile.DataTableSchemas)
-																								 .Union(Summary1AccessFile.DataTableSchemas)
-																								 .Union(Summary2AccessFile.DataTableSchemas)
-																								 .Union(CongressionalDistrictsAccessFile.DataTableSchemas);
+		                                                                                         .Union(Summary1AccessFile.DataTableSchemas)
+		                                                                                         .Union(Summary2AccessFile.DataTableSchemas)
+		                                                                                         .Union(CongressionalDistrictsAccessFile.DataTableSchemas);
 
 		public static readonly IEnumerable<DATA_FIELD_DESCRIPTORS> DataDescriptors = RedistrictingAccessFile.DataDescriptors.Union(DemographicProfileAccessFile.DataDescriptors)
-																											.Union(Summary1AccessFile.DataDescriptors)
-																											.Union(Summary2AccessFile.DataDescriptors)
-																											.Union(CongressionalDistrictsAccessFile.DataDescriptors);
+		                                                                                                    .Union(Summary1AccessFile.DataDescriptors)
+		                                                                                                    .Union(Summary2AccessFile.DataDescriptors)
+		                                                                                                    .Union(CongressionalDistrictsAccessFile.DataDescriptors);
 
 		public static readonly IEnumerable<GeoHeader_Specifications> GeoDataDescriptors = RedistrictingAccessFile.GeoDataDescriptors.Union(DemographicProfileAccessFile.GeoDataDescriptors)
-																												 .Union(Summary2AccessFile.GeoDataDescriptors);
+		                                                                                                         .Union(Summary2AccessFile.GeoDataDescriptors);
 		#endregion Schema Structures
 
 		#region Data Archives
 		public static readonly IEnumerable<FileInfo> DataArchives = DataArchivePaths.SelectMany(s => new DirectoryInfo(s).EnumerateFiles("*.zip", SearchOption.AllDirectories));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> DemographicProfileDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.DemographicProfile.GetShortName())
-																													 .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																						.Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                             .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                                .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> RedistrictingDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.Redistricting.GetShortName())
-																												.ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																				   .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                        .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                           .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> CongressionalDistrictDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SF1CongressionalDistricts113.GetShortName())
-																														.ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																						   .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                                .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                                   .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> Summary1DataFiles => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryOne.GetShortName())
-																										.ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																		   .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                   .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> Summary2DataFiles => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryTwo.GetShortName())
-																										.ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																		   .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                   .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> UrbanUpdateDataArchives => DataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.UrbanAreaUpdate.GetShortName())
-																											  .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																				 .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                      .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                         .Entries.Where(w => !w.Name.EndsWith(".txt")));
 		#endregion
 
 		#region AllData Archives
 		public static readonly IEnumerable<FileInfo> AllDataArchives = AllDataArchivePaths.SelectMany(s => new DirectoryInfo(s).EnumerateFiles("*.zip", SearchOption.AllDirectories));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllDemographicProfileDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.DemographicProfile.GetShortName())
-																														   .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																							  .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                                   .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                                      .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllRedistrictingDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.Redistricting.GetShortName())
-																													  .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																						 .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                              .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                                 .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllCongressionalDistrictDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SF1CongressionalDistricts113.GetShortName())
-																															  .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																								 .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                                      .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                                         .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllSummary1DataFiles => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryOne.GetShortName())
-																											  .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																				 .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                      .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                         .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllSummary2DataFiles => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.SummaryTwo.GetShortName())
-																											  .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																				 .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                      .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                         .Entries.Where(w => !w.Name.EndsWith(".txt")));
 
 		public static Dictionary<string, IEnumerable<ZipArchiveEntry>> AllUrbanUpdateDataArchives => AllDataArchives.Where(dataArchive => dataArchive.Name.Split('.')[1].ToUpperInvariant() == CensusFileType.UrbanAreaUpdate.GetShortName())
-																													.ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
-																																																					   .Entries.Where(w => !w.Name.EndsWith(".txt")));
+		                                                                                                            .ToDictionary(dataArchive => dataArchive.Name.Split('.')[0].Substring(0, 2), dataArchive => ZipFile.OpenRead(dataArchive.FullName)
+		                                                                                                                                                                                                               .Entries.Where(w => !w.Name.EndsWith(".txt")));
 		#endregion AllData Archives
 
 		#region Data Files
@@ -276,17 +268,17 @@ namespace CensusDataParser
 					Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
 
 					bool isGeo = entry.Name.ToLowerInvariant()
-									  .Contains("geo");
-					string name = isGeo ? GetGeoType(CensusFileType.SummaryOne)
-										: entry.Name.Replace("20101", "")
-													.Replace("2010", "")
-													.Replace($".{CensusFileType.SummaryOne.GetShortName().ToLowerInvariant()}", "")
-													.Replace(file.Key, $"{fileTypeShortName}_");
+					                  .Contains("geo");
+					string name = isGeo
+						              ? GetGeoType(CensusFileType.SummaryOne)
+						              : entry.Name.Replace("20101", "")
+						                     .Replace("2010", "")
+						                     .Replace($".{CensusFileType.SummaryOne.GetShortName() .ToLowerInvariant()}", "")
+						                     .Replace(file.Key, $"{fileTypeShortName}_");
 
 					string outputFilePath = $"{Program.OutputPath}\\{entry.Name}";
 
 					string tableName = $"[{Program.DefaultDatabase}].[{fileTypeName}].[{name}]";
-
 
 					int rowsAffected = 0;
 
@@ -301,7 +293,6 @@ namespace CensusDataParser
 									Console.Write($"Copying file to {outputFilePath}. . . Please wait!");
 									sr.BaseStream.CopyTo(sw);
 								}
-
 							}
 						}
 
@@ -310,7 +301,9 @@ namespace CensusDataParser
 						string mapName = $"{Program.BaseNamespace}.{Program.Namespace}.Mapping.{fileTypeName}_{name}Map";
 
 						Type mapType = Type.GetType(mapName);
-						dynamic map = mapType == null ? null : Activator.CreateInstance(mapType);
+						dynamic map = mapType == null
+							              ? null
+							              : Activator.CreateInstance(mapType);
 
 						SSISApp.AddFlatFileConnection(outputFilePath, map);
 						SSISApp.CensusApplication.SaveToXml(@"C:\Users\Anthony\Documents\Visual Studio 2013\Projects\GISSIS\GISSIS\Package.dtsx", SSISApp.CensusPackage, null);
@@ -323,13 +316,11 @@ namespace CensusDataParser
 
 					// TODO: toggle between flat file and csv formatting from here
 
-
 					//if (File.Exists(outputFilePath))
 					//File.Delete(outputFilePath);
 				}
 			}
 		}
-
 
 		public static string GetGeoType(CensusFileType fileType)
 		{
@@ -371,12 +362,12 @@ namespace CensusDataParser
 			string outputPath = Program.OutputPath;
 
 			DatabaseSchema dbSchema = new DatabaseSchema
-			{
-				Name = "RawCensusDataEntities",
-				Tables = allTables
-													   ? AllTableSchemas
-													   : TableSchemas
-			};
+			                          {
+				                          Name = "RawCensusDataEntities",
+				                          Tables = allTables
+					                                   ? AllTableSchemas
+					                                   : TableSchemas
+			                          };
 
 			if (!string.IsNullOrWhiteSpace(directory))
 			{

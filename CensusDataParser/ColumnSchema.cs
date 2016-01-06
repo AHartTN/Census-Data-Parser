@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/02/2015 4:24 PM
+// Authored: 01/06/2015 12:03 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -39,7 +39,6 @@ namespace CensusDataParser
 {
 	#region Using Directives
 	using System;
-	using System.Configuration;
 	using System.Data;
 	using System.Linq;
 	using Models.SF1;
@@ -106,9 +105,9 @@ namespace CensusDataParser
 			                                                                    : "");
 
 		public bool AllowDbNull { get; set; } = true;
+		public string BaseCatalog { get; set; } = Program.BaseCatalog;
 
 		public string BaseName { get; set; }
-		public string BaseCatalog { get; set; } = Program.BaseCatalog;
 		public string BaseSchema { get; set; } = Program.BaseSchema;
 		public string BaseTable { get; set; }
 
