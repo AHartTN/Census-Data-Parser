@@ -37,73 +37,77 @@
 
 namespace CensusDataParser
 {
-	#region Using Directives
 	using System;
-	using System.Collections;
-	using System.Collections.Generic;
 	using System.Configuration;
-	using System.Data.Entity.ModelConfiguration;
-	using System.Data.Entity.ModelConfiguration.Configuration;
-	using System.Data.Entity.ModelConfiguration.Utilities;
 	using System.Linq;
-	using System.Reflection;
+	using System.Runtime.CompilerServices;
 	using Enumerators;
-	using Generated.Binding;
+	using Extensions;
 	using Generated.Context;
-	using Generated.Mapping;
+
+	#region Using Directives
 	#endregion
 
 	public class Program
 	{
-		public const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+		public static bool UseFtp = bool.Parse(ConfigurationManager.AppSettings["UseFTP"]);
+		public static string LocalRootPath = ConfigurationManager.AppSettings["LocalRootPath"];
 		public static string OutputPath => ConfigurationManager.AppSettings["OutputPath"];
+		public static string DefaultConnectionString => ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		public static string DefaultDatabase = ConfigurationManager.AppSettings["DefaultCatalog"];
+		public static string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		public static string BaseCatalog = ConfigurationManager.AppSettings["DefaultCatalog"];
+		public static string BaseSchema = ConfigurationManager.AppSettings["DefaultSchema"];
+		public static string BaseNamespace = typeof (Program).Namespace;
+		public static string Namespace = ConfigurationManager.AppSettings["DefaultNamespace"];
 
 		private static void Main(string[] args)
 		{
-			Console.BufferHeight = short.MaxValue - 1;
-			Console.BufferWidth = Console.BufferWidth * 50;
-
-			Dictionary<string, int> columnOrders = GetColumnOrders(new SummaryOne_GEO_HEADER_SF1Map());
-			Console.WriteLine(columnOrders.Count);
-			//CensusDataHelper.OutputSchemaStrings(directory: OutputPath, allTables: true);
-
-			if (RawCensusDataEntities.CreateDatabase())
-			{
-				//CensusDataHelper.ProcessData(CensusFileType.Redistricting);
-				//CensusDataHelper.ProcessData(CensusFileType.DemographicProfile);
-				CensusDataHelper.ProcessData(CensusFileType.SummaryOne);
-
-				//CensusDataHelper.ProcessData(CensusFileType.SummaryTwo);
-				//CensusDataHelper.ProcessData(CensusFileType.SF1CongressionalDistricts113);
-			}
+			Initialize(args);
+			//ProcessCensusSchema();
+			ProcessCensusData();
 
 			Console.WriteLine("END OF APPLICATION");
 		}
 
-		public static Dictionary<string, int> GetColumnOrders<T>(EntityTypeConfiguration<T> map) where T : class
+		private static void Initialize(string[] args)
 		{
-			Type modelType = typeof(T);
-			object configuration = map.GetType().GetProperty("Configuration", BindFlags).GetValue(map);
-			Type configurationType = configuration.GetType();
-			PropertyInfo propertiesConfiguration = configurationType.GetProperty("PrimitivePropertyConfigurations", BindFlags);
-			IEnumerable propertyValues = propertiesConfiguration.GetValue(configuration) as IEnumerable;
+			Console.Write("INITIALIZING APPLICATION");
 
-			if (propertyValues == null)
-				return null;
+			Console.BufferHeight = Int16.MaxValue - 1;
+			Console.BufferWidth = Console.BufferWidth * 50;
 
-			foreach (object propertyValue in propertyValues)
+			ProcessArgs(args);
+
+			Console.WriteLine("\rINITIALIZATION COMPLETE\t\t\t\t\t");
+		}
+
+		private static void ProcessArgs(string[] args)
+		{
+			Console.Write("PROCESSING ARGUMENTS");
+			foreach (string arg in args.Select((argument,index) => $"Argument {index}: {argument}"))
 			{
-				Type propertyValueType = propertyValue.GetType();
-				PropertyInfo keyProperty = propertyValueType.GetProperty("Key", BindFlags);
-				PropertyInfo valueProperty = propertyValueType.GetProperty("Value", BindFlags);
-
-				object keyValue = keyProperty.GetValue(propertyValue);
-				object valueValue = valueProperty.GetValue(propertyValue);
-
-				Console.WriteLine();
+				Console.WriteLine(arg);
 			}
+			Console.WriteLine("\rARGUMENT PROCESSING COMPLETE\t\t\t\t\t");
+		}
 
-			return null;
+		public static void ProcessCensusSchema()
+		{
+			Console.Write("PROCESSING CENSUS SCHEMA");
+			CensusDataHelper.OutputSchemaStrings(directory: OutputPath, allTables: true);
+			Console.WriteLine("\rCENSUS SCHEMA PROCESSING COMPLETE\t\t\t\t\t");
+		}
+
+		public static void ProcessCensusData()
+		{
+			if (RawCensusDataEntities.CreateDatabase())
+			{
+				foreach (var fileType in default(CensusFileType).GetEnums())
+				{
+					CensusDataHelper.ProcessData(fileType);
+				}
+			}
 		}
 	}
 }

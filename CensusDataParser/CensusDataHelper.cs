@@ -39,9 +39,11 @@ namespace CensusDataParser
 {
 	#region Using Directives
 	using System;
+	using System.CodeDom;
 	using System.Collections.Generic;
 	using System.Configuration;
 	using System.Data;
+	using System.Data.Entity.ModelConfiguration;
 	using System.Data.SqlClient;
 	using System.IO;
 	using System.IO.Compression;
@@ -49,6 +51,7 @@ namespace CensusDataParser
 	using Enumerators;
 	using Extensions;
 	using Generated.Binding;
+	using Generated.Context;
 	using Generated.Mapping;
 	using Helpers;
 	using Microsoft.SqlServer.Server;
@@ -58,6 +61,11 @@ namespace CensusDataParser
 	public class CensusDataHelper : BaseModel
 	{
 		#region Properties
+
+		#region Helpers
+		public static SSISHelper SSISApp = new SSISHelper();
+		public static RawCensusDataEntities DB = new RawCensusDataEntities();
+		#endregion Helpers
 
 		#region Archive Paths
 		public static readonly string[] DataArchivePaths = { CensusDataPaths.AssembledSummary1Path, CensusDataPaths.AssembledSummary2Path };
@@ -242,6 +250,7 @@ namespace CensusDataParser
 				case CensusFileType.IslandAreasDetailedCrossTabulations:
 				case CensusFileType.IslandAreas_PUMS:
 				case CensusFileType.Stateside_PUMS:
+				case CensusFileType.UrbanAreaUpdate:
 					Console.WriteLine($"{fileType} is not supported as there is no access file outlining the CSV schemas.");
 					break;
 				default:
@@ -255,57 +264,72 @@ namespace CensusDataParser
 
 		public static void ProcessSummary1FileData()
 		{
+			string fileTypeName = CensusFileType.SummaryOne.GetName();
+			string fileTypeShortName = CensusFileType.SummaryOne.GetShortName();
+
 			foreach (KeyValuePair<string, IEnumerable<ZipArchiveEntry>> file in Summary1DataFiles)
 			{
-				Console.WriteLine($"{file.Key} | {file.Value.Count()}");
+				Console.WriteLine($"{file.Key} | {file.Value.Count()} files");
 				foreach (ZipArchiveEntry entry in file.Value)
 				{
-					string name = entry.Name.Replace("20101", "")
-									   .Replace("2010", "")
-									   .Replace($".{CensusFileType.SummaryOne.GetShortName().ToLowerInvariant()}", "");
+					Console.WriteLine($"Processing {entry.FullName}");
+					Console.WriteLine($"\t{entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}");
+
+					bool isGeo = entry.Name.ToLowerInvariant()
+									  .Contains("geo");
+					string name = isGeo ? GetGeoType(CensusFileType.SummaryOne)
+										: entry.Name.Replace("20101", "")
+													.Replace("2010", "")
+													.Replace($".{CensusFileType.SummaryOne.GetShortName().ToLowerInvariant()}", "")
+													.Replace(file.Key, $"{fileTypeShortName}_");
 
 					string outputFilePath = $"{Program.OutputPath}\\{entry.Name}";
 
-					string defaultDatabase = ConfigurationManager.AppSettings["DefaultCatalog"];
-					string fileTypeName = CensusFileType.SummaryOne.GetName();
-					string fileTypeShortName = CensusFileType.SummaryOne.GetShortName();
+					string tableName = $"[{Program.DefaultDatabase}].[{fileTypeName}].[{name}]";
 
-					if (name.ToLowerInvariant().Contains("geo"))
-						name = GetGeoType(CensusFileType.SummaryOne);
 
-					string tableName = $"[{defaultDatabase}].[{fileTypeName}].[{name}]";
+					int rowsAffected = 0;
 
-					string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-					string sql = $"BULK INSERT {tableName} FROM '{outputFilePath}' WITH (FIELDTERMINATOR = ',', ROWTERMINATOR = '\\n')";
-
-					Console.WriteLine($"\t{tableName} | {entry.Name} | {entry.CompressedLength} | {entry.Length} | {entry.LastWriteTime}\r\n\t{sql}");
-
-					using (StreamReader sr = new StreamReader(entry.Open()))
-					using (FileStream sw = File.Create(outputFilePath))
+					if (isGeo)
 					{
-						Console.Write("\rCopying file. . . Please wait!\t\t\t");
-						sr.BaseStream.CopyTo(sw);
-					}
+						if (!File.Exists(outputFilePath))
+						{
+							using (StreamReader sr = new StreamReader(entry.Open()))
+							{
+								using (FileStream sw = File.Create(outputFilePath))
+								{
+									Console.Write($"Copying file to {outputFilePath}. . . Please wait!");
+									sr.BaseStream.CopyTo(sw);
+								}
 
-					using (SqlConnection conn = new SqlConnection(connString))
-					using (SqlCommand cmd = conn.CreateCommand())
+							}
+						}
+
+						Console.WriteLine($"\rFile copied successfully.\t\t\t\t\t");
+						Console.Write($"\rProcessing {entry.Name} as a Flat File into {tableName}\t\t\t\t\t");
+						string mapName = $"{Program.BaseNamespace}.{Program.Namespace}.Mapping.{fileTypeName}_{name}Map";
+
+						Type mapType = Type.GetType(mapName);
+						dynamic map = mapType == null ? null : Activator.CreateInstance(mapType);
+
+						SSISApp.AddFlatFileConnection(outputFilePath, map);
+						SSISApp.CensusApplication.SaveToXml(@"C:\Users\Anthony\Documents\Visual Studio 2013\Projects\GISSIS\GISSIS\Package.dtsx", SSISApp.CensusPackage, null);
+					}
+					else
 					{
-						Console.Write("\rExecuting SQL. . . Please wait!\t\t\t");
-						cmd.CommandText = sql;
-						cmd.CommandType = CommandType.Text;
-
-						cmd.Connection.Open();
-
-						int rowCount = cmd.ExecuteNonQuery();
-
-						Console.WriteLine($"\r\t\t{rowCount} records inserted into the {tableName} table");
+						rowsAffected += 0; //SqlHelper.BulkCSVInsert(tableName, outputFilePath);
 					}
+					Console.WriteLine($"\r{rowsAffected} records affected from processing {entry.Name} into {tableName}\t\t\t\t\t");
 
-					if (File.Exists(outputFilePath))
-						File.Delete(outputFilePath);
+					// TODO: toggle between flat file and csv formatting from here
+
+
+					//if (File.Exists(outputFilePath))
+					//File.Delete(outputFilePath);
 				}
 			}
 		}
+
 
 		public static string GetGeoType(CensusFileType fileType)
 		{

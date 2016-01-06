@@ -43,25 +43,25 @@ namespace CensusDataParser
 
 	public class CensusDataPaths
 	{
-		public static string AssembledCongressionalDistrictsPath => $@"{(UseFtp
+		public static string AssembledCongressionalDistrictsPath => $@"{(Program.UseFtp
 			                                                                 ? FtpRootPath
-			                                                                 : LocalRootPath)}\{ContainerPath}\{CongressionalDistrictsPath}";
+			                                                                 : Program.LocalRootPath)}\{ContainerPath}\{CongressionalDistrictsPath}";
 
-		public static string AssembledDemographicProfilePath => $@"{(UseFtp
+		public static string AssembledDemographicProfilePath => $@"{(Program.UseFtp
 			                                                             ? FtpRootPath
-			                                                             : LocalRootPath)}\{ContainerPath}\{DemographicProfilePath}";
+			                                                             : Program.LocalRootPath)}\{ContainerPath}\{DemographicProfilePath}";
 
-		public static string AssembledRedistrictingPath => $@"{(UseFtp
+		public static string AssembledRedistrictingPath => $@"{(Program.UseFtp
 			                                                        ? FtpRootPath
-			                                                        : LocalRootPath)}\{ContainerPath}\{RedistrictingPath}";
+			                                                        : Program.LocalRootPath)}\{ContainerPath}\{RedistrictingPath}";
 
-		public static string AssembledSummary1Path => $@"{(UseFtp
+		public static string AssembledSummary1Path => $@"{(Program.UseFtp
 			                                                   ? FtpRootPath
-			                                                   : LocalRootPath)}\{ContainerPath}\{Summary1Path}";
+			                                                   : Program.LocalRootPath)}\{ContainerPath}\{Summary1Path}";
 
-		public static string AssembledSummary2Path => $@"{(UseFtp
+		public static string AssembledSummary2Path => $@"{(Program.UseFtp
 			                                                   ? FtpRootPath
-			                                                   : LocalRootPath)}\{ContainerPath}\{Summary2Path}";
+			                                                   : Program.LocalRootPath)}\{ContainerPath}\{Summary2Path}";
 
 		public static string CongressionalDistrictsAccessFile => $@"{AssembledCongressionalDistrictsPath}\{CongressionalDistrictsAccessFileName}";
 
@@ -72,7 +72,6 @@ namespace CensusDataParser
 		public static string Summary1AccessFile => $@"{AssembledSummary1Path}\{Summary1AccessFileName}";
 		public static string Summary2AccessFile => $@"{AssembledSummary2Path}\{Summary2AccessFileName}";
 
-		public static bool UseFtp => bool.Parse(ConfigurationManager.AppSettings["UseFTP"]);
 		public const string CongressionalDistrictsAccessFileName = @"SF1_Access2007_v2.accdb";
 		public const string CongressionalDistrictsPath = @"08-SF1_Congressional_Districts_113";
 		public const string ContainerPath = @"census_2010";
@@ -87,7 +86,6 @@ namespace CensusDataParser
 		public const string Summary1Path = @"04-Summary_File_1";
 		public const string Summary2AccessFileName = @"SF2_MSAccess_2007.accdb";
 		public const string Summary2Path = @"05-Summary_File_2";
-		public static string LocalRootPath = ConfigurationManager.AppSettings["LocalRootPath"];
 		public static string[] AllPaths = {AssembledRedistrictingPath, AssembledDemographicProfilePath, AssembledSummary1Path, AssembledSummary2Path, AssembledCongressionalDistrictsPath};
 		public static string[] AllAccessFiles = {RedistrictingAccessFile, DemographicProfileAccessFile, Summary1AccessFile, Summary2AccessFile, CongressionalDistrictsAccessFile};
 	}

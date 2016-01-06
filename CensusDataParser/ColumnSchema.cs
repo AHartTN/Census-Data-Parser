@@ -107,9 +107,9 @@ namespace CensusDataParser
 
 		public bool AllowDbNull { get; set; } = true;
 
-		public string BaseCatalog { get; set; } = ConfigurationManager.AppSettings["DefaultCatalog"];
 		public string BaseName { get; set; }
-		public string BaseSchema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
+		public string BaseCatalog { get; set; } = Program.BaseCatalog;
+		public string BaseSchema { get; set; } = Program.BaseSchema;
 		public string BaseTable { get; set; }
 
 		public Type DataType { get; set; }

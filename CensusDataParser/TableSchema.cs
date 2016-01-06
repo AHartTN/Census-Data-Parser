@@ -40,7 +40,6 @@ namespace CensusDataParser
 	#region Using Directives
 	using System;
 	using System.Collections.Generic;
-	using System.Configuration;
 	using System.Data;
 	using System.Linq;
 	using Enumerators;
@@ -105,14 +104,13 @@ namespace CensusDataParser
 		}
 
 		public string DisplayName => CleanName.Replace("_", " ");
-		public string FileTypeString => Enum.GetName(typeof (CensusFileType), FileType);
+		public string FileTypeString => FileType.GetName();
 
 		public string FluentAPIPropertyStrings => Columns.Aggregate("", (current, column) => current + column.FluentAPIMapString);
 
 		public string MappingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Mapping";
 		public string MappingHeaderString => $"public class {ClassName}Map : EntityTypeConfiguration<{ClassName}>";
 
-		//public string MappingKeyString => Columns?.Where(w => w.IsKey || ColumnSchema.KeyColumns.Contains(w.CleanName)).Aggregate("HasKey(k => new {", (current, column) => current + $"k.{column.CleanName},") + "});";
 		public string MappingKeyString => string.Join(", ", Columns.Where(w => w.IsKey || ColumnSchema.KeyColumns.Contains(w.CleanName))
 		                                                           .Select(s => $"k.{s.CleanName}"));
 
@@ -154,8 +152,8 @@ namespace CensusDataParser
 
 		public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
 
-		public string BaseNamespace { get; set; } = typeof (Program).Namespace;
-		public string Catalog { get; set; } = ConfigurationManager.AppSettings["DefaultCatalog"];
+		public string BaseNamespace { get; set; } = Program.BaseNamespace;
+		public string Catalog { get; set; } = Program.BaseCatalog;
 
 		public IEnumerable<ColumnSchema> Columns { get; set; }
 
@@ -167,10 +165,10 @@ namespace CensusDataParser
 
 		public Guid Guid { get; set; }
 		public string Name { get; set; }
-		public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
+		public string Namespace { get; set; } = Program.Namespace;
 
 		public string PropID { get; set; }
-		public string Schema { get; set; } = ConfigurationManager.AppSettings["DefaultSchema"];
+		public string Schema { get; set; } = Program.BaseSchema;
 		public string Type { get; set; }
 
 		public TableSchema()

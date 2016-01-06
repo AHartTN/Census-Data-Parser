@@ -103,10 +103,10 @@ namespace CensusDataParser
 		public string TableMapsString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\t\tmodelBuilder.Configurations.Add(new {table.ClassName}Map());");
 
 		public string TablesString => Tables.Aggregate("", (current, table) => current + $"\r\n\t\tpublic virtual DbSet<{table.ClassName}> {table.ClassName}Records {{ get; set; }}");
-		public string BaseNamespace { get; set; } = typeof (Program).Namespace;
+		public string BaseNamespace { get; set; } = Program.BaseNamespace;
 		public string ConnectionName { get; set; } = "DefaultConnection";
 		public string Name { get; set; }
-		public string Namespace { get; set; } = ConfigurationManager.AppSettings["DefaultNamespace"];
+		public string Namespace { get; set; } = Program.Namespace;
 
 		public IEnumerable<TableSchema> Tables { get; set; }
 	}
