@@ -55,7 +55,7 @@ namespace CensusDataParser
 		#region Properties
 
 		#region Helpers
-		public static SSISHelper SSISApp = new SSISHelper();
+		public static SSISHelper SSISApp;
 		public static RawCensusDataEntities DB = new RawCensusDataEntities();
 		#endregion Helpers
 
@@ -256,6 +256,7 @@ namespace CensusDataParser
 
 		public static void ProcessSummary1FileData()
 		{
+			SSISApp = new SSISHelper();
 			string fileTypeName = CensusFileType.SummaryOne.GetName();
 			string fileTypeShortName = CensusFileType.SummaryOne.GetShortName();
 
@@ -306,7 +307,6 @@ namespace CensusDataParser
 							              : Activator.CreateInstance(mapType);
 
 						SSISApp.AddFlatFileConnection(outputFilePath, map);
-						SSISApp.CensusApplication.SaveToXml(@"C:\Users\Anthony\Documents\Visual Studio 2013\Projects\GISSIS\GISSIS\Package.dtsx", SSISApp.CensusPackage, null);
 					}
 					else
 					{
@@ -320,6 +320,7 @@ namespace CensusDataParser
 					//File.Delete(outputFilePath);
 				}
 			}
+			SSISApp.Save();
 		}
 
 		public static string GetGeoType(CensusFileType fileType)

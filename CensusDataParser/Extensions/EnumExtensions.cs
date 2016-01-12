@@ -41,6 +41,7 @@ namespace CensusDataParser.Extensions
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
+	using System.Globalization;
 	using System.Linq;
 	using System.Reflection;
 	using Attributes;
@@ -54,18 +55,13 @@ namespace CensusDataParser.Extensions
 			return attribute?.Description;
 		}
 
-		public static DisplayAttribute GetDisplayAttribute<T>(this T source)
+		public static DisplayAttribute GetDisplayAttribute<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
 		{
-			if (source == null)
-			{
-				return null;
-			}
-
-			Type type = typeof (T);
-			FieldInfo field = type.GetField(source.ToString());
-			return field != null
-				       ? field.GetCustomAttribute<DisplayAttribute>()
-				       : type.GetCustomAttribute<DisplayAttribute>();
+			Type type = typeof(T);
+			FieldInfo field = type.GetField(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
+			PropertyInfo property = type.GetProperty(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
+			return field?.GetCustomAttribute<DisplayAttribute>()
+					   ?? property?.GetCustomAttribute<DisplayAttribute>();
 		}
 
 		public static IEnumerable<T> GetEnums<T>(this T source, bool includeHidden = false)

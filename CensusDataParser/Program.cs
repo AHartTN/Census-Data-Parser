@@ -82,6 +82,7 @@ namespace CensusDataParser
 			ProcessCensusData();
 
 			Console.WriteLine("END OF APPLICATION");
+			Console.ReadKey();
 		}
 
 		private static void ProcessArgs(string[] args)

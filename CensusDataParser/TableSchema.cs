@@ -48,7 +48,7 @@ namespace CensusDataParser
 
 	public class TableSchema
 	{
-		public string[] BaseConstructors => new[] {$"public {ClassName}(string csvLine) : base(csvLine) {{}}", $"public {ClassName}(string[] values) : base(values) {{}}"};
+		public string[] BaseConstructors => new[] { $"public {ClassName}() {{ }}", $"public {ClassName}(string csvLine) : base(csvLine) {{ }}", $"public {ClassName}(string[] values) : base(values) {{ }}"};
 		public string BaseConstructorsString => string.Join("\r\n\r\n\t\t", BaseConstructors);
 
 		public string BindingBaseNamespaceString => $"{BaseNamespace}.{Namespace}.Binding";

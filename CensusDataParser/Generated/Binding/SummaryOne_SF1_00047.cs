@@ -1,47 +1,18 @@
-#region Header
-
-// Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 2:17 PM
-// 
-// Solution: CensusDataParser
-// Project: CensusDataParser
-// File: SummaryOne_SF1_00047.cs
-// 
-// Anthony Hart ("ANTHONY") CONFIDENTIAL
-// 
-// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
-// 
-// === NOTICE ===
-// All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
-// herein are proprietary to ANTHONY and may be covered by U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law.
-// Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained
-// from ANTHONY. Access to the source code contained herein is hereby forbidden to anyone except current ANTHONY employees, managers or contractors who have executed 
-// Confidentiality and Non-disclosure agreements explicitly covering such access. 
-// 
-// The copyright notice above does not evidence any actual or intended publication or disclosure of this source code, which includes 
-// information that is confidential and/or proprietary, and is a trade secret, of ANTHONY. ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC PERFORMANCE, 
-// OR PUBLIC DISPLAY OF OR THROUGH USE OF THIS SOURCE CODE WITHOUT THE EXPRESS WRITTEN CONSENT OF ANTHONY IS STRICTLY PROHIBITED, AND IN VIOLATION OF APPLICABLE 
-// LAWS AND INTERNATIONAL TREATIES. THE RECEIPT OR POSSESSION OF THIS SOURCE CODE AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS 
-// TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT MAY DESCRIBE, IN WHOLE OR IN PART.
-// 
-// ANTHONY reserves the right to make public any and all contents of this file at the sole discretion of ANTHONY. In such case, licensing included with said publication(s) will supercede this notice only if made public by ANTHONY.
-// 
-// DISCLAIMERS (When Implemented):
-// MAF/TIGER SHAPEFILES AND CENSUS DATA OBTAINED FROM THE US CENSUS BUREAU VIA FTP.
-// http://www.census.gov
-// ftp://ftp.census.gov
-// 
-// CRIME/POLICE INFORMATION OBTAINED FROM THE FEDERAL BUREAU OF INVESTIGATIONS VIA HTTP
-// http://www.fbi.gov
-#endregion
-
 namespace CensusDataParser.Generated.Binding
 {
 	#region Using Directives
 	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using System.Data.Entity;
+	using System.Data.Entity.ModelConfiguration;
 	using System.Data.OleDb;
-	#endregion
+	using Enumerators;
+	using Generated.Binding;
+	using Generated.Mapping;
+	#endregion Using Directives
 
 	public class SummaryOne_SF1_00047 : BaseModel
 	{
@@ -285,325 +256,327 @@ namespace CensusDataParser.Generated.Binding
 		#endregion Properties
 
 		#region Constructors
+		public SummaryOne_SF1_00047() { }
+
 		public SummaryOne_SF1_00047(string csvLine) : base(csvLine) { }
 
 		public SummaryOne_SF1_00047(string[] values) : base(values) { }
 
 		public SummaryOne_SF1_00047(OleDbDataReader reader)
 		{
-			if (reader[0] != DBNull.Value)
+			if(reader[0] != DBNull.Value)
 			{
 				FILEID = (string)reader[0];
 			}
-			if (reader[1] != DBNull.Value)
+			if(reader[1] != DBNull.Value)
 			{
 				STUSAB = (string)reader[1];
 			}
-			if (reader[2] != DBNull.Value)
+			if(reader[2] != DBNull.Value)
 			{
 				CHARITER = (string)reader[2];
 			}
-			if (reader[3] != DBNull.Value)
+			if(reader[3] != DBNull.Value)
 			{
 				CIFSN = (string)reader[3];
 			}
-			if (reader[4] != DBNull.Value)
+			if(reader[4] != DBNull.Value)
 			{
 				LOGRECNO = (int)reader[4];
 			}
-			if (reader[5] != DBNull.Value)
+			if(reader[5] != DBNull.Value)
 			{
 				HCT0010001 = (int?)reader[5];
 			}
-			if (reader[6] != DBNull.Value)
+			if(reader[6] != DBNull.Value)
 			{
 				HCT0010002 = (int?)reader[6];
 			}
-			if (reader[7] != DBNull.Value)
+			if(reader[7] != DBNull.Value)
 			{
 				HCT0010003 = (int?)reader[7];
 			}
-			if (reader[8] != DBNull.Value)
+			if(reader[8] != DBNull.Value)
 			{
 				HCT0010004 = (int?)reader[8];
 			}
-			if (reader[9] != DBNull.Value)
+			if(reader[9] != DBNull.Value)
 			{
 				HCT0010005 = (int?)reader[9];
 			}
-			if (reader[10] != DBNull.Value)
+			if(reader[10] != DBNull.Value)
 			{
 				HCT0010006 = (int?)reader[10];
 			}
-			if (reader[11] != DBNull.Value)
+			if(reader[11] != DBNull.Value)
 			{
 				HCT0010007 = (int?)reader[11];
 			}
-			if (reader[12] != DBNull.Value)
+			if(reader[12] != DBNull.Value)
 			{
 				HCT0010008 = (int?)reader[12];
 			}
-			if (reader[13] != DBNull.Value)
+			if(reader[13] != DBNull.Value)
 			{
 				HCT0010009 = (int?)reader[13];
 			}
-			if (reader[14] != DBNull.Value)
+			if(reader[14] != DBNull.Value)
 			{
 				HCT0010010 = (int?)reader[14];
 			}
-			if (reader[15] != DBNull.Value)
+			if(reader[15] != DBNull.Value)
 			{
 				HCT0010011 = (int?)reader[15];
 			}
-			if (reader[16] != DBNull.Value)
+			if(reader[16] != DBNull.Value)
 			{
 				HCT0010012 = (int?)reader[16];
 			}
-			if (reader[17] != DBNull.Value)
+			if(reader[17] != DBNull.Value)
 			{
 				HCT0010013 = (int?)reader[17];
 			}
-			if (reader[18] != DBNull.Value)
+			if(reader[18] != DBNull.Value)
 			{
 				HCT0010014 = (int?)reader[18];
 			}
-			if (reader[19] != DBNull.Value)
+			if(reader[19] != DBNull.Value)
 			{
 				HCT0010015 = (int?)reader[19];
 			}
-			if (reader[20] != DBNull.Value)
+			if(reader[20] != DBNull.Value)
 			{
 				HCT0010016 = (int?)reader[20];
 			}
-			if (reader[21] != DBNull.Value)
+			if(reader[21] != DBNull.Value)
 			{
 				HCT0010017 = (int?)reader[21];
 			}
-			if (reader[22] != DBNull.Value)
+			if(reader[22] != DBNull.Value)
 			{
 				HCT0010018 = (int?)reader[22];
 			}
-			if (reader[23] != DBNull.Value)
+			if(reader[23] != DBNull.Value)
 			{
 				HCT0010019 = (int?)reader[23];
 			}
-			if (reader[24] != DBNull.Value)
+			if(reader[24] != DBNull.Value)
 			{
 				HCT0010020 = (int?)reader[24];
 			}
-			if (reader[25] != DBNull.Value)
+			if(reader[25] != DBNull.Value)
 			{
 				HCT0010021 = (int?)reader[25];
 			}
-			if (reader[26] != DBNull.Value)
+			if(reader[26] != DBNull.Value)
 			{
 				HCT0010022 = (int?)reader[26];
 			}
-			if (reader[27] != DBNull.Value)
+			if(reader[27] != DBNull.Value)
 			{
 				HCT0010023 = (int?)reader[27];
 			}
-			if (reader[28] != DBNull.Value)
+			if(reader[28] != DBNull.Value)
 			{
 				HCT0010024 = (int?)reader[28];
 			}
-			if (reader[29] != DBNull.Value)
+			if(reader[29] != DBNull.Value)
 			{
 				HCT0010025 = (int?)reader[29];
 			}
-			if (reader[30] != DBNull.Value)
+			if(reader[30] != DBNull.Value)
 			{
 				HCT0010026 = (int?)reader[30];
 			}
-			if (reader[31] != DBNull.Value)
+			if(reader[31] != DBNull.Value)
 			{
 				HCT0010027 = (int?)reader[31];
 			}
-			if (reader[32] != DBNull.Value)
+			if(reader[32] != DBNull.Value)
 			{
 				HCT0010028 = (int?)reader[32];
 			}
-			if (reader[33] != DBNull.Value)
+			if(reader[33] != DBNull.Value)
 			{
 				HCT0010029 = (int?)reader[33];
 			}
-			if (reader[34] != DBNull.Value)
+			if(reader[34] != DBNull.Value)
 			{
 				HCT0010030 = (int?)reader[34];
 			}
-			if (reader[35] != DBNull.Value)
+			if(reader[35] != DBNull.Value)
 			{
 				HCT0010031 = (int?)reader[35];
 			}
-			if (reader[36] != DBNull.Value)
+			if(reader[36] != DBNull.Value)
 			{
 				HCT0010032 = (int?)reader[36];
 			}
-			if (reader[37] != DBNull.Value)
+			if(reader[37] != DBNull.Value)
 			{
 				HCT0010033 = (int?)reader[37];
 			}
-			if (reader[38] != DBNull.Value)
+			if(reader[38] != DBNull.Value)
 			{
 				HCT0010034 = (int?)reader[38];
 			}
-			if (reader[39] != DBNull.Value)
+			if(reader[39] != DBNull.Value)
 			{
 				HCT0010035 = (int?)reader[39];
 			}
-			if (reader[40] != DBNull.Value)
+			if(reader[40] != DBNull.Value)
 			{
 				HCT0020001 = (int?)reader[40];
 			}
-			if (reader[41] != DBNull.Value)
+			if(reader[41] != DBNull.Value)
 			{
 				HCT0020002 = (int?)reader[41];
 			}
-			if (reader[42] != DBNull.Value)
+			if(reader[42] != DBNull.Value)
 			{
 				HCT0020003 = (int?)reader[42];
 			}
-			if (reader[43] != DBNull.Value)
+			if(reader[43] != DBNull.Value)
 			{
 				HCT0020004 = (int?)reader[43];
 			}
-			if (reader[44] != DBNull.Value)
+			if(reader[44] != DBNull.Value)
 			{
 				HCT0020005 = (int?)reader[44];
 			}
-			if (reader[45] != DBNull.Value)
+			if(reader[45] != DBNull.Value)
 			{
 				HCT0020006 = (int?)reader[45];
 			}
-			if (reader[46] != DBNull.Value)
+			if(reader[46] != DBNull.Value)
 			{
 				HCT0020007 = (int?)reader[46];
 			}
-			if (reader[47] != DBNull.Value)
+			if(reader[47] != DBNull.Value)
 			{
 				HCT0020008 = (int?)reader[47];
 			}
-			if (reader[48] != DBNull.Value)
+			if(reader[48] != DBNull.Value)
 			{
 				HCT0020009 = (int?)reader[48];
 			}
-			if (reader[49] != DBNull.Value)
+			if(reader[49] != DBNull.Value)
 			{
 				HCT0020010 = (int?)reader[49];
 			}
-			if (reader[50] != DBNull.Value)
+			if(reader[50] != DBNull.Value)
 			{
 				HCT0020011 = (int?)reader[50];
 			}
-			if (reader[51] != DBNull.Value)
+			if(reader[51] != DBNull.Value)
 			{
 				HCT0020012 = (int?)reader[51];
 			}
-			if (reader[52] != DBNull.Value)
+			if(reader[52] != DBNull.Value)
 			{
 				HCT0020013 = (int?)reader[52];
 			}
-			if (reader[53] != DBNull.Value)
+			if(reader[53] != DBNull.Value)
 			{
 				HCT0030001 = (int?)reader[53];
 			}
-			if (reader[54] != DBNull.Value)
+			if(reader[54] != DBNull.Value)
 			{
 				HCT0030002 = (int?)reader[54];
 			}
-			if (reader[55] != DBNull.Value)
+			if(reader[55] != DBNull.Value)
 			{
 				HCT0030003 = (int?)reader[55];
 			}
-			if (reader[56] != DBNull.Value)
+			if(reader[56] != DBNull.Value)
 			{
 				HCT0030004 = (int?)reader[56];
 			}
-			if (reader[57] != DBNull.Value)
+			if(reader[57] != DBNull.Value)
 			{
 				HCT0030005 = (int?)reader[57];
 			}
-			if (reader[58] != DBNull.Value)
+			if(reader[58] != DBNull.Value)
 			{
 				HCT0030006 = (int?)reader[58];
 			}
-			if (reader[59] != DBNull.Value)
+			if(reader[59] != DBNull.Value)
 			{
 				HCT0030007 = (int?)reader[59];
 			}
-			if (reader[60] != DBNull.Value)
+			if(reader[60] != DBNull.Value)
 			{
 				HCT0030008 = (int?)reader[60];
 			}
-			if (reader[61] != DBNull.Value)
+			if(reader[61] != DBNull.Value)
 			{
 				HCT0030009 = (int?)reader[61];
 			}
-			if (reader[62] != DBNull.Value)
+			if(reader[62] != DBNull.Value)
 			{
 				HCT0030010 = (int?)reader[62];
 			}
-			if (reader[63] != DBNull.Value)
+			if(reader[63] != DBNull.Value)
 			{
 				HCT0030011 = (int?)reader[63];
 			}
-			if (reader[64] != DBNull.Value)
+			if(reader[64] != DBNull.Value)
 			{
 				HCT0030012 = (int?)reader[64];
 			}
-			if (reader[65] != DBNull.Value)
+			if(reader[65] != DBNull.Value)
 			{
 				HCT0030013 = (int?)reader[65];
 			}
-			if (reader[66] != DBNull.Value)
+			if(reader[66] != DBNull.Value)
 			{
 				HCT0040001 = (int?)reader[66];
 			}
-			if (reader[67] != DBNull.Value)
+			if(reader[67] != DBNull.Value)
 			{
 				HCT0040002 = (int?)reader[67];
 			}
-			if (reader[68] != DBNull.Value)
+			if(reader[68] != DBNull.Value)
 			{
 				HCT0040003 = (int?)reader[68];
 			}
-			if (reader[69] != DBNull.Value)
+			if(reader[69] != DBNull.Value)
 			{
 				HCT0040004 = (int?)reader[69];
 			}
-			if (reader[70] != DBNull.Value)
+			if(reader[70] != DBNull.Value)
 			{
 				HCT0040005 = (int?)reader[70];
 			}
-			if (reader[71] != DBNull.Value)
+			if(reader[71] != DBNull.Value)
 			{
 				HCT0040006 = (int?)reader[71];
 			}
-			if (reader[72] != DBNull.Value)
+			if(reader[72] != DBNull.Value)
 			{
 				HCT0040007 = (int?)reader[72];
 			}
-			if (reader[73] != DBNull.Value)
+			if(reader[73] != DBNull.Value)
 			{
 				HCT0040008 = (int?)reader[73];
 			}
-			if (reader[74] != DBNull.Value)
+			if(reader[74] != DBNull.Value)
 			{
 				HCT0040009 = (int?)reader[74];
 			}
-			if (reader[75] != DBNull.Value)
+			if(reader[75] != DBNull.Value)
 			{
 				HCT0040010 = (int?)reader[75];
 			}
-			if (reader[76] != DBNull.Value)
+			if(reader[76] != DBNull.Value)
 			{
 				HCT0040011 = (int?)reader[76];
 			}
-			if (reader[77] != DBNull.Value)
+			if(reader[77] != DBNull.Value)
 			{
 				HCT0040012 = (int?)reader[77];
 			}
-			if (reader[78] != DBNull.Value)
+			if(reader[78] != DBNull.Value)
 			{
 				HCT0040013 = (int?)reader[78];
 			}

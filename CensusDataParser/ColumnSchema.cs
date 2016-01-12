@@ -39,6 +39,7 @@ namespace CensusDataParser
 {
 	#region Using Directives
 	using System;
+	using System.Collections.Generic;
 	using System.Data;
 	using System.Linq;
 	using Models.SF1;
@@ -127,6 +128,15 @@ namespace CensusDataParser
 		public int Size { get; set; }
 		public static readonly string[] KeyColumns = {"ID", "FILEID", "STUSAB", "CHARITER", "CIFSN", "LOGRECNO", "STUB", "ITEM", "SEGMENT", "DESC", "SORT_ID", "TABLE_NUMBER", "TABLE", "FIELD_CODE"};
 
+		// Access file isn't perfect. We need to adjust the length of specific columns to ensure proper flat file importing
+		public static Dictionary<string, int> CustomFieldLengths = new Dictionary<string, int>
+													{
+														{"LOGRECNO", 7},
+														{"AREALAND", 14},
+														{"AREAWATR", 14},
+														{"POP100", 9},
+														{"HU100", 9}
+													};
 		public ColumnSchema()
 		{
 			// Empty constructor to ensure JSON operability
@@ -213,6 +223,14 @@ namespace CensusDataParser
 			{
 				DataType = typeof (long);
 			}
+			else if (Name == "AREALAND"
+			         || Name == "AREAWATR")
+			{
+				DataType = typeof (string);
+			}
+
+			if (CustomFieldLengths.ContainsKey(Name))
+				Size = CustomFieldLengths[Name];
 		}
 
 		public string GetAttributeString()

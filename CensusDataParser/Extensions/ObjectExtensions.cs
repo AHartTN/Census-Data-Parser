@@ -38,7 +38,10 @@
 namespace CensusDataParser.Extensions
 {
 	#region Using Directives
+	using System;
+	using System.ComponentModel.DataAnnotations;
 	using System.Reflection;
+	using Attributes;
 	#endregion
 
 	public static class ObjectExtensions
@@ -48,7 +51,7 @@ namespace CensusDataParser.Extensions
 		public static PropertyInfo GetProperty(this object source, string name)
 		{
 			return source?.GetType()
-			              .GetProperty(name, BindFlags);
+						  .GetProperty(name, BindFlags);
 		}
 
 		public static object GetPropertyValue(this object source, string name) { return source?.GetPropertyValue(source.GetProperty(name)); }
@@ -60,5 +63,111 @@ namespace CensusDataParser.Extensions
 			PropertyInfo property = source?.GetProperty(name);
 			property?.SetValue(source, value);
 		}
+
+		public static DisplayAttribute GetDisplayAttribute<T>(this T source, string name)
+		{
+			if (source == null)
+			{
+				return null;
+			}
+
+			Type type = typeof(T);
+			FieldInfo field = type.GetField(name, BindFlags);
+			PropertyInfo property = type.GetProperty(name, BindFlags);
+			return field?.GetCustomAttribute<DisplayAttribute>()
+					   ?? property?.GetCustomAttribute<DisplayAttribute>();
+		}
+
+		public static string GetDescription<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+			return attribute?.Description;
+		}
+		
+		public static string GetName<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+			return attribute?.Name;
+		}
+
+		public static int? GetOrder<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+			return attribute?.Order;
+		}
+
+		public static string GetGroupName<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+			return attribute?.GroupName;
+		}
+
+		public static HiddenAttribute GetHiddenAttribute<T>(this T source, string name)
+		{
+			Type type = typeof(T);
+			FieldInfo field = type.GetField(name, BindFlags);
+			PropertyInfo property = type.GetProperty(name, BindFlags);
+			return field?.GetCustomAttribute<HiddenAttribute>()
+					?? property?.GetCustomAttribute<HiddenAttribute>();
+		}
+		public static string GetPrompt<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			return attribute?.Prompt;
+		}
+
+		public static string GetShortName<T>(this T source, string name)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			return attribute?.ShortName;
+		}
+
+		public static bool IsHidden<T>(this T source, string name)
+		{
+			HiddenAttribute attribute = source.GetHiddenAttribute(name);
+			return attribute != null && attribute.IsHidden;
+		}
+		public static T SetDescription<T>(this T source, string name, string value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.Description = value;
+			return source;
+		}
+
+		public static T SetGroupName<T>(this T source, string name, string value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.GroupName = value;
+			return source;
+		}
+
+		public static T SetName<T>(this T source, string name, string value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.Name = value;
+			return source;
+		}
+
+		public static T SetOrder<T>(this T source, string name, int value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.Order = value;
+			return source;
+		}
+
+		public static T SetPrompt<T>(this T source, string name, string value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.Prompt = value;
+			return source;
+		}
+
+		public static T SetShortName<T>(this T source, string name, string value)
+		{
+			DisplayAttribute attribute = source.GetDisplayAttribute(name);
+			attribute.ShortName = value;
+			return source;
+		}
+
 	}
 }

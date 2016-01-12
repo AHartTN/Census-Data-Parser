@@ -46,7 +46,7 @@ namespace CensusDataParser.Extensions
 
 	public static class EntityTypeConfigurationExtensions
 	{
-		public static IEnumerable<Tuple<string, int?, int?>> GetColumnInfo<T>(this EntityTypeConfiguration<T> map) where T : class
+		public static IEnumerable<Tuple<string, string, int?, int?>> GetColumnInfo<T>(this EntityTypeConfiguration<T> map) where T : class
 		{
 			object configuration = map.GetPropertyValue("Configuration");
 			IEnumerable properties = configuration?.GetPropertyValue("PrimitivePropertyConfigurations") as IEnumerable;
@@ -58,12 +58,14 @@ namespace CensusDataParser.Extensions
 			foreach (object property in properties)
 			{
 				string propertyString = $"{property.GetPropertyValue("Key")}";
+				string columnType = property.GetPropertyValue("Value")
+										   .GetPropertyValue("ColumnType") as string;
 				int? columnIndex = property.GetPropertyValue("Value")
-				                           .GetPropertyValue("ColumnOrder") as int?;
+										   .GetPropertyValue("ColumnOrder") as int?;
 				int? maxLength = property.GetPropertyValue("Value")
 				                         .GetPropertyValue("MaxLength") as int?;
 
-				yield return new Tuple<string, int?, int?>(propertyString, columnIndex, maxLength);
+				yield return new Tuple<string, string, int?, int?>(propertyString, columnType, columnIndex, maxLength);
 			}
 		}
 	}

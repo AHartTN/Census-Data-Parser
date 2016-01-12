@@ -1,47 +1,18 @@
-#region Header
-
-// Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 2:17 PM
-// 
-// Solution: CensusDataParser
-// Project: CensusDataParser
-// File: SF1CongressionalDistricts113_SF1_00030.cs
-// 
-// Anthony Hart ("ANTHONY") CONFIDENTIAL
-// 
-// Unpublished Copyright (c) 1985-2016 Anthony Hart, All Rights Reserved.
-// 
-// === NOTICE ===
-// All information contained herein is, and remains the property of ANTHONY. The intellectual and technical concepts contained
-// herein are proprietary to ANTHONY and may be covered by U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law.
-// Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained
-// from ANTHONY. Access to the source code contained herein is hereby forbidden to anyone except current ANTHONY employees, managers or contractors who have executed 
-// Confidentiality and Non-disclosure agreements explicitly covering such access. 
-// 
-// The copyright notice above does not evidence any actual or intended publication or disclosure of this source code, which includes 
-// information that is confidential and/or proprietary, and is a trade secret, of ANTHONY. ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC PERFORMANCE, 
-// OR PUBLIC DISPLAY OF OR THROUGH USE OF THIS SOURCE CODE WITHOUT THE EXPRESS WRITTEN CONSENT OF ANTHONY IS STRICTLY PROHIBITED, AND IN VIOLATION OF APPLICABLE 
-// LAWS AND INTERNATIONAL TREATIES. THE RECEIPT OR POSSESSION OF THIS SOURCE CODE AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS 
-// TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT MAY DESCRIBE, IN WHOLE OR IN PART.
-// 
-// ANTHONY reserves the right to make public any and all contents of this file at the sole discretion of ANTHONY. In such case, licensing included with said publication(s) will supercede this notice only if made public by ANTHONY.
-// 
-// DISCLAIMERS (When Implemented):
-// MAF/TIGER SHAPEFILES AND CENSUS DATA OBTAINED FROM THE US CENSUS BUREAU VIA FTP.
-// http://www.census.gov
-// ftp://ftp.census.gov
-// 
-// CRIME/POLICE INFORMATION OBTAINED FROM THE FEDERAL BUREAU OF INVESTIGATIONS VIA HTTP
-// http://www.fbi.gov
-#endregion
-
 namespace CensusDataParser.Generated.Binding
 {
 	#region Using Directives
 	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using System.Data.Entity;
+	using System.Data.Entity.ModelConfiguration;
 	using System.Data.OleDb;
-	#endregion
+	using Enumerators;
+	using Generated.Binding;
+	using Generated.Mapping;
+	#endregion Using Directives
 
 	public class SF1CongressionalDistricts113_SF1_00030 : BaseModel
 	{
@@ -690,865 +661,867 @@ namespace CensusDataParser.Generated.Binding
 		#endregion Properties
 
 		#region Constructors
+		public SF1CongressionalDistricts113_SF1_00030() { }
+
 		public SF1CongressionalDistricts113_SF1_00030(string csvLine) : base(csvLine) { }
 
 		public SF1CongressionalDistricts113_SF1_00030(string[] values) : base(values) { }
 
 		public SF1CongressionalDistricts113_SF1_00030(OleDbDataReader reader)
 		{
-			if (reader[0] != DBNull.Value)
+			if(reader[0] != DBNull.Value)
 			{
 				FILEID = (string)reader[0];
 			}
-			if (reader[1] != DBNull.Value)
+			if(reader[1] != DBNull.Value)
 			{
 				STUSAB = (string)reader[1];
 			}
-			if (reader[2] != DBNull.Value)
+			if(reader[2] != DBNull.Value)
 			{
 				CHARITER = (string)reader[2];
 			}
-			if (reader[3] != DBNull.Value)
+			if(reader[3] != DBNull.Value)
 			{
 				CIFSN = (string)reader[3];
 			}
-			if (reader[4] != DBNull.Value)
+			if(reader[4] != DBNull.Value)
 			{
 				LOGRECNO = (int)reader[4];
 			}
-			if (reader[5] != DBNull.Value)
+			if(reader[5] != DBNull.Value)
 			{
 				PCT012K001 = (int?)reader[5];
 			}
-			if (reader[6] != DBNull.Value)
+			if(reader[6] != DBNull.Value)
 			{
 				PCT012K002 = (int?)reader[6];
 			}
-			if (reader[7] != DBNull.Value)
+			if(reader[7] != DBNull.Value)
 			{
 				PCT012K003 = (int?)reader[7];
 			}
-			if (reader[8] != DBNull.Value)
+			if(reader[8] != DBNull.Value)
 			{
 				PCT012K004 = (int?)reader[8];
 			}
-			if (reader[9] != DBNull.Value)
+			if(reader[9] != DBNull.Value)
 			{
 				PCT012K005 = (int?)reader[9];
 			}
-			if (reader[10] != DBNull.Value)
+			if(reader[10] != DBNull.Value)
 			{
 				PCT012K006 = (int?)reader[10];
 			}
-			if (reader[11] != DBNull.Value)
+			if(reader[11] != DBNull.Value)
 			{
 				PCT012K007 = (int?)reader[11];
 			}
-			if (reader[12] != DBNull.Value)
+			if(reader[12] != DBNull.Value)
 			{
 				PCT012K008 = (int?)reader[12];
 			}
-			if (reader[13] != DBNull.Value)
+			if(reader[13] != DBNull.Value)
 			{
 				PCT012K009 = (int?)reader[13];
 			}
-			if (reader[14] != DBNull.Value)
+			if(reader[14] != DBNull.Value)
 			{
 				PCT012K010 = (int?)reader[14];
 			}
-			if (reader[15] != DBNull.Value)
+			if(reader[15] != DBNull.Value)
 			{
 				PCT012K011 = (int?)reader[15];
 			}
-			if (reader[16] != DBNull.Value)
+			if(reader[16] != DBNull.Value)
 			{
 				PCT012K012 = (int?)reader[16];
 			}
-			if (reader[17] != DBNull.Value)
+			if(reader[17] != DBNull.Value)
 			{
 				PCT012K013 = (int?)reader[17];
 			}
-			if (reader[18] != DBNull.Value)
+			if(reader[18] != DBNull.Value)
 			{
 				PCT012K014 = (int?)reader[18];
 			}
-			if (reader[19] != DBNull.Value)
+			if(reader[19] != DBNull.Value)
 			{
 				PCT012K015 = (int?)reader[19];
 			}
-			if (reader[20] != DBNull.Value)
+			if(reader[20] != DBNull.Value)
 			{
 				PCT012K016 = (int?)reader[20];
 			}
-			if (reader[21] != DBNull.Value)
+			if(reader[21] != DBNull.Value)
 			{
 				PCT012K017 = (int?)reader[21];
 			}
-			if (reader[22] != DBNull.Value)
+			if(reader[22] != DBNull.Value)
 			{
 				PCT012K018 = (int?)reader[22];
 			}
-			if (reader[23] != DBNull.Value)
+			if(reader[23] != DBNull.Value)
 			{
 				PCT012K019 = (int?)reader[23];
 			}
-			if (reader[24] != DBNull.Value)
+			if(reader[24] != DBNull.Value)
 			{
 				PCT012K020 = (int?)reader[24];
 			}
-			if (reader[25] != DBNull.Value)
+			if(reader[25] != DBNull.Value)
 			{
 				PCT012K021 = (int?)reader[25];
 			}
-			if (reader[26] != DBNull.Value)
+			if(reader[26] != DBNull.Value)
 			{
 				PCT012K022 = (int?)reader[26];
 			}
-			if (reader[27] != DBNull.Value)
+			if(reader[27] != DBNull.Value)
 			{
 				PCT012K023 = (int?)reader[27];
 			}
-			if (reader[28] != DBNull.Value)
+			if(reader[28] != DBNull.Value)
 			{
 				PCT012K024 = (int?)reader[28];
 			}
-			if (reader[29] != DBNull.Value)
+			if(reader[29] != DBNull.Value)
 			{
 				PCT012K025 = (int?)reader[29];
 			}
-			if (reader[30] != DBNull.Value)
+			if(reader[30] != DBNull.Value)
 			{
 				PCT012K026 = (int?)reader[30];
 			}
-			if (reader[31] != DBNull.Value)
+			if(reader[31] != DBNull.Value)
 			{
 				PCT012K027 = (int?)reader[31];
 			}
-			if (reader[32] != DBNull.Value)
+			if(reader[32] != DBNull.Value)
 			{
 				PCT012K028 = (int?)reader[32];
 			}
-			if (reader[33] != DBNull.Value)
+			if(reader[33] != DBNull.Value)
 			{
 				PCT012K029 = (int?)reader[33];
 			}
-			if (reader[34] != DBNull.Value)
+			if(reader[34] != DBNull.Value)
 			{
 				PCT012K030 = (int?)reader[34];
 			}
-			if (reader[35] != DBNull.Value)
+			if(reader[35] != DBNull.Value)
 			{
 				PCT012K031 = (int?)reader[35];
 			}
-			if (reader[36] != DBNull.Value)
+			if(reader[36] != DBNull.Value)
 			{
 				PCT012K032 = (int?)reader[36];
 			}
-			if (reader[37] != DBNull.Value)
+			if(reader[37] != DBNull.Value)
 			{
 				PCT012K033 = (int?)reader[37];
 			}
-			if (reader[38] != DBNull.Value)
+			if(reader[38] != DBNull.Value)
 			{
 				PCT012K034 = (int?)reader[38];
 			}
-			if (reader[39] != DBNull.Value)
+			if(reader[39] != DBNull.Value)
 			{
 				PCT012K035 = (int?)reader[39];
 			}
-			if (reader[40] != DBNull.Value)
+			if(reader[40] != DBNull.Value)
 			{
 				PCT012K036 = (int?)reader[40];
 			}
-			if (reader[41] != DBNull.Value)
+			if(reader[41] != DBNull.Value)
 			{
 				PCT012K037 = (int?)reader[41];
 			}
-			if (reader[42] != DBNull.Value)
+			if(reader[42] != DBNull.Value)
 			{
 				PCT012K038 = (int?)reader[42];
 			}
-			if (reader[43] != DBNull.Value)
+			if(reader[43] != DBNull.Value)
 			{
 				PCT012K039 = (int?)reader[43];
 			}
-			if (reader[44] != DBNull.Value)
+			if(reader[44] != DBNull.Value)
 			{
 				PCT012K040 = (int?)reader[44];
 			}
-			if (reader[45] != DBNull.Value)
+			if(reader[45] != DBNull.Value)
 			{
 				PCT012K041 = (int?)reader[45];
 			}
-			if (reader[46] != DBNull.Value)
+			if(reader[46] != DBNull.Value)
 			{
 				PCT012K042 = (int?)reader[46];
 			}
-			if (reader[47] != DBNull.Value)
+			if(reader[47] != DBNull.Value)
 			{
 				PCT012K043 = (int?)reader[47];
 			}
-			if (reader[48] != DBNull.Value)
+			if(reader[48] != DBNull.Value)
 			{
 				PCT012K044 = (int?)reader[48];
 			}
-			if (reader[49] != DBNull.Value)
+			if(reader[49] != DBNull.Value)
 			{
 				PCT012K045 = (int?)reader[49];
 			}
-			if (reader[50] != DBNull.Value)
+			if(reader[50] != DBNull.Value)
 			{
 				PCT012K046 = (int?)reader[50];
 			}
-			if (reader[51] != DBNull.Value)
+			if(reader[51] != DBNull.Value)
 			{
 				PCT012K047 = (int?)reader[51];
 			}
-			if (reader[52] != DBNull.Value)
+			if(reader[52] != DBNull.Value)
 			{
 				PCT012K048 = (int?)reader[52];
 			}
-			if (reader[53] != DBNull.Value)
+			if(reader[53] != DBNull.Value)
 			{
 				PCT012K049 = (int?)reader[53];
 			}
-			if (reader[54] != DBNull.Value)
+			if(reader[54] != DBNull.Value)
 			{
 				PCT012K050 = (int?)reader[54];
 			}
-			if (reader[55] != DBNull.Value)
+			if(reader[55] != DBNull.Value)
 			{
 				PCT012K051 = (int?)reader[55];
 			}
-			if (reader[56] != DBNull.Value)
+			if(reader[56] != DBNull.Value)
 			{
 				PCT012K052 = (int?)reader[56];
 			}
-			if (reader[57] != DBNull.Value)
+			if(reader[57] != DBNull.Value)
 			{
 				PCT012K053 = (int?)reader[57];
 			}
-			if (reader[58] != DBNull.Value)
+			if(reader[58] != DBNull.Value)
 			{
 				PCT012K054 = (int?)reader[58];
 			}
-			if (reader[59] != DBNull.Value)
+			if(reader[59] != DBNull.Value)
 			{
 				PCT012K055 = (int?)reader[59];
 			}
-			if (reader[60] != DBNull.Value)
+			if(reader[60] != DBNull.Value)
 			{
 				PCT012K056 = (int?)reader[60];
 			}
-			if (reader[61] != DBNull.Value)
+			if(reader[61] != DBNull.Value)
 			{
 				PCT012K057 = (int?)reader[61];
 			}
-			if (reader[62] != DBNull.Value)
+			if(reader[62] != DBNull.Value)
 			{
 				PCT012K058 = (int?)reader[62];
 			}
-			if (reader[63] != DBNull.Value)
+			if(reader[63] != DBNull.Value)
 			{
 				PCT012K059 = (int?)reader[63];
 			}
-			if (reader[64] != DBNull.Value)
+			if(reader[64] != DBNull.Value)
 			{
 				PCT012K060 = (int?)reader[64];
 			}
-			if (reader[65] != DBNull.Value)
+			if(reader[65] != DBNull.Value)
 			{
 				PCT012K061 = (int?)reader[65];
 			}
-			if (reader[66] != DBNull.Value)
+			if(reader[66] != DBNull.Value)
 			{
 				PCT012K062 = (int?)reader[66];
 			}
-			if (reader[67] != DBNull.Value)
+			if(reader[67] != DBNull.Value)
 			{
 				PCT012K063 = (int?)reader[67];
 			}
-			if (reader[68] != DBNull.Value)
+			if(reader[68] != DBNull.Value)
 			{
 				PCT012K064 = (int?)reader[68];
 			}
-			if (reader[69] != DBNull.Value)
+			if(reader[69] != DBNull.Value)
 			{
 				PCT012K065 = (int?)reader[69];
 			}
-			if (reader[70] != DBNull.Value)
+			if(reader[70] != DBNull.Value)
 			{
 				PCT012K066 = (int?)reader[70];
 			}
-			if (reader[71] != DBNull.Value)
+			if(reader[71] != DBNull.Value)
 			{
 				PCT012K067 = (int?)reader[71];
 			}
-			if (reader[72] != DBNull.Value)
+			if(reader[72] != DBNull.Value)
 			{
 				PCT012K068 = (int?)reader[72];
 			}
-			if (reader[73] != DBNull.Value)
+			if(reader[73] != DBNull.Value)
 			{
 				PCT012K069 = (int?)reader[73];
 			}
-			if (reader[74] != DBNull.Value)
+			if(reader[74] != DBNull.Value)
 			{
 				PCT012K070 = (int?)reader[74];
 			}
-			if (reader[75] != DBNull.Value)
+			if(reader[75] != DBNull.Value)
 			{
 				PCT012K071 = (int?)reader[75];
 			}
-			if (reader[76] != DBNull.Value)
+			if(reader[76] != DBNull.Value)
 			{
 				PCT012K072 = (int?)reader[76];
 			}
-			if (reader[77] != DBNull.Value)
+			if(reader[77] != DBNull.Value)
 			{
 				PCT012K073 = (int?)reader[77];
 			}
-			if (reader[78] != DBNull.Value)
+			if(reader[78] != DBNull.Value)
 			{
 				PCT012K074 = (int?)reader[78];
 			}
-			if (reader[79] != DBNull.Value)
+			if(reader[79] != DBNull.Value)
 			{
 				PCT012K075 = (int?)reader[79];
 			}
-			if (reader[80] != DBNull.Value)
+			if(reader[80] != DBNull.Value)
 			{
 				PCT012K076 = (int?)reader[80];
 			}
-			if (reader[81] != DBNull.Value)
+			if(reader[81] != DBNull.Value)
 			{
 				PCT012K077 = (int?)reader[81];
 			}
-			if (reader[82] != DBNull.Value)
+			if(reader[82] != DBNull.Value)
 			{
 				PCT012K078 = (int?)reader[82];
 			}
-			if (reader[83] != DBNull.Value)
+			if(reader[83] != DBNull.Value)
 			{
 				PCT012K079 = (int?)reader[83];
 			}
-			if (reader[84] != DBNull.Value)
+			if(reader[84] != DBNull.Value)
 			{
 				PCT012K080 = (int?)reader[84];
 			}
-			if (reader[85] != DBNull.Value)
+			if(reader[85] != DBNull.Value)
 			{
 				PCT012K081 = (int?)reader[85];
 			}
-			if (reader[86] != DBNull.Value)
+			if(reader[86] != DBNull.Value)
 			{
 				PCT012K082 = (int?)reader[86];
 			}
-			if (reader[87] != DBNull.Value)
+			if(reader[87] != DBNull.Value)
 			{
 				PCT012K083 = (int?)reader[87];
 			}
-			if (reader[88] != DBNull.Value)
+			if(reader[88] != DBNull.Value)
 			{
 				PCT012K084 = (int?)reader[88];
 			}
-			if (reader[89] != DBNull.Value)
+			if(reader[89] != DBNull.Value)
 			{
 				PCT012K085 = (int?)reader[89];
 			}
-			if (reader[90] != DBNull.Value)
+			if(reader[90] != DBNull.Value)
 			{
 				PCT012K086 = (int?)reader[90];
 			}
-			if (reader[91] != DBNull.Value)
+			if(reader[91] != DBNull.Value)
 			{
 				PCT012K087 = (int?)reader[91];
 			}
-			if (reader[92] != DBNull.Value)
+			if(reader[92] != DBNull.Value)
 			{
 				PCT012K088 = (int?)reader[92];
 			}
-			if (reader[93] != DBNull.Value)
+			if(reader[93] != DBNull.Value)
 			{
 				PCT012K089 = (int?)reader[93];
 			}
-			if (reader[94] != DBNull.Value)
+			if(reader[94] != DBNull.Value)
 			{
 				PCT012K090 = (int?)reader[94];
 			}
-			if (reader[95] != DBNull.Value)
+			if(reader[95] != DBNull.Value)
 			{
 				PCT012K091 = (int?)reader[95];
 			}
-			if (reader[96] != DBNull.Value)
+			if(reader[96] != DBNull.Value)
 			{
 				PCT012K092 = (int?)reader[96];
 			}
-			if (reader[97] != DBNull.Value)
+			if(reader[97] != DBNull.Value)
 			{
 				PCT012K093 = (int?)reader[97];
 			}
-			if (reader[98] != DBNull.Value)
+			if(reader[98] != DBNull.Value)
 			{
 				PCT012K094 = (int?)reader[98];
 			}
-			if (reader[99] != DBNull.Value)
+			if(reader[99] != DBNull.Value)
 			{
 				PCT012K095 = (int?)reader[99];
 			}
-			if (reader[100] != DBNull.Value)
+			if(reader[100] != DBNull.Value)
 			{
 				PCT012K096 = (int?)reader[100];
 			}
-			if (reader[101] != DBNull.Value)
+			if(reader[101] != DBNull.Value)
 			{
 				PCT012K097 = (int?)reader[101];
 			}
-			if (reader[102] != DBNull.Value)
+			if(reader[102] != DBNull.Value)
 			{
 				PCT012K098 = (int?)reader[102];
 			}
-			if (reader[103] != DBNull.Value)
+			if(reader[103] != DBNull.Value)
 			{
 				PCT012K099 = (int?)reader[103];
 			}
-			if (reader[104] != DBNull.Value)
+			if(reader[104] != DBNull.Value)
 			{
 				PCT012K100 = (int?)reader[104];
 			}
-			if (reader[105] != DBNull.Value)
+			if(reader[105] != DBNull.Value)
 			{
 				PCT012K101 = (int?)reader[105];
 			}
-			if (reader[106] != DBNull.Value)
+			if(reader[106] != DBNull.Value)
 			{
 				PCT012K102 = (int?)reader[106];
 			}
-			if (reader[107] != DBNull.Value)
+			if(reader[107] != DBNull.Value)
 			{
 				PCT012K103 = (int?)reader[107];
 			}
-			if (reader[108] != DBNull.Value)
+			if(reader[108] != DBNull.Value)
 			{
 				PCT012K104 = (int?)reader[108];
 			}
-			if (reader[109] != DBNull.Value)
+			if(reader[109] != DBNull.Value)
 			{
 				PCT012K105 = (int?)reader[109];
 			}
-			if (reader[110] != DBNull.Value)
+			if(reader[110] != DBNull.Value)
 			{
 				PCT012K106 = (int?)reader[110];
 			}
-			if (reader[111] != DBNull.Value)
+			if(reader[111] != DBNull.Value)
 			{
 				PCT012K107 = (int?)reader[111];
 			}
-			if (reader[112] != DBNull.Value)
+			if(reader[112] != DBNull.Value)
 			{
 				PCT012K108 = (int?)reader[112];
 			}
-			if (reader[113] != DBNull.Value)
+			if(reader[113] != DBNull.Value)
 			{
 				PCT012K109 = (int?)reader[113];
 			}
-			if (reader[114] != DBNull.Value)
+			if(reader[114] != DBNull.Value)
 			{
 				PCT012K110 = (int?)reader[114];
 			}
-			if (reader[115] != DBNull.Value)
+			if(reader[115] != DBNull.Value)
 			{
 				PCT012K111 = (int?)reader[115];
 			}
-			if (reader[116] != DBNull.Value)
+			if(reader[116] != DBNull.Value)
 			{
 				PCT012K112 = (int?)reader[116];
 			}
-			if (reader[117] != DBNull.Value)
+			if(reader[117] != DBNull.Value)
 			{
 				PCT012K113 = (int?)reader[117];
 			}
-			if (reader[118] != DBNull.Value)
+			if(reader[118] != DBNull.Value)
 			{
 				PCT012K114 = (int?)reader[118];
 			}
-			if (reader[119] != DBNull.Value)
+			if(reader[119] != DBNull.Value)
 			{
 				PCT012K115 = (int?)reader[119];
 			}
-			if (reader[120] != DBNull.Value)
+			if(reader[120] != DBNull.Value)
 			{
 				PCT012K116 = (int?)reader[120];
 			}
-			if (reader[121] != DBNull.Value)
+			if(reader[121] != DBNull.Value)
 			{
 				PCT012K117 = (int?)reader[121];
 			}
-			if (reader[122] != DBNull.Value)
+			if(reader[122] != DBNull.Value)
 			{
 				PCT012K118 = (int?)reader[122];
 			}
-			if (reader[123] != DBNull.Value)
+			if(reader[123] != DBNull.Value)
 			{
 				PCT012K119 = (int?)reader[123];
 			}
-			if (reader[124] != DBNull.Value)
+			if(reader[124] != DBNull.Value)
 			{
 				PCT012K120 = (int?)reader[124];
 			}
-			if (reader[125] != DBNull.Value)
+			if(reader[125] != DBNull.Value)
 			{
 				PCT012K121 = (int?)reader[125];
 			}
-			if (reader[126] != DBNull.Value)
+			if(reader[126] != DBNull.Value)
 			{
 				PCT012K122 = (int?)reader[126];
 			}
-			if (reader[127] != DBNull.Value)
+			if(reader[127] != DBNull.Value)
 			{
 				PCT012K123 = (int?)reader[127];
 			}
-			if (reader[128] != DBNull.Value)
+			if(reader[128] != DBNull.Value)
 			{
 				PCT012K124 = (int?)reader[128];
 			}
-			if (reader[129] != DBNull.Value)
+			if(reader[129] != DBNull.Value)
 			{
 				PCT012K125 = (int?)reader[129];
 			}
-			if (reader[130] != DBNull.Value)
+			if(reader[130] != DBNull.Value)
 			{
 				PCT012K126 = (int?)reader[130];
 			}
-			if (reader[131] != DBNull.Value)
+			if(reader[131] != DBNull.Value)
 			{
 				PCT012K127 = (int?)reader[131];
 			}
-			if (reader[132] != DBNull.Value)
+			if(reader[132] != DBNull.Value)
 			{
 				PCT012K128 = (int?)reader[132];
 			}
-			if (reader[133] != DBNull.Value)
+			if(reader[133] != DBNull.Value)
 			{
 				PCT012K129 = (int?)reader[133];
 			}
-			if (reader[134] != DBNull.Value)
+			if(reader[134] != DBNull.Value)
 			{
 				PCT012K130 = (int?)reader[134];
 			}
-			if (reader[135] != DBNull.Value)
+			if(reader[135] != DBNull.Value)
 			{
 				PCT012K131 = (int?)reader[135];
 			}
-			if (reader[136] != DBNull.Value)
+			if(reader[136] != DBNull.Value)
 			{
 				PCT012K132 = (int?)reader[136];
 			}
-			if (reader[137] != DBNull.Value)
+			if(reader[137] != DBNull.Value)
 			{
 				PCT012K133 = (int?)reader[137];
 			}
-			if (reader[138] != DBNull.Value)
+			if(reader[138] != DBNull.Value)
 			{
 				PCT012K134 = (int?)reader[138];
 			}
-			if (reader[139] != DBNull.Value)
+			if(reader[139] != DBNull.Value)
 			{
 				PCT012K135 = (int?)reader[139];
 			}
-			if (reader[140] != DBNull.Value)
+			if(reader[140] != DBNull.Value)
 			{
 				PCT012K136 = (int?)reader[140];
 			}
-			if (reader[141] != DBNull.Value)
+			if(reader[141] != DBNull.Value)
 			{
 				PCT012K137 = (int?)reader[141];
 			}
-			if (reader[142] != DBNull.Value)
+			if(reader[142] != DBNull.Value)
 			{
 				PCT012K138 = (int?)reader[142];
 			}
-			if (reader[143] != DBNull.Value)
+			if(reader[143] != DBNull.Value)
 			{
 				PCT012K139 = (int?)reader[143];
 			}
-			if (reader[144] != DBNull.Value)
+			if(reader[144] != DBNull.Value)
 			{
 				PCT012K140 = (int?)reader[144];
 			}
-			if (reader[145] != DBNull.Value)
+			if(reader[145] != DBNull.Value)
 			{
 				PCT012K141 = (int?)reader[145];
 			}
-			if (reader[146] != DBNull.Value)
+			if(reader[146] != DBNull.Value)
 			{
 				PCT012K142 = (int?)reader[146];
 			}
-			if (reader[147] != DBNull.Value)
+			if(reader[147] != DBNull.Value)
 			{
 				PCT012K143 = (int?)reader[147];
 			}
-			if (reader[148] != DBNull.Value)
+			if(reader[148] != DBNull.Value)
 			{
 				PCT012K144 = (int?)reader[148];
 			}
-			if (reader[149] != DBNull.Value)
+			if(reader[149] != DBNull.Value)
 			{
 				PCT012K145 = (int?)reader[149];
 			}
-			if (reader[150] != DBNull.Value)
+			if(reader[150] != DBNull.Value)
 			{
 				PCT012K146 = (int?)reader[150];
 			}
-			if (reader[151] != DBNull.Value)
+			if(reader[151] != DBNull.Value)
 			{
 				PCT012K147 = (int?)reader[151];
 			}
-			if (reader[152] != DBNull.Value)
+			if(reader[152] != DBNull.Value)
 			{
 				PCT012K148 = (int?)reader[152];
 			}
-			if (reader[153] != DBNull.Value)
+			if(reader[153] != DBNull.Value)
 			{
 				PCT012K149 = (int?)reader[153];
 			}
-			if (reader[154] != DBNull.Value)
+			if(reader[154] != DBNull.Value)
 			{
 				PCT012K150 = (int?)reader[154];
 			}
-			if (reader[155] != DBNull.Value)
+			if(reader[155] != DBNull.Value)
 			{
 				PCT012K151 = (int?)reader[155];
 			}
-			if (reader[156] != DBNull.Value)
+			if(reader[156] != DBNull.Value)
 			{
 				PCT012K152 = (int?)reader[156];
 			}
-			if (reader[157] != DBNull.Value)
+			if(reader[157] != DBNull.Value)
 			{
 				PCT012K153 = (int?)reader[157];
 			}
-			if (reader[158] != DBNull.Value)
+			if(reader[158] != DBNull.Value)
 			{
 				PCT012K154 = (int?)reader[158];
 			}
-			if (reader[159] != DBNull.Value)
+			if(reader[159] != DBNull.Value)
 			{
 				PCT012K155 = (int?)reader[159];
 			}
-			if (reader[160] != DBNull.Value)
+			if(reader[160] != DBNull.Value)
 			{
 				PCT012K156 = (int?)reader[160];
 			}
-			if (reader[161] != DBNull.Value)
+			if(reader[161] != DBNull.Value)
 			{
 				PCT012K157 = (int?)reader[161];
 			}
-			if (reader[162] != DBNull.Value)
+			if(reader[162] != DBNull.Value)
 			{
 				PCT012K158 = (int?)reader[162];
 			}
-			if (reader[163] != DBNull.Value)
+			if(reader[163] != DBNull.Value)
 			{
 				PCT012K159 = (int?)reader[163];
 			}
-			if (reader[164] != DBNull.Value)
+			if(reader[164] != DBNull.Value)
 			{
 				PCT012K160 = (int?)reader[164];
 			}
-			if (reader[165] != DBNull.Value)
+			if(reader[165] != DBNull.Value)
 			{
 				PCT012K161 = (int?)reader[165];
 			}
-			if (reader[166] != DBNull.Value)
+			if(reader[166] != DBNull.Value)
 			{
 				PCT012K162 = (int?)reader[166];
 			}
-			if (reader[167] != DBNull.Value)
+			if(reader[167] != DBNull.Value)
 			{
 				PCT012K163 = (int?)reader[167];
 			}
-			if (reader[168] != DBNull.Value)
+			if(reader[168] != DBNull.Value)
 			{
 				PCT012K164 = (int?)reader[168];
 			}
-			if (reader[169] != DBNull.Value)
+			if(reader[169] != DBNull.Value)
 			{
 				PCT012K165 = (int?)reader[169];
 			}
-			if (reader[170] != DBNull.Value)
+			if(reader[170] != DBNull.Value)
 			{
 				PCT012K166 = (int?)reader[170];
 			}
-			if (reader[171] != DBNull.Value)
+			if(reader[171] != DBNull.Value)
 			{
 				PCT012K167 = (int?)reader[171];
 			}
-			if (reader[172] != DBNull.Value)
+			if(reader[172] != DBNull.Value)
 			{
 				PCT012K168 = (int?)reader[172];
 			}
-			if (reader[173] != DBNull.Value)
+			if(reader[173] != DBNull.Value)
 			{
 				PCT012K169 = (int?)reader[173];
 			}
-			if (reader[174] != DBNull.Value)
+			if(reader[174] != DBNull.Value)
 			{
 				PCT012K170 = (int?)reader[174];
 			}
-			if (reader[175] != DBNull.Value)
+			if(reader[175] != DBNull.Value)
 			{
 				PCT012K171 = (int?)reader[175];
 			}
-			if (reader[176] != DBNull.Value)
+			if(reader[176] != DBNull.Value)
 			{
 				PCT012K172 = (int?)reader[176];
 			}
-			if (reader[177] != DBNull.Value)
+			if(reader[177] != DBNull.Value)
 			{
 				PCT012K173 = (int?)reader[177];
 			}
-			if (reader[178] != DBNull.Value)
+			if(reader[178] != DBNull.Value)
 			{
 				PCT012K174 = (int?)reader[178];
 			}
-			if (reader[179] != DBNull.Value)
+			if(reader[179] != DBNull.Value)
 			{
 				PCT012K175 = (int?)reader[179];
 			}
-			if (reader[180] != DBNull.Value)
+			if(reader[180] != DBNull.Value)
 			{
 				PCT012K176 = (int?)reader[180];
 			}
-			if (reader[181] != DBNull.Value)
+			if(reader[181] != DBNull.Value)
 			{
 				PCT012K177 = (int?)reader[181];
 			}
-			if (reader[182] != DBNull.Value)
+			if(reader[182] != DBNull.Value)
 			{
 				PCT012K178 = (int?)reader[182];
 			}
-			if (reader[183] != DBNull.Value)
+			if(reader[183] != DBNull.Value)
 			{
 				PCT012K179 = (int?)reader[183];
 			}
-			if (reader[184] != DBNull.Value)
+			if(reader[184] != DBNull.Value)
 			{
 				PCT012K180 = (int?)reader[184];
 			}
-			if (reader[185] != DBNull.Value)
+			if(reader[185] != DBNull.Value)
 			{
 				PCT012K181 = (int?)reader[185];
 			}
-			if (reader[186] != DBNull.Value)
+			if(reader[186] != DBNull.Value)
 			{
 				PCT012K182 = (int?)reader[186];
 			}
-			if (reader[187] != DBNull.Value)
+			if(reader[187] != DBNull.Value)
 			{
 				PCT012K183 = (int?)reader[187];
 			}
-			if (reader[188] != DBNull.Value)
+			if(reader[188] != DBNull.Value)
 			{
 				PCT012K184 = (int?)reader[188];
 			}
-			if (reader[189] != DBNull.Value)
+			if(reader[189] != DBNull.Value)
 			{
 				PCT012K185 = (int?)reader[189];
 			}
-			if (reader[190] != DBNull.Value)
+			if(reader[190] != DBNull.Value)
 			{
 				PCT012K186 = (int?)reader[190];
 			}
-			if (reader[191] != DBNull.Value)
+			if(reader[191] != DBNull.Value)
 			{
 				PCT012K187 = (int?)reader[191];
 			}
-			if (reader[192] != DBNull.Value)
+			if(reader[192] != DBNull.Value)
 			{
 				PCT012K188 = (int?)reader[192];
 			}
-			if (reader[193] != DBNull.Value)
+			if(reader[193] != DBNull.Value)
 			{
 				PCT012K189 = (int?)reader[193];
 			}
-			if (reader[194] != DBNull.Value)
+			if(reader[194] != DBNull.Value)
 			{
 				PCT012K190 = (int?)reader[194];
 			}
-			if (reader[195] != DBNull.Value)
+			if(reader[195] != DBNull.Value)
 			{
 				PCT012K191 = (int?)reader[195];
 			}
-			if (reader[196] != DBNull.Value)
+			if(reader[196] != DBNull.Value)
 			{
 				PCT012K192 = (int?)reader[196];
 			}
-			if (reader[197] != DBNull.Value)
+			if(reader[197] != DBNull.Value)
 			{
 				PCT012K193 = (int?)reader[197];
 			}
-			if (reader[198] != DBNull.Value)
+			if(reader[198] != DBNull.Value)
 			{
 				PCT012K194 = (int?)reader[198];
 			}
-			if (reader[199] != DBNull.Value)
+			if(reader[199] != DBNull.Value)
 			{
 				PCT012K195 = (int?)reader[199];
 			}
-			if (reader[200] != DBNull.Value)
+			if(reader[200] != DBNull.Value)
 			{
 				PCT012K196 = (int?)reader[200];
 			}
-			if (reader[201] != DBNull.Value)
+			if(reader[201] != DBNull.Value)
 			{
 				PCT012K197 = (int?)reader[201];
 			}
-			if (reader[202] != DBNull.Value)
+			if(reader[202] != DBNull.Value)
 			{
 				PCT012K198 = (int?)reader[202];
 			}
-			if (reader[203] != DBNull.Value)
+			if(reader[203] != DBNull.Value)
 			{
 				PCT012K199 = (int?)reader[203];
 			}
-			if (reader[204] != DBNull.Value)
+			if(reader[204] != DBNull.Value)
 			{
 				PCT012K200 = (int?)reader[204];
 			}
-			if (reader[205] != DBNull.Value)
+			if(reader[205] != DBNull.Value)
 			{
 				PCT012K201 = (int?)reader[205];
 			}
-			if (reader[206] != DBNull.Value)
+			if(reader[206] != DBNull.Value)
 			{
 				PCT012K202 = (int?)reader[206];
 			}
-			if (reader[207] != DBNull.Value)
+			if(reader[207] != DBNull.Value)
 			{
 				PCT012K203 = (int?)reader[207];
 			}
-			if (reader[208] != DBNull.Value)
+			if(reader[208] != DBNull.Value)
 			{
 				PCT012K204 = (int?)reader[208];
 			}
-			if (reader[209] != DBNull.Value)
+			if(reader[209] != DBNull.Value)
 			{
 				PCT012K205 = (int?)reader[209];
 			}
-			if (reader[210] != DBNull.Value)
+			if(reader[210] != DBNull.Value)
 			{
 				PCT012K206 = (int?)reader[210];
 			}
-			if (reader[211] != DBNull.Value)
+			if(reader[211] != DBNull.Value)
 			{
 				PCT012K207 = (int?)reader[211];
 			}
-			if (reader[212] != DBNull.Value)
+			if(reader[212] != DBNull.Value)
 			{
 				PCT012K208 = (int?)reader[212];
 			}
-			if (reader[213] != DBNull.Value)
+			if(reader[213] != DBNull.Value)
 			{
 				PCT012K209 = (int?)reader[213];
 			}
