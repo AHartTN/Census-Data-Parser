@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 6:45 PM
+// Authored: 01/31/2015 6:45 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,14 +37,14 @@
 
 namespace CensusDataParser.Attributes
 {
-	#region Using Directives
-	using System;
-	#endregion
+    #region Using Directives
+    using System;
+    #endregion
 
-	public class HiddenAttribute : Attribute
-	{
-		public bool IsHidden { get; protected set; }
+    public class HiddenAttribute : Attribute
+    {
+        public bool IsHidden { get; protected set; }
 
-		public HiddenAttribute(bool isHidden = true) { IsHidden = isHidden; }
-	}
+        public HiddenAttribute(bool isHidden = true) { IsHidden = isHidden; }
+    }
 }

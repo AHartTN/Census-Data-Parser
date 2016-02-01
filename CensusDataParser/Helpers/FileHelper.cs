@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 11:04 AM
+// Authored: 01/31/2015 11:04 AM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,66 +37,66 @@
 
 namespace CensusDataParser.Helpers
 {
-	#region Using Directives
-	using System;
-	using System.IO;
-	using System.Linq;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.IO;
+    using System.Linq;
+    #endregion
 
-	public class FileHelper
-	{
-		public static void AppendToFile(FileInfo file, string response) { AppendToFile(file, new[] {response}); }
+    public class FileHelper
+    {
+        public static void AppendToFile(FileInfo file, string response) { AppendToFile(file, new[] {response}); }
 
-		public static void AppendToFile(FileInfo file, string[] responses)
-		{
-			if (responses == null
-			    || !responses.Any())
-			{
-				return;
-			}
+        public static void AppendToFile(FileInfo file, string[] responses)
+        {
+            if (responses == null
+                || !responses.Any())
+            {
+                return;
+            }
 
-			if (file.Directory == null
-			    || !file.Directory.Exists
-			    || !file.Exists)
-			{
-				WriteToFile(file, responses[0]);
+            if (file.Directory == null
+                || !file.Directory.Exists
+                || !file.Exists)
+            {
+                WriteToFile(file, responses[0]);
 
-				if (responses.Length > 1)
-				{
-					File.AppendAllLines(file.FullName, responses.Skip(1));
-				}
-			}
-			else
-			{
-				File.AppendAllLines(file.FullName, responses);
-			}
-		}
+                if (responses.Length > 1)
+                {
+                    File.AppendAllLines(file.FullName, responses.Skip(1));
+                }
+            }
+            else
+            {
+                File.AppendAllLines(file.FullName, responses);
+            }
+        }
 
-		public static void WriteToFile(FileInfo file, string response)
-		{
-			if (string.IsNullOrWhiteSpace(response))
-			{
-				return;
-			}
+        public static void WriteToFile(FileInfo file, string response)
+        {
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                return;
+            }
 
-			if (file.Directory == null)
-			{
-				throw new ArgumentException();
-			}
+            if (file.Directory == null)
+            {
+                throw new ArgumentException();
+            }
 
-			if (file.Directory != null
-			    && !file.Directory.Exists)
-			{
-				file.Directory.Create();
-			}
+            if (file.Directory != null
+                && !file.Directory.Exists)
+            {
+                file.Directory.Create();
+            }
 
-			using (FileStream fs = File.Create(file.FullName))
-			{
-				using (StreamWriter sw = new StreamWriter(fs))
-				{
-					sw.WriteLine(response);
-				}
-			}
-		}
-	}
+            using (FileStream fs = File.Create(file.FullName))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine(response);
+                }
+            }
+        }
+    }
 }

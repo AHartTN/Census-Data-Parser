@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 4:41 PM
+// Authored: 01/31/2016 4:41 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,137 +37,152 @@
 
 namespace CensusDataParser.Extensions
 {
-	#region Using Directives
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.Reflection;
-	using Attributes;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Reflection;
+    using Attributes;
+    #endregion
 
-	public static class ObjectExtensions
-	{
-		public const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+    public static class ObjectExtensions
+    {
+        public const BindingFlags BindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 
-		public static PropertyInfo GetProperty(this object source, string name)
-		{
-			return source?.GetType()
-						  .GetProperty(name, BindFlags);
-		}
+        public static string GetDescription<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+            return attribute?.Description;
+        }
 
-		public static object GetPropertyValue(this object source, string name) { return source?.GetPropertyValue(source.GetProperty(name)); }
+        public static DisplayAttribute GetDisplayAttribute<T>(this T source, string name)
+        {
+            if (source == null)
+            {
+                return null;
+            }
 
-		public static object GetPropertyValue(this object source, PropertyInfo property) { return property?.GetValue(source); }
+            Type type = typeof (T);
+            FieldInfo field = type.GetField(name, BindFlags);
+            PropertyInfo property = type.GetProperty(name, BindFlags);
+            return field?.GetCustomAttribute<DisplayAttribute>() ?? property?.GetCustomAttribute<DisplayAttribute>();
+        }
 
-		public static void SetPropertyValue(this object source, string name, object value)
-		{
-			PropertyInfo property = source?.GetProperty(name);
-			property?.SetValue(source, value);
-		}
+        public static FieldInfo GetField(this object source, string name)
+        {
+            return source?.GetType()
+                          .GetField(name, BindFlags);
+        }
 
-		public static DisplayAttribute GetDisplayAttribute<T>(this T source, string name)
-		{
-			if (source == null)
-			{
-				return null;
-			}
+        public static object GetFieldValue(this object source, string name) { return source?.GetFieldValue(source.GetField(name)); }
 
-			Type type = typeof(T);
-			FieldInfo field = type.GetField(name, BindFlags);
-			PropertyInfo property = type.GetProperty(name, BindFlags);
-			return field?.GetCustomAttribute<DisplayAttribute>()
-					   ?? property?.GetCustomAttribute<DisplayAttribute>();
-		}
+        public static object GetFieldValue(this object source, FieldInfo Field) { return Field?.GetValue(source); }
 
-		public static string GetDescription<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
-			return attribute?.Description;
-		}
-		
-		public static string GetName<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
-			return attribute?.Name;
-		}
+        public static string GetGroupName<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+            return attribute?.GroupName;
+        }
 
-		public static int? GetOrder<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
-			return attribute?.Order;
-		}
+        public static HiddenAttribute GetHiddenAttribute<T>(this T source, string name)
+        {
+            Type type = typeof (T);
+            FieldInfo field = type.GetField(name, BindFlags);
+            PropertyInfo property = type.GetProperty(name, BindFlags);
+            return field?.GetCustomAttribute<HiddenAttribute>() ?? property?.GetCustomAttribute<HiddenAttribute>();
+        }
 
-		public static string GetGroupName<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source?.GetDisplayAttribute(name);
-			return attribute?.GroupName;
-		}
+        public static string GetName<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+            return attribute?.Name;
+        }
 
-		public static HiddenAttribute GetHiddenAttribute<T>(this T source, string name)
-		{
-			Type type = typeof(T);
-			FieldInfo field = type.GetField(name, BindFlags);
-			PropertyInfo property = type.GetProperty(name, BindFlags);
-			return field?.GetCustomAttribute<HiddenAttribute>()
-					?? property?.GetCustomAttribute<HiddenAttribute>();
-		}
-		public static string GetPrompt<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			return attribute?.Prompt;
-		}
+        public static int? GetOrder<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source?.GetDisplayAttribute(name);
+            return attribute?.Order;
+        }
 
-		public static string GetShortName<T>(this T source, string name)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			return attribute?.ShortName;
-		}
+        public static string GetPrompt<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            return attribute?.Prompt;
+        }
 
-		public static bool IsHidden<T>(this T source, string name)
-		{
-			HiddenAttribute attribute = source.GetHiddenAttribute(name);
-			return attribute != null && attribute.IsHidden;
-		}
-		public static T SetDescription<T>(this T source, string name, string value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.Description = value;
-			return source;
-		}
+        public static PropertyInfo GetProperty(this object source, string name)
+        {
+            return source?.GetType()
+                          .GetProperty(name, BindFlags);
+        }
 
-		public static T SetGroupName<T>(this T source, string name, string value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.GroupName = value;
-			return source;
-		}
+        public static object GetPropertyValue(this object source, string name) { return source?.GetPropertyValue(source.GetProperty(name)); }
 
-		public static T SetName<T>(this T source, string name, string value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.Name = value;
-			return source;
-		}
+        public static object GetPropertyValue(this object source, PropertyInfo property) { return property?.GetValue(source); }
 
-		public static T SetOrder<T>(this T source, string name, int value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.Order = value;
-			return source;
-		}
+        public static string GetShortName<T>(this T source, string name)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            return attribute?.ShortName;
+        }
 
-		public static T SetPrompt<T>(this T source, string name, string value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.Prompt = value;
-			return source;
-		}
+        public static bool IsHidden<T>(this T source, string name)
+        {
+            HiddenAttribute attribute = source.GetHiddenAttribute(name);
+            return attribute != null && attribute.IsHidden;
+        }
 
-		public static T SetShortName<T>(this T source, string name, string value)
-		{
-			DisplayAttribute attribute = source.GetDisplayAttribute(name);
-			attribute.ShortName = value;
-			return source;
-		}
+        public static T SetDescription<T>(this T source, string name, string value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.Description = value;
+            return source;
+        }
 
-	}
+        public static void SetFieldValue(this object source, string name, object value)
+        {
+            FieldInfo field = source?.GetField(name);
+            field?.SetValue(source, value);
+        }
+
+        public static T SetGroupName<T>(this T source, string name, string value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.GroupName = value;
+            return source;
+        }
+
+        public static T SetName<T>(this T source, string name, string value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.Name = value;
+            return source;
+        }
+
+        public static T SetOrder<T>(this T source, string name, int value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.Order = value;
+            return source;
+        }
+
+        public static T SetPrompt<T>(this T source, string name, string value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.Prompt = value;
+            return source;
+        }
+
+        public static void SetPropertyValue(this object source, string name, object value)
+        {
+            PropertyInfo property = source?.GetProperty(name);
+            property?.SetValue(source, value);
+        }
+
+        public static T SetShortName<T>(this T source, string name, string value)
+        {
+            DisplayAttribute attribute = source.GetDisplayAttribute(name);
+            attribute.ShortName = value;
+            return source;
+        }
+    }
 }

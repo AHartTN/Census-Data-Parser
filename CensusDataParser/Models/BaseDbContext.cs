@@ -1,11 +1,11 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 6:18 PM
+// Authored: 01/31/2016 3:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
-// File: BaseModel.cs
+// File: BaseDbContext.cs
 // 
 // Anthony Hart ("ANTHONY") CONFIDENTIAL
 // 
@@ -35,71 +35,11 @@
 // http://www.fbi.gov
 #endregion
 
-namespace CensusDataParser
+namespace CensusDataParser.Models
 {
-	#region Using Directives
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel.DataAnnotations;
-	using System.Globalization;
-	using System.Linq;
-	using System.Reflection;
-	using Extensions;
-	#endregion
+    #region Using Directives
+    using System.Data.Entity;
+    #endregion
 
-	public class BaseModel
-	{
-		public BaseModel()
-		{
-			// Empty for EF/JSON Interoperability
-		}
-
-		public BaseModel(string csvLine) { PopulateFromCsvString(csvLine); }
-
-		public BaseModel(IEnumerable<string> values) { PopulateFromCollection(values); }
-
-		private PropertyInfo GetProperty(int index)
-		{
-			return (from property in GetType()
-				        .GetProperties()
-			        let displayAttribute = property.GetCustomAttribute<DisplayAttribute>()
-			        let idx = displayAttribute.Order
-			        where idx == index
-			        select property).FirstOrDefault();
-		}
-
-		public void PopulateFromCollection(IEnumerable<string> items)
-		{
-			foreach (var item in items.Select((s, i) => new
-			                                            {
-				                                            Value = s,
-				                                            Index = i
-			                                            }))
-			{
-				PropertyInfo property = GetProperty(item.Index);
-
-				object value = item.Value;
-				Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-				// May include scientific notation in decimals.
-				// We need to make sure all decimals are clean before parsing
-				if (t == typeof (decimal))
-				{
-					value = decimal.Parse(item.Value, NumberStyles.Any)
-					               .ToString(CultureInfo.InvariantCulture);
-				}
-
-				object safeValue = Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
-				property.SetValue(this, safeValue, null);
-			}
-		}
-
-		public void PopulateFromCsvString(string csvLine)
-		{
-			IEnumerable<string> values = csvLine.SplitCSV();
-			PopulateFromCollection(values);
-		}
-
-		public void PopulateFromDelimitedString(string delimitedString, char delimiter) { PopulateFromCollection(delimitedString.Split(delimiter)); }
-	}
+    public class BaseDbContext : DbContext {}
 }

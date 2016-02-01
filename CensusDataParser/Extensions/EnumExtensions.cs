@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 6:09 PM
+// Authored: 01/31/2015 6:09 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,132 +37,131 @@
 
 namespace CensusDataParser.Extensions
 {
-	#region Using Directives
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel.DataAnnotations;
-	using System.Globalization;
-	using System.Linq;
-	using System.Reflection;
-	using Attributes;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
+    using Attributes;
+    #endregion
 
-	public static class EnumExtensions
-	{
-		public static string GetDescription<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			return attribute?.Description;
-		}
+    public static class EnumExtensions
+    {
+        public static string GetDescription<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            return attribute?.Description;
+        }
 
-		public static DisplayAttribute GetDisplayAttribute<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			Type type = typeof(T);
-			FieldInfo field = type.GetField(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
-			PropertyInfo property = type.GetProperty(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
-			return field?.GetCustomAttribute<DisplayAttribute>()
-					   ?? property?.GetCustomAttribute<DisplayAttribute>();
-		}
+        public static DisplayAttribute GetDisplayAttribute<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            Type type = typeof (T);
+            FieldInfo field = type.GetField(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
+            PropertyInfo property = type.GetProperty(source.ToString(CultureInfo.InvariantCulture), ObjectExtensions.BindFlags);
+            return field?.GetCustomAttribute<DisplayAttribute>() ?? property?.GetCustomAttribute<DisplayAttribute>();
+        }
 
-		public static IEnumerable<T> GetEnums<T>(this T source, bool includeHidden = false)
-		{
-			Type type = typeof (T);
+        public static IEnumerable<T> GetEnums<T>(this T source, bool includeHidden = false)
+        {
+            Type type = typeof (T);
 
-			if (!type.IsEnum)
-			{
-				return null;
-			}
+            if (!type.IsEnum)
+            {
+                return null;
+            }
 
-			IEnumerable<T> output = Enum.GetValues(type)
-			                            .Cast<T>();
-			return includeHidden
-				       ? output
-				       : output.Where(w => IsHidden(w) == false);
-		}
+            IEnumerable<T> output = Enum.GetValues(type)
+                                        .Cast<T>();
+            return includeHidden
+                       ? output
+                       : output.Where(w => IsHidden(w) == false);
+        }
 
-		public static string GetGroupName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			return attribute?.GroupName;
-		}
+        public static string GetGroupName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            return attribute?.GroupName;
+        }
 
-		public static HiddenAttribute GetHiddenAttribute<T>(this T source)
-		{
-			Type type = typeof (T);
-			FieldInfo field = type.GetField(source.ToString());
-			return field.GetCustomAttribute<HiddenAttribute>();
-		}
+        public static HiddenAttribute GetHiddenAttribute<T>(this T source)
+        {
+            Type type = typeof (T);
+            FieldInfo field = type.GetField(source.ToString());
+            return field.GetCustomAttribute<HiddenAttribute>();
+        }
 
-		public static string GetName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable { return Enum.GetName(typeof (T), source); }
+        public static string GetName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable { return Enum.GetName(typeof (T), source); }
 
-		public static int GetOrder<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			int? order = attribute?.GetOrder();
+        public static int GetOrder<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            int? order = attribute?.GetOrder();
 
-			return order != null && order >= 0
-				       ? (int)order
-				       : int.MaxValue;
-		}
+            return order != null && order >= 0
+                       ? (int)order
+                       : int.MaxValue;
+        }
 
-		public static string GetPrompt<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			return attribute?.Prompt;
-		}
+        public static string GetPrompt<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            return attribute?.Prompt;
+        }
 
-		public static string GetShortName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			return attribute?.ShortName;
-		}
+        public static string GetShortName<T>(this T source) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            return attribute?.ShortName;
+        }
 
-		public static bool IsHidden<T>(this T source)
-		{
-			HiddenAttribute attribute = GetHiddenAttribute(source);
-			return attribute != null && attribute.IsHidden;
-		}
+        public static bool IsHidden<T>(this T source)
+        {
+            HiddenAttribute attribute = GetHiddenAttribute(source);
+            return attribute != null && attribute.IsHidden;
+        }
 
-		public static T SetDescription<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.Description = value;
-			return source;
-		}
+        public static T SetDescription<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.Description = value;
+            return source;
+        }
 
-		public static T SetGroupName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.GroupName = value;
-			return source;
-		}
+        public static T SetGroupName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.GroupName = value;
+            return source;
+        }
 
-		public static T SetName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.Name = value;
-			return source;
-		}
+        public static T SetName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.Name = value;
+            return source;
+        }
 
-		public static T SetOrder<T>(this T source, int value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.Order = value;
-			return source;
-		}
+        public static T SetOrder<T>(this T source, int value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.Order = value;
+            return source;
+        }
 
-		public static T SetPrompt<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.Prompt = value;
-			return source;
-		}
+        public static T SetPrompt<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.Prompt = value;
+            return source;
+        }
 
-		public static T SetShortName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
-		{
-			DisplayAttribute attribute = GetDisplayAttribute(source);
-			attribute.ShortName = value;
-			return source;
-		}
-	}
+        public static T SetShortName<T>(this T source, string value) where T : struct, IComparable, IConvertible, IFormattable
+        {
+            DisplayAttribute attribute = GetDisplayAttribute(source);
+            attribute.ShortName = value;
+            return source;
+        }
+    }
 }

@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 3:35 PM
+// Authored: 01/31/2015 3:35 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,107 +37,107 @@
 
 namespace CensusDataParser.Models.SF1
 {
-	#region Using Directives
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.Data.OleDb;
-	using System.Globalization;
-	using Enumerators;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.OleDb;
+    using System.Globalization;
+    using Enumerators;
+    #endregion
 
-	public class GeoHeader_Specifications
-	{
-		[Display(Name = "DATA DICTIONARY REFERENCE", ShortName = "DATA DICTIONARY REFERENCE", Order = 2)]
-		public string DATA_DICTIONARY_REFERENCE { get; set; }
+    public class GeoHeader_Specifications
+    {
+        [Display(Name = "DATA DICTIONARY REFERENCE", ShortName = "DATA DICTIONARY REFERENCE", Order = 2)]
+        public string DATA_DICTIONARY_REFERENCE { get; set; }
 
-		[Display(Name = "DATA TYPE", ShortName = "DATA TYPE", Order = 5)]
-		public string DATA_TYPE { get; set; }
+        [Display(Name = "DATA TYPE", ShortName = "DATA TYPE", Order = 5)]
+        public string DATA_TYPE { get; set; }
 
-		[Display(Name = "FIELD", ShortName = "FIELD", Order = 1)]
-		public string FIELD { get; set; }
+        [Display(Name = "FIELD", ShortName = "FIELD", Order = 1)]
+        public string FIELD { get; set; }
 
-		[Display(Name = "FIELD SIZE", ShortName = "FIELD SIZE", Order = 4)]
-		public string FIELD_SIZE { get; set; }
+        [Display(Name = "FIELD SIZE", ShortName = "FIELD SIZE", Order = 4)]
+        public string FIELD_SIZE { get; set; }
 
-		[Display(Name = "ID", ShortName = "ID", Order = 0)]
-		public int? ID { get; set; }
+        [Display(Name = "ID", ShortName = "ID", Order = 0)]
+        public int? ID { get; set; }
 
-		[Display(Name = "STARTING POSITION", ShortName = "STARTING POSITION", Order = 3)]
-		public string STARTING_POSITION { get; set; }
+        [Display(Name = "STARTING POSITION", ShortName = "STARTING POSITION", Order = 3)]
+        public string STARTING_POSITION { get; set; }
 
-		public GeoHeader_Specifications()
-		{
-			// Empty constructor to ensure JSON operability
-		}
+        public GeoHeader_Specifications()
+        {
+            // Empty constructor to ensure JSON operability
+        }
 
-		public GeoHeader_Specifications(OleDbDataReader row, CensusFileType summaryFileType)
-		{
-			switch (summaryFileType)
-			{
-				case CensusFileType.SummaryTwo:
-					if (row[0] != DBNull.Value)
-					{
-						ID = (int)row[0];
-					}
-					if (row[1] != DBNull.Value)
-					{
-						FIELD = (string)row[1];
-					}
-					if (row[2] != DBNull.Value)
-					{
-						DATA_DICTIONARY_REFERENCE = (string)row[2];
-					}
-					if (row[3] != DBNull.Value)
-					{
-						STARTING_POSITION = (string)row[3];
-					}
-					if (row[4] != DBNull.Value)
-					{
-						FIELD_SIZE = (string)row[4];
-					}
-					if (row[5] != DBNull.Value)
-					{
-						DATA_TYPE = (string)row[5];
-					}
-					break;
-				case CensusFileType.Redistricting:
-				case CensusFileType.DemographicProfile:
-					if (row[0] != DBNull.Value)
-					{
-						FIELD = (string)row[0];
-					}
-					if (row[1] != DBNull.Value)
-					{
-						DATA_DICTIONARY_REFERENCE = (string)row[1];
-					}
-					if (row[2] != DBNull.Value)
-					{
-						FIELD_SIZE = (row[2] as double?)?.ToString(CultureInfo.InvariantCulture) ?? (row[2] as decimal?)?.ToString(CultureInfo.InvariantCulture);
-					}
-					break;
-				case CensusFileType.AdvanceGroupQuarters:
-				case CensusFileType.SummaryOne:
-				case CensusFileType.IslandAreas_DPSF:
-				case CensusFileType.AIANSummaryFile:
-				case CensusFileType.SF1CongressionalDistricts113:
-				case CensusFileType.IslandAreas_IASF:
-				case CensusFileType.IslandAreasDetailedCrossTabulations:
-				case CensusFileType.IslandAreas_PUMS:
-				case CensusFileType.Stateside_PUMS:
-					throw new NotImplementedException("The Geography Field Specifications table is not included in this specific dataset.");
-				default:
-					throw new ArgumentOutOfRangeException(nameof(summaryFileType), summaryFileType, null);
-			}
-		}
+        public GeoHeader_Specifications(OleDbDataReader row, CensusFileType summaryFileType)
+        {
+            switch (summaryFileType)
+            {
+                case CensusFileType.SummaryTwo:
+                    if (row[0] != DBNull.Value)
+                    {
+                        ID = (int)row[0];
+                    }
+                    if (row[1] != DBNull.Value)
+                    {
+                        FIELD = (string)row[1];
+                    }
+                    if (row[2] != DBNull.Value)
+                    {
+                        DATA_DICTIONARY_REFERENCE = (string)row[2];
+                    }
+                    if (row[3] != DBNull.Value)
+                    {
+                        STARTING_POSITION = (string)row[3];
+                    }
+                    if (row[4] != DBNull.Value)
+                    {
+                        FIELD_SIZE = (string)row[4];
+                    }
+                    if (row[5] != DBNull.Value)
+                    {
+                        DATA_TYPE = (string)row[5];
+                    }
+                    break;
+                case CensusFileType.Redistricting:
+                case CensusFileType.DemographicProfile:
+                    if (row[0] != DBNull.Value)
+                    {
+                        FIELD = (string)row[0];
+                    }
+                    if (row[1] != DBNull.Value)
+                    {
+                        DATA_DICTIONARY_REFERENCE = (string)row[1];
+                    }
+                    if (row[2] != DBNull.Value)
+                    {
+                        FIELD_SIZE = (row[2] as double?)?.ToString(CultureInfo.InvariantCulture) ?? (row[2] as decimal?)?.ToString(CultureInfo.InvariantCulture);
+                    }
+                    break;
+                case CensusFileType.AdvanceGroupQuarters:
+                case CensusFileType.SummaryOne:
+                case CensusFileType.IslandAreas_DPSF:
+                case CensusFileType.AIANSummaryFile:
+                case CensusFileType.SF1CongressionalDistricts113:
+                case CensusFileType.IslandAreas_IASF:
+                case CensusFileType.IslandAreasDetailedCrossTabulations:
+                case CensusFileType.IslandAreas_PUMS:
+                case CensusFileType.Stateside_PUMS:
+                    throw new NotImplementedException("The Geography Field Specifications table is not included in this specific dataset.");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(summaryFileType), summaryFileType, null);
+            }
+        }
 
-		#region Overrides of Object
-		/// <summary>
-		///     Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>
-		///     A string that represents the current object.
-		/// </returns>
-		public override string ToString() { return $"{DATA_DICTIONARY_REFERENCE} | {DATA_TYPE} | {FIELD_SIZE} | {FIELD}"; }
-		#endregion
-	}
+        #region Overrides of Object
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString() { return $"{DATA_DICTIONARY_REFERENCE} | {DATA_TYPE} | {FIELD_SIZE} | {FIELD}"; }
+        #endregion
+    }
 }

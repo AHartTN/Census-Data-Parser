@@ -1,7 +1,7 @@
 #region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 4:41 PM
+// Authored: 01/31/2016 11:18 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,36 +37,54 @@
 
 namespace CensusDataParser.Extensions
 {
-	#region Using Directives
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Data.Entity.ModelConfiguration;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Entity.ModelConfiguration;
+    #endregion
 
-	public static class EntityTypeConfigurationExtensions
-	{
-		public static IEnumerable<Tuple<string, string, int?, int?>> GetColumnInfo<T>(this EntityTypeConfiguration<T> map) where T : class
-		{
-			object configuration = map.GetPropertyValue("Configuration");
-			IEnumerable properties = configuration?.GetPropertyValue("PrimitivePropertyConfigurations") as IEnumerable;
+    public static class EntityTypeConfigurationExtensions
+    {
+        public static IEnumerable<Tuple<string, string, int?, int?>> GetColumnInfo<T>(this EntityTypeConfiguration<T> map) where T : class
+        {
+            IEnumerable properties = map.GetConfiguration()
+                                         ?.GetPropertyValue("PrimitivePropertyConfigurations") as IEnumerable;
 
-			if (properties == null)
-			{
-				yield break;
-			}
-			foreach (object property in properties)
-			{
-				string propertyString = $"{property.GetPropertyValue("Key")}";
-				string columnType = property.GetPropertyValue("Value")
-										   .GetPropertyValue("ColumnType") as string;
-				int? columnIndex = property.GetPropertyValue("Value")
-										   .GetPropertyValue("ColumnOrder") as int?;
-				int? maxLength = property.GetPropertyValue("Value")
-				                         .GetPropertyValue("MaxLength") as int?;
+            if (properties == null)
+            {
+                yield break;
+            }
+            foreach (object property in properties)
+            {
+                string propertyString = $"{property.GetPropertyValue("Key")}";
+                string columnType = property.GetPropertyValue("Value")
+                                            .GetPropertyValue("ColumnType") as string;
+                int? columnIndex = property.GetPropertyValue("Value")
+                                           .GetPropertyValue("ColumnOrder") as int?;
+                int? maxLength = property.GetPropertyValue("Value")
+                                         .GetPropertyValue("MaxLength") as int?;
 
-				yield return new Tuple<string, string, int?, int?>(propertyString, columnType, columnIndex, maxLength);
-			}
-		}
-	}
+                yield return new Tuple<string, string, int?, int?>(propertyString, columnType, columnIndex, maxLength);
+            }
+        }
+
+        public static object GetConfiguration<T>(this EntityTypeConfiguration<T> map) where T : class { return map.GetPropertyValue("Configuration"); }
+
+        public static string GetFullTableName<T>(this EntityTypeConfiguration<T> map) where T : class { return $"{map.GetSchemaName()}.{map.GetTableName()}"; }
+
+        public static string GetSchemaName<T>(this EntityTypeConfiguration<T> map) where T : class
+        {
+            return map.GetConfiguration()
+                      .GetProperty("SchemaName")
+                      .GetValue(map.GetConfiguration()) as string;
+        }
+
+        public static string GetTableName<T>(this EntityTypeConfiguration<T> map) where T : class
+        {
+            return map.GetConfiguration()
+                      .GetProperty("TableName")
+                      .GetValue(map.GetConfiguration()) as string;
+        }
+    }
 }

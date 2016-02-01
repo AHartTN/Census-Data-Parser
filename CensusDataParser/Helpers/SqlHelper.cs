@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 9:00 PM
+// Authored: 01/31/2016 9:00 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,42 +37,42 @@
 
 namespace CensusDataParser.Helpers
 {
-	#region Using Directives
-	using System;
-	using System.Data;
-	using System.Data.SqlClient;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.Data;
+    using System.Data.SqlClient;
+    #endregion
 
-	public class SqlHelper
-	{
-		public static int BulkCSVInsert(string tableName, string filePath)
-		{
-			//string fileString = File.ReadAllText(filePath);
-			int rowsAffected = 0;
-			string sql = $"BULK INSERT {tableName} FROM '{filePath}' WITH (FIELDTERMINATOR = ',', ROWTERMINATOR = '\n')";
+    public class SqlHelper
+    {
+        public static int BulkCSVInsert(string tableName, string filePath)
+        {
+            //string fileString = File.ReadAllText(filePath);
+            int rowsAffected = 0;
+            string sql = $"BULK INSERT {tableName} FROM '{filePath}' WITH (FIELDTERMINATOR = ',', ROWTERMINATOR = '\n')";
 
-			using (SqlConnection conn = new SqlConnection(Program.ConnectionString))
-			{
-				using (SqlCommand cmd = conn.CreateCommand())
-				{
-					Console.Write("Bulk inserting CSV records. . . Please wait!");
-					cmd.CommandText = sql;
-					cmd.CommandType = CommandType.Text;
-					cmd.CommandTimeout = 600;
+            using (SqlConnection conn = new SqlConnection(Program.ConnectionString))
+            {
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    Console.Write("Bulk inserting CSV records. . . Please wait!");
+                    cmd.CommandText = sql;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandTimeout = 600;
 
-					if (cmd.Connection.State != ConnectionState.Open)
-					{
-						cmd.Connection.Open();
-					}
+                    if (cmd.Connection.State != ConnectionState.Open)
+                    {
+                        cmd.Connection.Open();
+                    }
 
-					rowsAffected = cmd.ExecuteNonQuery();
+                    rowsAffected = cmd.ExecuteNonQuery();
 
-					cmd.Connection.Close();
-				}
-			}
-			Console.WriteLine($"\r{rowsAffected} CSV records inserted into the {tableName} table from {filePath}");
+                    cmd.Connection.Close();
+                }
+            }
+            Console.WriteLine($"\r{rowsAffected} CSV records inserted into the {tableName} table from {filePath}");
 
-			return rowsAffected;
-		}
-	}
+            return rowsAffected;
+        }
+    }
 }

@@ -48,6 +48,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -57,7 +77,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.DTSRuntimeWrap, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=x86">
+    <Reference Include="Microsoft.SqlServer.DTSPipelineWrap, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.SQLServer.DTSRuntimeWrap, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=x86">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.SQLServer.ManagedDTS, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -84,9 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HiddenAttribute.cs" />
-    <Compile Include="BaseDbContext.cs" />
-    <Compile Include="BaseModel.cs" />
-    <Compile Include="DatabaseSchema.cs" />
+    <Compile Include="Models\BaseDbContext.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\DatabaseSchema.cs" />
     <Compile Include="Enumerators\SSISTaskType.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\EntityTypeConfigurationExtensions.cs" />
@@ -343,12 +366,19 @@
     <Compile Include="Generated\Mapping\SummaryTwo_Table_NamesMap.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Helpers\SqlHelper.cs" />
-    <Compile Include="SSISHelper.cs" />
-    <Compile Include="TableSchema.cs" />
-    <Compile Include="ColumnSchema.cs" />
+    <Compile Include="Models\SF1\DATA_FIELD_DESCRIPTORS.cs" />
+    <Compile Include="Models\SF1\GeoHeader_Specifications.cs" />
+    <Compile Include="Models\SF2\DataDictionary.cs" />
+    <Compile Include="Models\SF2\DataDictionary_NOTES.cs" />
+    <Compile Include="Models\SF2\Iterations_List.cs" />
+    <Compile Include="Models\SF2\Iterations_NOTES.cs" />
+    <Compile Include="Models\SF2\Table_Names.cs" />
+    <Compile Include="Helpers\SSISHelper.cs" />
+    <Compile Include="Models\TableSchema.cs" />
+    <Compile Include="Models\ColumnSchema.cs" />
     <Compile Include="Enumerators\CensusAccessFileTypes.cs" />
-    <Compile Include="CensusDataHelper.cs" />
-    <Compile Include="CensusDataPaths.cs" />
+    <Compile Include="Helpers\CensusDataHelper.cs" />
+    <Compile Include="Helpers\CensusDataPaths.cs" />
     <Compile Include="Enumerators\CongressionalDistrictsFileType.cs" />
     <Compile Include="Enumerators\DemographicProfileFileType.cs" />
     <Compile Include="Enumerators\RedistrictingFileType.cs" />
@@ -356,18 +386,13 @@
     <Compile Include="Enumerators\Summary2FileType.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Models\SF2\Table_Names.cs" />
-    <Compile Include="Models\SF2\DataDictionary.cs" />
-    <Compile Include="Models\SF2\DataDictionary_NOTES.cs" />
-    <Compile Include="Models\SF1\DATA_FIELD_DESCRIPTORS.cs" />
-    <Compile Include="Models\SF1\GeoHeader_Specifications.cs" />
-    <Compile Include="Models\SF2\Iterations_List.cs" />
-    <Compile Include="Models\SF2\Iterations_NOTES.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AccessFile.cs" />
+    <Compile Include="Models\AccessFile.cs" />
     <Compile Include="Enumerators\CensusFileType.cs" />
+    <Compile Include="Models\SSISComponentEventHandler.cs" />
+    <Compile Include="Models\SSISEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 3:35 PM
+// Authored: 01/31/2015 3:35 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,67 +37,67 @@
 
 namespace CensusDataParser.Models.SF2
 {
-	#region Using Directives
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.Data.OleDb;
-	using Enumerators;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.OleDb;
+    using Enumerators;
+    #endregion
 
-	public class Table_Names
-	{
-		[Display(Name = "CELL COUNT", ShortName = "CELL COUNT", Order = 3)]
-		public string CELL_COUNT { get; set; }
+    public class Table_Names
+    {
+        [Display(Name = "CELL COUNT", ShortName = "CELL COUNT", Order = 3)]
+        public string CELL_COUNT { get; set; }
 
-		[Display(Name = "SORT ID", ShortName = "SORT ID", Order = 0)]
-		public int? SORT_ID { get; set; }
+        [Display(Name = "SORT ID", ShortName = "SORT ID", Order = 0)]
+        public int? SORT_ID { get; set; }
 
-		[Display(Name = "TABLE CODE", ShortName = "TABLE CODE", Order = 1)]
-		public string TABLE_CODE { get; set; }
+        [Display(Name = "TABLE CODE", ShortName = "TABLE CODE", Order = 1)]
+        public string TABLE_CODE { get; set; }
 
-		[Display(Name = "TABLE NAME", ShortName = "TABLE NAME", Order = 2)]
-		public string TABLE_NAME { get; set; }
+        [Display(Name = "TABLE NAME", ShortName = "TABLE NAME", Order = 2)]
+        public string TABLE_NAME { get; set; }
 
-		public Table_Names()
-		{
-			// Empty constructor to ensure JSON operability
-		}
+        public Table_Names()
+        {
+            // Empty constructor to ensure JSON operability
+        }
 
-		public Table_Names(OleDbDataReader reader, CensusFileType fileType)
-		{
-			switch (fileType)
-			{
-				case CensusFileType.SummaryTwo:
-					SORT_ID = (int)reader[0];
-					TABLE_CODE = (string)reader[1];
-					TABLE_NAME = (string)reader[2];
-					CELL_COUNT = (string)reader[3];
-					break;
-				case CensusFileType.Redistricting:
-				case CensusFileType.AdvanceGroupQuarters:
-				case CensusFileType.DemographicProfile:
-				case CensusFileType.SummaryOne:
-				case CensusFileType.IslandAreas_DPSF:
-				case CensusFileType.AIANSummaryFile:
-				case CensusFileType.SF1CongressionalDistricts113:
-				case CensusFileType.IslandAreas_IASF:
-				case CensusFileType.IslandAreasDetailedCrossTabulations:
-				case CensusFileType.IslandAreas_PUMS:
-				case CensusFileType.Stateside_PUMS:
-					throw new NotImplementedException("The Table Categories table is not included in this specific dataset.");
-				default:
-					throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
-			}
-		}
+        public Table_Names(OleDbDataReader reader, CensusFileType fileType)
+        {
+            switch (fileType)
+            {
+                case CensusFileType.SummaryTwo:
+                    SORT_ID = (int)reader[0];
+                    TABLE_CODE = (string)reader[1];
+                    TABLE_NAME = (string)reader[2];
+                    CELL_COUNT = (string)reader[3];
+                    break;
+                case CensusFileType.Redistricting:
+                case CensusFileType.AdvanceGroupQuarters:
+                case CensusFileType.DemographicProfile:
+                case CensusFileType.SummaryOne:
+                case CensusFileType.IslandAreas_DPSF:
+                case CensusFileType.AIANSummaryFile:
+                case CensusFileType.SF1CongressionalDistricts113:
+                case CensusFileType.IslandAreas_IASF:
+                case CensusFileType.IslandAreasDetailedCrossTabulations:
+                case CensusFileType.IslandAreas_PUMS:
+                case CensusFileType.Stateside_PUMS:
+                    throw new NotImplementedException("The Table Categories table is not included in this specific dataset.");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+            }
+        }
 
-		#region Overrides of Object
-		/// <summary>
-		///     Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>
-		///     A string that represents the current object.
-		/// </returns>
-		public override string ToString() { return $"{SORT_ID} | {TABLE_CODE} | {TABLE_NAME} | {CELL_COUNT}"; }
-		#endregion
-	}
+        #region Overrides of Object
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString() { return $"{SORT_ID} | {TABLE_CODE} | {TABLE_NAME} | {CELL_COUNT}"; }
+        #endregion
+    }
 }

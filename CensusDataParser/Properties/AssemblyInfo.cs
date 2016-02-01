@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2015 2:41 PM
+// Authored: 01/31/2015 2:41 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser

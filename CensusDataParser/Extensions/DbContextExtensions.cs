@@ -1,7 +1,7 @@
 ﻿#region Header
 
 // Author: Anthony Hart (Anthony | Anthony Hart)
-// Authored: 01/06/2016 9:36 PM
+// Authored: 01/31/2016 9:36 PM
 // 
 // Solution: CensusDataParser
 // Project: CensusDataParser
@@ -37,20 +37,20 @@
 
 namespace CensusDataParser.Extensions
 {
-	#region Using Directives
-	using System;
-	using System.Data.Entity;
-	using System.Reflection;
-	#endregion
+    #region Using Directives
+    using System;
+    using System.Data.Entity;
+    using System.Reflection;
+    #endregion
 
-	public static class DbContextExtensions
-	{
-		public static object Test(this DbContext context)
-		{
-			Type contextType = context.GetType();
-			Assembly assembly = contextType.Assembly;
-			Type[] assemblyTypes = assembly.GetTypes();
-			return null;
-		}
-	}
+    public static class DbContextExtensions
+    {
+        public static object Test(this DbContext context)
+        {
+            Type contextType = context.GetType();
+            Assembly assembly = contextType.Assembly;
+            Type[] assemblyTypes = assembly.GetTypes();
+            return null;
+        }
+    }
 }
