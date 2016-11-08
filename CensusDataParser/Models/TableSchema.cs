@@ -148,7 +148,7 @@ namespace CensusDataParser.Models
                                                                               })
                                                    .Aggregate($"public {ClassName}(OleDbDataReader reader)\r\n\t\t{{", (current, a) => current + $"\r\n\t\t\tif(reader[{a.Index}] != DBNull.Value)\r\n\t\t\t{{\r\n\t\t\t\t{a.Column.CleanName} = ({a.Column.TypeString})reader[{a.Index}];\r\n\t\t\t}}") + "\r\n\t\t}";
 
-        public string[] UsingDirectives => new[] {"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", "")};
+        public string[] UsingDirectives => new[] {"System", "System.Collections.Generic", "System.ComponentModel", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "System.Data.Entity", "System.Data.Entity.ModelConfiguration", "System.Data.OleDb", "Enumerators", BindingNamespaceString.Replace($"{BaseNamespace}.", ""), MappingNamespaceString.Replace($"{BaseNamespace}.", ""), "Models"};
 
         public string UsingDirectivesString => UsingDirectives.Aggregate("#region Using Directives", (current, usingDirective) => current + $"\r\n\tusing {usingDirective};") + "\r\n\t#endregion Using Directives";
 

@@ -396,11 +396,20 @@ namespace CensusDataParser.Helpers
         public Executable AddFlatFileConnection<T>(string path, EntityTypeConfiguration<T> map, bool updateExisting = false) where T : class
         {
             ConnectionManager manager = GetFlatFileConnection(path, map, updateExisting);
-            Executable executable = AddTask(map, manager);
+            Executable executable = null;
+            try
+            {
+                executable = AddTask(map, manager);
 
-            Save();
-            Console.Write($"\rAdded {manager.Name} to the flat file connections");
+                Save();
+                Console.Write($"\rAdded {manager.Name} to the flat file connections");
 
+                return executable;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             return executable;
         }
 

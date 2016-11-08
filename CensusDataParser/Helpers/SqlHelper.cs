@@ -45,11 +45,39 @@ namespace CensusDataParser.Helpers
 
     public class SqlHelper
     {
-        public static int BulkCSVInsert(string tableName, string filePath)
+		public static void TruncateTable(string tableName)
+		{
+			int rowsAffected = 0;
+			string sql = $"TRUNCATE TABLE {tableName}";
+
+			using (SqlConnection conn = new SqlConnection(Program.ConnectionString))
+			{
+				using (SqlCommand cmd = conn.CreateCommand())
+				{
+					Console.Write($"Truncating records from {tableName}. . . Please wait!");
+					cmd.CommandText = sql;
+					cmd.CommandType = CommandType.Text;
+					cmd.CommandTimeout = 600;
+
+					if (cmd.Connection.State != ConnectionState.Open)
+					{
+						cmd.Connection.Open();
+					}
+
+					rowsAffected = cmd.ExecuteNonQuery();
+
+					cmd.Connection.Close();
+				}
+			}
+			Console.WriteLine($"\r{rowsAffected} records truncated from the {tableName} table");
+		}
+
+        public static int BulkCSVInsert(string tableName, string filePath, string fieldTerminator = ",", string rowTerminator = "\n")
         {
             //string fileString = File.ReadAllText(filePath);
             int rowsAffected = 0;
-            string sql = $"BULK INSERT {tableName} FROM '{filePath}' WITH (FIELDTERMINATOR = ',', ROWTERMINATOR = '\n')";
+
+            string sql = $"BULK INSERT {tableName} FROM '{filePath}' WITH (FIELDTERMINATOR = '{fieldTerminator}', ROWTERMINATOR = '{rowTerminator}')";
 
             using (SqlConnection conn = new SqlConnection(Program.ConnectionString))
             {

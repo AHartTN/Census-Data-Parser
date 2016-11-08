@@ -82,7 +82,11 @@ namespace CensusDataParser.Models
                 output += "\r\n\t\t\t{";
                 output += $"\r\n\t\t\t\tusing (var db = new {Name}())";
                 output += "\r\n\t\t\t\t{";
-                output += "\r\n\t\t\t\t\treturn db.Database.Exists() || db.Database.CreateIfNotExists();";
+                output += "\r\n\t\t\t\t\tbool exists = db.Database.Exists() || db.Database.CreateIfNotExists();";
+                output += "\r\n\t\t\t\t\tdb.SaveChanges();";
+				output += "\r\n\t\t\t\t\tdb.Database.ExecuteSqlCommand($\"ALTER DATABASE { db.Database.Connection.Database} SET RECOVERY SIMPLE\");";
+				output += "\r\n\t\t\t\t\tdb.SaveChanges();";
+				output += "\r\n\t\t\t\t\treturn exists;";
                 output += "\r\n\t\t\t\t}";
                 output += "\r\n\t\t\t}";
                 output += "\r\n\t\t\tcatch (Exception ex)";
