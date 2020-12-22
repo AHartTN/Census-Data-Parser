@@ -460,7 +460,6 @@ namespace CensusDataParser.Helpers
             source.RuntimeConnectionCollection[0].Description = manager.Description;
 
             sourceWrapper.SetComponentProperty("RetainNulls", true);
-            //sourceWrapper.SetComponentProperty("FastParse", true);
 
             sourceWrapper.AcquireConnections(null);
             sourceWrapper.ReinitializeMetaData();

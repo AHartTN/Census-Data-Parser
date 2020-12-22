@@ -41,7 +41,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -371,6 +371,7 @@
     <Compile Include="Generated\Mapping\SummaryTwo_SF2_Segment_10Map.cs" />
     <Compile Include="Generated\Mapping\SummaryTwo_SF2_Segment_11Map.cs" />
     <Compile Include="Generated\Mapping\SummaryTwo_Table_NamesMap.cs" />
+    <Compile Include="Helpers\ParallelZipFile.cs" />
     <Compile Include="Models\BaseDbContext.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\DatabaseSchema.cs" />
