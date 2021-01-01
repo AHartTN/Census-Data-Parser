@@ -79,7 +79,7 @@ namespace CensusDataParser
 			Console.Write("INITIALIZING APPLICATION");
 
 			Console.BufferHeight = short.MaxValue - 1;
-			Console.BufferWidth = Console.BufferWidth * 50;
+			Console.BufferWidth *= 50;
 
 			ProcessArgs(args);
 
